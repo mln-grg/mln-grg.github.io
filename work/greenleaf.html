@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Greenleaf — Milan George</title>
+<meta name="description" content="A Total War style strategy game in Unreal Engine 5. Leading the battle and overworld layers: 4,000 soldiers on Mass Entity, an MVVM UI framework, A* formation navigation and a settlement economy.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Project Greenleaf — Milan George">
+<meta property="og:description" content="Total War style RTS in UE5. 4,000 individually simulated soldiers on Mass Entity, plus the UI framework, navigation and settlement systems around them.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../style.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var sysLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+    document.documentElement.setAttribute("data-theme", saved || (sysLight ? "light" : "dark"));
+  })();
+</script>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="../index.html">Milan George</a>
+    <nav>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#experience" class="hide-sm">Experience</a>
+      <a href="../index.html#contact">Contact</a>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap crumb"><a href="../index.html#projects">← All projects</a></div>
+
+<div class="phead">
+  <div class="wrap">
+    <h1>Project Greenleaf</h1>
+    <p class="deck">
+      A Total War style strategy game in Unreal Engine 5: a campaign overworld feeding real-time
+      battles with thousands of soldiers on the field at once. I joined as a gameplay programmer
+      and ended up leading the battle and overworld layers — architecture, systems design,
+      implementation, task breakdown and code review for a team of five.
+    </p>
+    <div class="facts">
+      <div class="fact"><div class="k">Studio</div><div class="v">Nytwolf Games</div></div>
+      <div class="fact"><div class="k">Role</div><div class="v">Project Lead</div></div>
+      <div class="fact"><div class="k">Engine</div><div class="v">Unreal Engine 5, C++</div></div>
+      <div class="fact"><div class="k">Scale</div><div class="v">4,000 simulated soldiers</div></div>
+      <div class="fact"><div class="k">Team</div><div class="v">5 engineers</div></div>
+      <div class="fact"><div class="k">Period</div><div class="v">2024 — 2026</div></div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="wrap">
+
+    <!-- GIF / VIDEO SLOT — the page badly wants battle footage at the top. Once cleared:
+    <figure class="media">
+      <img src="../media/greenleaf-charge.gif" alt="Four thousand soldiers colliding in a Greenleaf battle">
+      <figcaption>4,000 soldiers, individually simulated.</figcaption>
+    </figure>
+    or an unlisted YouTube embed:
+    <figure class="media">
+      <iframe src="https://www.youtube-nocookie.com/embed/VIDEO_ID" title="Greenleaf battle" allowfullscreen></iframe>
+      <figcaption>Battle footage.</figcaption>
+    </figure>
+    -->
+
+    <p>
+      Four systems, all mine end to end. The battle simulation is the one that defines the
+      project; the other three exist because a battle needs an interface, a way to move, and
+      somewhere to come home to.
+    </p>
+
+    <div class="toc">
+      <a href="#battle">01 — Battle simulation at scale</a>
+      <a href="#ui">02 — Data-driven UI framework</a>
+      <a href="#navigation">03 — Grid navigation &amp; formations</a>
+      <a href="#settlement">04 — Settlement designer &amp; economy</a>
+    </div>
+
+    <!-- ============================================================ 01 -->
+    <section class="sys first" id="battle">
+      <div class="kicker">01 — shipped as a standalone plugin</div>
+      <h2>Battle simulation at scale</h2>
+
+      <h3>The problem</h3>
+      <p>
+        A Total War style battle wants two things that pull against each other. Every soldier
+        should be a real individual — its own position, its own target, its own morale state, its
+        own death — because that is what makes the line break believably rather than as one
+        animated blob. And there should be thousands of them, at a playable frame rate, on
+        hardware people actually own.
+      </p>
+      <p>
+        The default Unreal answer is an actor per soldier. That answer does not survive contact
+        with 4,000 of them. Each actor carries a component hierarchy, a tick registration and a
+        scene proxy; the simulation ends up chasing pointers across scattered heap allocations,
+        and the renderer ends up with thousands of individual draw calls. The cost is not one
+        bottleneck you can optimise — it is the shape of the data.
+      </p>
+
+      <h3>The shape of the solution</h3>
+      <p>
+        I split each soldier in two. <strong>Simulation</strong> lives in Unreal's Mass Entity
+        framework, where a soldier is an entity: a row of tightly packed fragments processed in
+        bulk, with no actor, no tick and no component tree. <strong>Presentation</strong> lives in
+        a deliberately thin actor that owns nothing but the visual representation and reads its
+        state from the simulation.
+      </p>
+      <p>
+        That split is the whole design. Everything that runs for every soldier every frame —
+        movement, steering, target acquisition, formation slotting — runs in cache-friendly
+        batches inside Mass processors. Everything that only needs to look right runs on the
+        presentation side, where a slightly less efficient object model costs nothing because it
+        is not the hot path.
+      </p>
+
+      <figure class="figure">
+        <div class="frame">
+          <svg viewBox="0 0 720 320" role="img" aria-label="Diagram: Mass Entity simulation feeds a thin presentation actor, which drives instanced rendering with vertex animation.">
+            <text x="16" y="24" class="d-s">one soldier = one entity (simulation) + one thin actor (presentation)</text>
+
+            <rect x="16" y="44" width="200" height="252" rx="8" class="d-box-a"/>
+            <text x="32" y="70" class="d-t">Mass Entity</text>
+            <text x="32" y="88" class="d-s">batched, no actor tick</text>
+            <rect x="32" y="102" width="168" height="34" rx="6" class="d-box"/>
+            <text x="44" y="124" class="d-t">Movement &amp; steering</text>
+            <rect x="32" y="146" width="168" height="34" rx="6" class="d-box"/>
+            <text x="44" y="168" class="d-t">Target acquisition</text>
+            <rect x="32" y="190" width="168" height="34" rx="6" class="d-box"/>
+            <text x="44" y="212" class="d-t">Formation slots</text>
+            <rect x="32" y="234" width="168" height="34" rx="6" class="d-box"/>
+            <text x="44" y="256" class="d-t">Combat resolution</text>
+
+            <path class="d-l-a" d="M216 170 H258"/>
+            <polygon class="d-arrow-a" points="266,170 254,165 254,175"/>
+            <text x="218" y="160" class="d-lbl">transform + state</text>
+
+            <rect x="266" y="44" width="176" height="252" rx="8" class="d-box-a"/>
+            <text x="282" y="70" class="d-t">Soldier actor</text>
+            <text x="282" y="88" class="d-s">presentation only</text>
+            <rect x="282" y="102" width="144" height="34" rx="6" class="d-box"/>
+            <text x="294" y="124" class="d-t">State machine</text>
+            <rect x="282" y="146" width="144" height="34" rx="6" class="d-box"/>
+            <text x="294" y="168" class="d-t">Animation clock</text>
+            <rect x="282" y="190" width="144" height="34" rx="6" class="d-box"/>
+            <text x="294" y="212" class="d-t">Instance controller</text>
+            <rect x="282" y="234" width="144" height="34" rx="6" class="d-box"/>
+            <text x="294" y="256" class="d-t">Pooled on death</text>
+
+            <path class="d-l-a" d="M442 170 H484"/>
+            <polygon class="d-arrow-a" points="492,170 480,165 480,175"/>
+            <text x="440" y="160" class="d-lbl">per-instance data</text>
+
+            <rect x="492" y="44" width="212" height="252" rx="8" class="d-box-a"/>
+            <text x="508" y="70" class="d-t">Instanced rendering</text>
+            <text x="508" y="88" class="d-s">one draw call per mesh</text>
+            <rect x="508" y="102" width="180" height="34" rx="6" class="d-box"/>
+            <text x="520" y="124" class="d-t">Instanced static mesh</text>
+            <rect x="508" y="146" width="180" height="34" rx="6" class="d-box"/>
+            <text x="520" y="168" class="d-t">Vertex animation</text>
+            <rect x="508" y="190" width="180" height="34" rx="6" class="d-box"/>
+            <text x="520" y="212" class="d-t">Anim index · weapon</text>
+            <rect x="508" y="234" width="180" height="34" rx="6" class="d-box"/>
+            <text x="520" y="256" class="d-t">Faction colour · death</text>
+          </svg>
+        </div>
+        <figcaption>
+          The hybrid model. Simulation never touches a component; rendering never queries an
+          actor. The only traffic between them is a transform and a state change.
+        </figcaption>
+      </figure>
+
+      <h3>Simulation: entities, not objects</h3>
+      <p>
+        Soldiers are entities composed of fragments — transform, velocity, formation slot, combat
+        stats, target handle. Processors run over whole archetypes in bulk, so a movement pass
+        walks a contiguous array of transforms instead of dereferencing four thousand scattered
+        objects. This is the part of the design that is genuinely load-bearing: the win comes from
+        memory layout and batching, not from micro-optimising any single routine.
+      </p>
+
+      <h3>Presentation: a thin actor with a state machine</h3>
+      <p>
+        Each soldier's visual state — idle, run, charge, melee attack, death, wall climb — is a
+        plain C++ state object, pooled rather than allocated, entered and exited as the simulation
+        changes. Entering a state starts an animation, either looping or one-shot, and one-shot
+        animations route their completion back through a single callback so state transitions stay
+        in one place instead of being scattered across animation events.
+      </p>
+
+      <h3>Rendering: instancing plus vertex animation</h3>
+      <p>
+        Skeletal meshes are the obvious way to animate a soldier and the wrong way to animate four
+        thousand. The crowd renders as instanced static meshes with their animation baked into
+        textures, so the GPU plays animation without a per-soldier skeleton on the CPU.
+        Per-instance custom data channels carry what varies between soldiers: which animation is
+        playing, how far through the death sequence it is, which weapon it holds, and the faction
+        colour tinting it. Whole regiments end up costing a handful of draw calls.
+      </p>
+
+      <h3>Shipping it as a plugin</h3>
+      <p>
+        The battle layer lives in its own Unreal plugin, not in the game module. That was a
+        deliberate call early on: it forces the dependency to point one way, keeps the battle
+        testable without loading the campaign, and leaves the studio with reusable in-house
+        technology rather than a system welded to one title.
+      </p>
+
+      <h3>Decisions I would defend</h3>
+      <ul>
+        <li>
+          <strong>Hybrid, not pure ECS.</strong> A fully data-oriented presentation layer would
+          have been faster on paper and considerably slower to build, debug and hand to other
+          engineers. Keeping a thin actor per soldier preserved the parts of the engine —
+          animation tooling, debugging, designer-facing workflow — that the team actually needed,
+          at a cost that stays off the hot path.
+        </li>
+        <li>
+          <strong>Pooling over spawning.</strong> Battles create and destroy soldiers constantly.
+          Pooling the presentation side removed the allocation spikes, and taught me that pooling
+          buys performance in exchange for lifetime bugs: reused objects hold stale references,
+          and you pay for the win with disciplined re-initialisation.
+        </li>
+        <li>
+          <strong>Measured, not guessed.</strong> Unreal Insights drove the optimisation work
+          across the simulation, navigation and rendering paths. Every claim on this page came out
+          of a capture, including the ones that told me my first instinct was wrong.
+        </li>
+      </ul>
+
+      <h3>What I would do differently</h3>
+      <p>
+        The seam between simulation and presentation is the most expensive lesson in the project.
+        Two systems owning halves of the same conceptual object means every lifetime edge case —
+        pooling, level transitions, mid-battle streaming — has to be reasoned about twice. If I
+        built it again I would define that seam as an explicit, narrow contract from day one,
+        rather than letting it grow organically as each new requirement crossed it.
+      </p>
+    </section>
+
+    <!-- ============================================================ 02 -->
+    <section class="sys" id="ui">
+      <div class="kicker">02 — used across the whole project</div>
+      <h2>Data-driven UI framework</h2>
+
+      <!-- GIF SLOT — panels updating live, or a designer wiring one up:
+      <figure class="media">
+        <img src="../media/ui-binding.gif" alt="Strategy HUD panels updating from bound data fields">
+        <figcaption>Panels reacting to model changes with no gameplay code involved.</figcaption>
+      </figure>
+      -->
+
+      <h3>The problem</h3>
+      <p>
+        A strategy game is mostly interface, and the naive Unreal pattern is that gameplay code
+        finds a widget and pushes values into it. It works for one HUD and rots immediately
+        afterwards. Gameplay systems accumulate widget references they should never have owned; a
+        widget that is destroyed, pooled or simply not created yet becomes a crash or a silent
+        no-op; the same value gets pushed from four places with four slightly different formatting
+        rules; and every new panel is an engineering task because only an engineer can wire it.
+      </p>
+      <p>
+        On a strategy title that last point is the expensive one. If designers cannot build a
+        panel without a programmer, interface iteration runs at programmer speed, and the
+        interface is the game.
+      </p>
+
+      <h3>The design</h3>
+      <p>
+        I inverted the dependency. Gameplay systems write to <strong>shared data models</strong> —
+        plain objects holding named fields. Widgets <strong>subscribe</strong> to a field by name
+        and update themselves reactively when it changes. Gameplay never knows a widget exists; a
+        widget never reaches into gameplay. The binding layer between them is the only thing that
+        knows about both.
+      </p>
+
+      <figure class="figure">
+        <div class="frame">
+          <svg viewBox="0 0 720 320" role="img" aria-label="Diagram: gameplay systems write named fields on shared data models; a binding layer notifies subscribed widgets; gameplay and widgets never reference each other directly.">
+            <rect x="16" y="40" width="184" height="200" rx="8" class="d-box-a"/>
+            <text x="32" y="66" class="d-t">Gameplay systems</text>
+            <text x="32" y="84" class="d-s">write only</text>
+            <rect x="32" y="98" width="152" height="32" rx="6" class="d-box"/>
+            <text x="44" y="119" class="d-t">Economy</text>
+            <rect x="32" y="140" width="152" height="32" rx="6" class="d-box"/>
+            <text x="44" y="161" class="d-t">Battle state</text>
+            <rect x="32" y="182" width="152" height="32" rx="6" class="d-box"/>
+            <text x="44" y="203" class="d-t">Selection</text>
+
+            <path class="d-l-a" d="M200 140 H248"/>
+            <polygon class="d-arrow-a" points="256,140 244,135 244,145"/>
+            <text x="200" y="130" class="d-lbl">set(field, value)</text>
+
+            <rect x="256" y="40" width="200" height="200" rx="8" class="d-box-a"/>
+            <text x="272" y="66" class="d-t">Data model</text>
+            <text x="272" y="84" class="d-s">named fields + notify</text>
+            <rect x="272" y="98" width="168" height="32" rx="6" class="d-box"/>
+            <text x="284" y="119" class="d-s">"gold"        1240</text>
+            <rect x="272" y="140" width="168" height="32" rx="6" class="d-box"/>
+            <text x="284" y="161" class="d-s">"morale"      0.62</text>
+            <rect x="272" y="182" width="168" height="32" rx="6" class="d-box"/>
+            <text x="284" y="203" class="d-s">"unitName"    Spears</text>
+
+            <path class="d-l-a" d="M456 140 H504"/>
+            <polygon class="d-arrow-a" points="512,140 500,135 500,145"/>
+            <text x="452" y="130" class="d-lbl">on change →</text>
+
+            <rect x="512" y="40" width="192" height="200" rx="8" class="d-box-a"/>
+            <text x="528" y="66" class="d-t">Subscribed widgets</text>
+            <text x="528" y="84" class="d-s">type-dispatched binding</text>
+            <rect x="528" y="98" width="160" height="32" rx="6" class="d-box"/>
+            <text x="540" y="119" class="d-t">Text block</text>
+            <rect x="528" y="140" width="160" height="32" rx="6" class="d-box"/>
+            <text x="540" y="161" class="d-t">Progress bar</text>
+            <rect x="528" y="182" width="160" height="32" rx="6" class="d-box"/>
+            <text x="540" y="203" class="d-t">Any custom widget</text>
+
+            <path class="d-l" style="stroke-dasharray:5 5" d="M108 262 H340 M380 262 H612"/>
+            <path class="d-l" d="M352 254 L370 270 M370 254 L352 270"/>
+            <text x="300" y="292" class="d-lbl">no direct references, in either direction</text>
+          </svg>
+        </div>
+        <figcaption>
+          The dependency points inward from both sides. Adding a panel touches neither gameplay
+          code nor the framework.
+        </figcaption>
+      </figure>
+
+      <h3>Type dispatch, so any widget class can bind</h3>
+      <p>
+        A binding is not hard-coded per widget type. The layer dispatches on the type of the bound
+        field and the type of the target, so a float can drive a progress bar, a text block or a
+        custom widget nobody had written when the framework was built. New widget classes join the
+        system without editing the system.
+      </p>
+
+      <h3>Blueprint-exposed, so designers own the wiring</h3>
+      <p>
+        The full API is exposed to Blueprint. A designer creates a widget, names the field it
+        should follow, and it is live — no engineering ticket, no recompile, no programmer in the
+        loop. This was the point of the whole exercise, and the measure of whether it worked:
+        interface work stopped queueing behind engineers.
+      </p>
+
+      <h3>Subscription, so lifetime stops being a crash source</h3>
+      <p>
+        Because widgets subscribe and unsubscribe rather than being handed out as pointers, a
+        widget that does not exist yet, or has already been torn down, is simply not in the notify
+        list. An entire category of null-reference bugs stops being possible rather than being
+        handled.
+      </p>
+
+      <h3>Decisions I would defend</h3>
+      <ul>
+        <li>
+          <strong>Fields by name, not by compile-time binding.</strong> The tradeoff is real: a
+          typo in a field name is a runtime problem, not a compiler error. I took it because the
+          alternative puts every UI change back in C++, which was the exact cost the framework
+          existed to remove.
+        </li>
+        <li>
+          <strong>Reactive push, not per-frame polling.</strong> Panels update when a value
+          changes, not every tick. On a strategy HUD with dozens of live readouts, that difference
+          is measurable and it scales with how elaborate the interface gets.
+        </li>
+        <li>
+          <strong>Built as framework, not as feature.</strong> It cost more up front than
+          hard-wiring the first three panels would have. It paid that back by the time the project
+          had thirty, and again every time a designer built one without me.
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============================================================ 03 -->
+    <section class="sys" id="navigation">
+      <div class="kicker">03 — part of the battle plugin</div>
+      <h2>Grid navigation &amp; formations</h2>
+
+      <!-- GIF SLOT — a formation pathing around terrain, or the grid debug draw:
+      <figure class="media">
+        <img src="../media/formation-pathing.gif" alt="A formation pathing around an obstacle and reforming">
+        <figcaption>One path, one formation, four hundred men holding their slots.</figcaption>
+      </figure>
+      -->
+
+      <h3>The problem</h3>
+      <p>
+        Unreal's built-in navigation is built for a modest number of agents that each want their
+        own path, recomputed when the world changes. Point it at four thousand soldiers and the
+        cost is not subtle. Worse, the result is wrong even when it is fast: individually pathed
+        soldiers arrive as a stream of separate men trickling around obstacles, which is exactly
+        the thing a line-battle game must not look like.
+      </p>
+
+      <h3>The design</h3>
+      <p>
+        Navigation runs over a uniform grid with A* pathing, and the unit of navigation is the
+        <strong>formation</strong>, not the soldier. A formation resolves one path to its
+        destination and carries a set of slots; each soldier's job is to occupy its assigned slot
+        as the formation advances along that path. Individual movement becomes local — hold your
+        place, avoid the man in front — rather than a global search per person.
+      </p>
+      <p>
+        That decision does three things at once. It collapses thousands of path queries into a
+        handful. It makes cohesion the default instead of something to be recovered afterwards
+        with steering hacks. And it gives the simulation a natural place to express orders: a
+        formation moving, wheeling, charging, rather than four hundred independent agents that
+        happen to be adjacent.
+      </p>
+
+      <figure class="figure">
+        <div class="frame">
+          <svg viewBox="0 0 720 300" role="img" aria-label="Diagram: an A star path routed around blocked cells on a uniform grid on the left; on the right, a formation's slots translated to a destination.">
+            <text x="20" y="28" class="d-s">one A* query per formation, over a uniform grid</text>
+
+            <rect x="20" y="44" width="312" height="208" rx="4" class="d-box"/>
+            <path class="d-l" style="opacity:.35" d="M46 44 V252 M72 44 V252 M98 44 V252 M124 44 V252 M150 44 V252 M176 44 V252 M202 44 V252 M228 44 V252 M254 44 V252 M280 44 V252 M306 44 V252 M20 70 H332 M20 96 H332 M20 122 H332 M20 148 H332 M20 174 H332 M20 200 H332 M20 226 H332"/>
+
+            <g class="d-box" style="fill:var(--text-mute);opacity:.45;stroke:none">
+              <rect x="98" y="96" width="26" height="26"/>
+              <rect x="98" y="122" width="26" height="26"/>
+              <rect x="98" y="148" width="26" height="26"/>
+              <rect x="124" y="148" width="26" height="26"/>
+              <rect x="202" y="70" width="26" height="26"/>
+              <rect x="202" y="96" width="26" height="26"/>
+              <rect x="228" y="96" width="26" height="26"/>
+              <rect x="176" y="200" width="26" height="26"/>
+              <rect x="202" y="200" width="26" height="26"/>
+            </g>
+
+            <polyline class="d-l-a" points="59,213 85,187 85,161 85,135 85,109 85,83 111,57 137,57 163,83 189,109 189,135 215,135 241,135 267,109 293,83"/>
+            <circle cx="59" cy="213" r="5" class="d-l-a" style="fill:var(--accent)"/>
+            <circle cx="293" cy="83" r="5" class="d-l-a" style="fill:none"/>
+            <text x="20" y="272" class="d-lbl">blocked cells shaded · path in accent</text>
+
+            <path class="d-l-a" d="M348 148 H388"/>
+            <polygon class="d-arrow-a" points="396,148 384,143 384,153"/>
+
+            <text x="404" y="28" class="d-s">soldiers hold slots; the formation holds the path</text>
+            <rect x="404" y="60" width="132" height="88" rx="6" class="d-box-a"/>
+            <g style="fill:var(--accent)">
+              <circle cx="424" cy="82" r="4"/><circle cx="450" cy="82" r="4"/><circle cx="476" cy="82" r="4"/><circle cx="502" cy="82" r="4"/>
+              <circle cx="424" cy="104" r="4"/><circle cx="450" cy="104" r="4"/><circle cx="476" cy="104" r="4"/><circle cx="502" cy="104" r="4"/>
+              <circle cx="424" cy="126" r="4"/><circle cx="450" cy="126" r="4"/><circle cx="476" cy="126" r="4"/><circle cx="502" cy="126" r="4"/>
+            </g>
+            <text x="404" y="168" class="d-lbl">current</text>
+
+            <path class="d-l-a" d="M548 104 H588"/>
+            <polygon class="d-arrow-a" points="596,104 584,99 584,109"/>
+
+            <rect x="572" y="150" width="132" height="88" rx="6" class="d-box" style="stroke-dasharray:5 5"/>
+            <g style="fill:none;stroke:var(--text-mute)">
+              <circle cx="592" cy="172" r="4"/><circle cx="618" cy="172" r="4"/><circle cx="644" cy="172" r="4"/><circle cx="670" cy="172" r="4"/>
+              <circle cx="592" cy="194" r="4"/><circle cx="618" cy="194" r="4"/><circle cx="644" cy="194" r="4"/><circle cx="670" cy="194" r="4"/>
+              <circle cx="592" cy="216" r="4"/><circle cx="618" cy="216" r="4"/><circle cx="644" cy="216" r="4"/><circle cx="670" cy="216" r="4"/>
+            </g>
+            <text x="572" y="258" class="d-lbl">target slots</text>
+          </svg>
+        </div>
+        <figcaption>
+          The formation resolves one path; each soldier's problem shrinks to reaching its own slot.
+        </figcaption>
+      </figure>
+
+      <h3>Why a grid</h3>
+      <p>
+        A uniform grid is not the most sophisticated representation available, and that is most of
+        the argument for it. It is trivially queryable, cheap to update when the battlefield
+        changes, and — crucially for a formation-based game — it makes "is there room for a block
+        of men here" a simple question rather than a geometric one. Formations occupy rectangles of
+        cells; placement, blocking and destination validity all fall out of the same structure the
+        pathing already uses.
+      </p>
+      <p>
+        The cost is granularity: a grid approximates the world, and paths need smoothing to avoid
+        looking like they were drawn on graph paper. That is a solvable presentation problem. An
+        elegant representation that cannot answer formation-shaped questions is not.
+      </p>
+
+      <h3>Working inside the frame budget</h3>
+      <p>
+        Navigation shares a frame with everything else, so it was profiled alongside the simulation
+        and rendering paths in Unreal Insights rather than in isolation. The optimisation that
+        mattered was structural — moving the query count down by an order of magnitude by pathing
+        formations instead of individuals — not micro-tuning the search itself. That is the general
+        lesson I took from this system: when a cost scales with agent count, the fix is almost
+        never inside the per-agent code.
+      </p>
+
+      <!--
+        MILAN — verify this section before publishing:
+          · Is local avoidance handled in a Mass processor, or on the presentation side?
+          · Do path requests get budgeted / spread across frames? If so, say how.
+          · Grid cell size, and how the grid is generated from the terrain.
+          · Any concrete numbers: path query time, queries per second in a big battle.
+        Anything you can't verify, cut. A thin honest section beats a detailed guess.
+      -->
+    </section>
+
+    <!-- ============================================================ 04 -->
+    <section class="sys" id="settlement">
+      <div class="kicker">04 — built, then cut in a design pivot</div>
+      <h2>Settlement designer &amp; economy</h2>
+
+      <!-- GIF SLOT:
+      <figure class="media">
+        <img src="../media/settlement-placement.gif" alt="Placing buildings and dragging a wall segment inside a stronghold">
+        <figcaption>Building placement and modular wall construction.</figcaption>
+      </figure>
+      -->
+
+      <p>
+        Before Greenleaf narrowed to battles, it had a settlement layer: place buildings inside a
+        stronghold, raise walls around it, and run a production-chain economy underneath. I built
+        it. Then the design pivoted and it was cut. It is on this page deliberately — a system you
+        shipped and lost teaches more than one that survived by luck.
+      </p>
+
+      <h3>What it did</h3>
+      <ul>
+        <li>
+          <strong>Interior building placement.</strong> Stronghold-style: the player places
+          structures inside the settlement's footprint, with validity, footprint and adjacency
+          resolved as they drag rather than rejected on commit.
+        </li>
+        <li>
+          <strong>Modular wall construction.</strong> Walls built from parts rather than placed as
+          prefabs — segments, corners and gates that resolve their own geometry from the path the
+          player draws, so an arbitrary enclosure ends up looking authored.
+        </li>
+        <li>
+          <strong>A production-chain economy.</strong> Anno-style: raw goods feed intermediate
+          goods feed finished goods, each stage a building with inputs, outputs and throughput.
+          The interesting part is not any single building; it is that a chain has a bottleneck,
+          and the player's job is to find it.
+        </li>
+      </ul>
+
+      <figure class="figure">
+        <div class="frame">
+          <svg viewBox="0 0 720 200" role="img" aria-label="Diagram: raw goods feed intermediate production which feeds finished goods, with throughput limited by the slowest stage.">
+            <rect x="20" y="46" width="160" height="72" rx="8" class="d-box-a"/>
+            <text x="36" y="76" class="d-t">Raw</text>
+            <text x="36" y="98" class="d-s">timber, ore, grain</text>
+
+            <path class="d-l-a" d="M180 82 H222"/><polygon class="d-arrow-a" points="230,82 218,77 218,87"/>
+
+            <rect x="230" y="46" width="180" height="72" rx="8" class="d-box-a"/>
+            <text x="246" y="76" class="d-t">Intermediate</text>
+            <text x="246" y="98" class="d-s">planks, ingots, flour</text>
+
+            <path class="d-l-a" d="M410 82 H452"/><polygon class="d-arrow-a" points="460,82 448,77 448,87"/>
+
+            <rect x="460" y="46" width="180" height="72" rx="8" class="d-box-a"/>
+            <text x="476" y="76" class="d-t">Finished</text>
+            <text x="476" y="98" class="d-s">weapons, bread</text>
+
+            <path class="d-l" style="stroke-dasharray:5 5" d="M320 118 V150 H120 V118"/>
+            <text x="150" y="172" class="d-lbl">throughput of the whole chain = throughput of its slowest stage</text>
+          </svg>
+        </div>
+        <figcaption>
+          The economy in one line. Everything the player does to a settlement is an attempt to
+          move the bottleneck.
+        </figcaption>
+      </figure>
+
+      <h3>The engineering problem worth talking about</h3>
+      <p>
+        Placement and walls look like art problems and are actually validity problems. Every frame
+        the player is dragging, the system has to answer: does this fit, does it overlap, does it
+        connect, is the resulting enclosure sealed, and what does it cost — fast enough to render
+        the answer as feedback rather than as an error message. That pushed the design toward
+        resolving everything against a grid the settlement already maintained, so questions about
+        space became lookups rather than geometry.
+      </p>
+      <p>
+        The economy has the opposite shape. It is cheap per tick and hard to reason about, because
+        the behaviour that matters is emergent across the whole graph. Debugging it meant building
+        visibility into the chain — where goods are backing up, which stage is starved — before any
+        of the balancing work was possible.
+      </p>
+
+      <h3>Why it was cut, and what I took from it</h3>
+      <p>
+        The project narrowed to focus on the battle layer, which was the stronger pillar and the
+        thing that made Greenleaf distinctive. That was the correct call, and the settlement layer
+        was the right thing to lose. I would rather work somewhere that cuts a finished system for
+        a good reason than somewhere that ships everything it starts.
+      </p>
+      <p>
+        What I took from it is mostly about sequencing. A production economy is only interesting
+        once there is a game around it applying pressure; building it in depth before that pressure
+        existed meant tuning against assumptions rather than against play. Now I front-load the
+        question of what evidence would tell us this system is working, and if the answer is "we
+        won't know for six months", that is worth saying out loud before writing the system, not
+        after.
+      </p>
+
+      <!--
+        MILAN — verify this section before publishing:
+          · Was placement/walls grid-resolved, or free placement with collision tests?
+          · Roughly how many building types and chain stages existed?
+          · Was the economy simulated per-tick, or resolved on a longer campaign turn?
+          · Check "cut in a design pivot" is how the CEO would describe it too — interviewers
+            ask about it, and it should sound the same from both sides.
+        Screenshots would carry this section. Even editor screenshots.
+      -->
+    </section>
+
+  </div>
+</article>
+
+<div class="wrap pagenav">
+  <a href="../index.html#projects">← All projects</a>
+  <a class="next" href="simgym.html">SimGym →</a>
+</div>
+
+<script>
+  document.getElementById("themebtn").addEventListener("click", function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+</script>
+
+</body>
+</html>

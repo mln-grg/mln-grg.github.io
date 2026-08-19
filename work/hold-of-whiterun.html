@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hold of Whiterun — Milan George</title>
+<meta name="description" content="A small social simulation: 42 NPCs with daily schedules, opinions of each other, and grudges that persist. Built in TypeScript, source public.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hold of Whiterun — Milan George">
+<meta property="og:description" content="42 NPCs with schedules, opinions and grudges — how much social behaviour falls out of very simple rules.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../style.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var sysLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+    document.documentElement.setAttribute("data-theme", saved || (sysLight ? "light" : "dark"));
+  })();
+</script>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="../index.html">Milan George</a>
+    <nav>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#experience" class="hide-sm">Experience</a>
+      <a href="../index.html#contact">Contact</a>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap crumb"><a href="../index.html#projects">← All projects</a></div>
+
+<div class="phead">
+  <div class="wrap">
+    <h1>Hold of Whiterun</h1>
+    <p class="deck">
+      A town of 42 people who each have somewhere to be, an opinion of everyone else, and a memory
+      for slights. A personal project, built to find out how much social texture you get from rules
+      simple enough to hold in your head — and, unlike my day job, one whose source anybody can read.
+    </p>
+    <div class="facts">
+      <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
+      <div class="fact"><div class="k">Built with</div><div class="v">TypeScript</div></div>
+      <div class="fact"><div class="k">Population</div><div class="v">42 simulated NPCs</div></div>
+      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/ProceduralNarrative" rel="noopener">On GitHub</a></div></div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="wrap">
+
+    <!-- GIF SLOT — the town running, or the hand-drawn map with NPCs moving on it:
+    <figure class="media">
+      <img src="../media/whiterun-day.gif" alt="A simulated day passing in Hold of Whiterun">
+      <figcaption>One simulated day. Everyone has somewhere to be.</figcaption>
+    </figure>
+    -->
+
+    <h2>The question behind it</h2>
+    <p>
+      Most game towns are set dressing: villagers walk a loop and say one of three lines. The
+      interesting alternative is a town where behaviour is produced rather than authored — where
+      the blacksmith avoids the miller for a reason that happened, in the simulation, on a day you
+      could point to.
+    </p>
+    <p>
+      I wanted to know how cheap that is. Not "how would a studio build Dwarf Fortress", but: what
+      is the smallest set of rules that makes a town feel inhabited rather than staged?
+    </p>
+
+    <h2>How it works</h2>
+    <p>
+      Every NPC carries a <strong>daily schedule</strong>, a set of <strong>opinions</strong> —
+      one number per other resident — and a list of <strong>grudges</strong>, which are opinions
+      with a cause attached and a much longer half-life. The simulation advances in ticks. Each
+      tick, an NPC does whatever its schedule says it should be doing, other NPCs present observe
+      it, and observation nudges opinion. Once opinion crosses a threshold, it starts to override
+      the schedule: people go out of their way to be near someone, or out of their way not to be.
+    </p>
+
+    <figure class="figure">
+      <div class="frame">
+        <svg viewBox="0 0 720 260" role="img" aria-label="Diagram: schedule chooses an action, the action is witnessed by nearby NPCs, witnessing updates opinions and grudges, and those feed back into action selection.">
+          <rect x="20" y="50" width="150" height="76" rx="8" class="d-box-a"/>
+          <text x="36" y="80" class="d-t">Schedule</text>
+          <text x="36" y="102" class="d-s">where to be, when</text>
+
+          <path class="d-l-a" d="M170 88 H190"/><polygon class="d-arrow-a" points="198,88 186,83 186,93"/>
+
+          <rect x="198" y="50" width="150" height="76" rx="8" class="d-box-a"/>
+          <text x="214" y="80" class="d-t">Action</text>
+          <text x="214" y="102" class="d-s">work, drink, argue</text>
+
+          <path class="d-l-a" d="M348 88 H368"/><polygon class="d-arrow-a" points="376,88 364,83 364,93"/>
+
+          <rect x="376" y="50" width="150" height="76" rx="8" class="d-box-a"/>
+          <text x="392" y="80" class="d-t">Witnessed</text>
+          <text x="392" y="102" class="d-s">by whoever is near</text>
+
+          <path class="d-l-a" d="M526 88 H546"/><polygon class="d-arrow-a" points="554,88 542,83 542,93"/>
+
+          <rect x="554" y="50" width="150" height="76" rx="8" class="d-box-a"/>
+          <text x="570" y="80" class="d-t">Opinion</text>
+          <text x="570" y="102" class="d-s">and grudges, if bad</text>
+
+          <path class="d-l" d="M629 126 V186 H273 V126"/>
+          <polygon class="d-arrow" points="273,118 268,130 278,130"/>
+          <text x="360" y="206" class="d-lbl">strong enough opinions override the schedule</text>
+        </svg>
+      </div>
+      <figcaption>
+        One loop, four rules. Everything that looks like a story is this running for a few
+        simulated weeks.
+      </figcaption>
+    </figure>
+
+    <h2>What it demonstrates</h2>
+    <ul>
+      <li>
+        <strong>Emergence is a data problem.</strong> The behaviour people find interesting comes
+        from what state each agent keeps and who is allowed to observe it — not from the
+        sophistication of any single decision routine.
+      </li>
+      <li>
+        <strong>Persistence is what makes it read as narrative.</strong> An opinion that resets is
+        noise. A grudge that survives a week of simulated time is a character trait, and it costs
+        one extra field to store.
+      </li>
+      <li>
+        <strong>Small, complete, and readable.</strong> The whole thing is public. It exists partly
+        because my strongest professional work is under an NDA, and an interviewer who wants to see
+        how I actually write code should have something to open.
+      </li>
+    </ul>
+
+    <p style="margin-top:2rem">
+      <a class="btn" href="https://github.com/mln-grg/ProceduralNarrative" rel="noopener">Read the source on GitHub →</a>
+    </p>
+
+    <!--
+      MILAN — verify before publishing, and add whatever is genuinely there:
+        · How opinions actually change (fixed deltas? weighted by relationship? decay?)
+        · What counts as a grudge and how long it lasts
+        · Whether the map is authored or generated, and what the hand-drawn map is doing
+        · A screenshot of the town — this page badly wants one image
+      Also worth doing: deploy it to GitHub Pages so this page can link a playable demo.
+      A recruiter who can click and watch it run is worth more than three paragraphs.
+    -->
+
+  </div>
+</article>
+
+<div class="wrap pagenav">
+  <a href="benji-2d.html">← Benji-2D</a>
+  <a class="next" href="knight.html">Knight →</a>
+</div>
+
+<script>
+  document.getElementById("themebtn").addEventListener("click", function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+</script>
+
+</body>
+</html>

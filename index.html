@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Milan George — Gameplay &amp; Systems Programmer</title>
+<meta name="description" content="Gameplay and systems programmer. Unreal Engine 5, C++. Large-scale unit simulation on Mass Entity, data-driven UI frameworks, and VR training simulators.">
+<meta name="author" content="Milan George">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Milan George — Gameplay &amp; Systems Programmer">
+<meta property="og:description" content="Unreal Engine 5 and C++. Leads the battle layer of a Total War style RTS: 4,000 individually simulated soldiers on Mass Entity.">
+<meta property="og:site_name" content="Milan George">
+<meta name="twitter:card" content="summary">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<script>
+  // Applied before paint so there is no flash of the wrong theme.
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var sysLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+    document.documentElement.setAttribute("data-theme", saved || (sysLight ? "light" : "dark"));
+  })();
+</script>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="index.html">Milan George</a>
+    <nav>
+      <a href="#projects">Projects</a>
+      <a href="#experience" class="hide-sm">Experience</a>
+      <a href="#contact">Contact</a>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Bangalore, India</div>
+    <h1>Milan George</h1>
+    <div class="role">Gameplay &amp; Systems Programmer — Unreal Engine 5, C++</div>
+    <p class="lede">
+      Six years in game development, four of them across real-time strategy and VR training
+      simulation. I currently lead the battle and overworld layers of a Total War style strategy
+      title, where 4,000 individually simulated soldiers run on Unreal's Mass Entity framework.
+      I like the problems where the architecture <em>is</em> the feature: simulation at scale,
+      systems other people build on, and the profiler tells you whether you were right.
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="#projects">See the projects</a>
+      <a class="btn" href="Milan_George_Gameplay_Programmer.pdf">Download CV (PDF)</a>
+      <a class="btn" href="https://github.com/mln-grg" rel="noopener">GitHub</a>
+      <a class="btn" href="https://www.linkedin.com/in/milan-george-0a41a4181" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</div>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Projects</h2>
+      <div class="note">Open any project for the full write-up</div>
+    </div>
+
+    <div class="group">
+      <div class="group-head">
+        <h3>Work projects</h3>
+        <div class="ctx">Shipped in a studio, with a team</div>
+      </div>
+
+    <div class="grid">
+
+      <a class="pcard" href="work/greenleaf.html">
+        <div class="thumb">
+          <svg viewBox="0 0 400 225" aria-hidden="true">
+            <rect class="tb-bg" width="400" height="225"/>
+            <g class="tb-a">
+              <circle cx="52" cy="72" r="4"/><circle cx="76" cy="72" r="4"/><circle cx="100" cy="72" r="4"/><circle cx="124" cy="72" r="4"/><circle cx="148" cy="72" r="4"/>
+              <circle cx="52" cy="98" r="4"/><circle cx="76" cy="98" r="4"/><circle cx="100" cy="98" r="4"/><circle cx="124" cy="98" r="4"/><circle cx="148" cy="98" r="4"/>
+              <circle cx="52" cy="124" r="4"/><circle cx="76" cy="124" r="4"/><circle cx="100" cy="124" r="4"/><circle cx="124" cy="124" r="4"/><circle cx="148" cy="124" r="4"/>
+              <circle cx="52" cy="150" r="4"/><circle cx="76" cy="150" r="4"/><circle cx="100" cy="150" r="4"/><circle cx="124" cy="150" r="4"/><circle cx="148" cy="150" r="4"/>
+            </g>
+            <g class="tb-d">
+              <circle cx="252" cy="72" r="4"/><circle cx="276" cy="72" r="4"/><circle cx="300" cy="72" r="4"/><circle cx="324" cy="72" r="4"/><circle cx="348" cy="72" r="4"/>
+              <circle cx="252" cy="98" r="4"/><circle cx="276" cy="98" r="4"/><circle cx="300" cy="98" r="4"/><circle cx="324" cy="98" r="4"/><circle cx="348" cy="98" r="4"/>
+              <circle cx="252" cy="124" r="4"/><circle cx="276" cy="124" r="4"/><circle cx="300" cy="124" r="4"/><circle cx="324" cy="124" r="4"/><circle cx="348" cy="124" r="4"/>
+              <circle cx="252" cy="150" r="4"/><circle cx="276" cy="150" r="4"/><circle cx="300" cy="150" r="4"/><circle cx="324" cy="150" r="4"/><circle cx="348" cy="150" r="4"/>
+            </g>
+            <path class="tb-s" d="M176 60 L200 111 L176 162"/>
+            <path class="tb-sm" d="M224 60 L200 111 L224 162"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Project Greenleaf</h3>
+          <div class="sub">NYTWOLF GAMES · UE5 · 2024–2026</div>
+          <p>
+            A Total War style strategy game. I lead the battle and overworld layers: 4,000
+            individually simulated soldiers on Mass Entity, an MVVM UI framework, A* formation
+            navigation, and a settlement economy.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" href="work/simgym.html">
+        <div class="thumb">
+          <svg viewBox="0 0 400 225" aria-hidden="true">
+            <rect class="tb-bg" width="400" height="225"/>
+            <path class="tb-line" d="M60 58 H220 M60 90 H220 M60 122 H220 M60 154 H220 M60 58 V154 M92 58 V154 M124 58 V154 M156 58 V154 M188 58 V154 M220 58 V154"/>
+            <path class="tb-sm" d="M120 78 H280 M120 110 H280 M120 142 H280 M120 174 H280 M120 78 V174 M160 78 V174 M200 78 V174 M240 78 V174 M280 78 V174"/>
+            <rect class="tb-a" x="160" y="110" width="40" height="32"/>
+            <rect class="tb-am" x="200" y="78" width="40" height="32"/>
+            <rect class="tb-am" x="120" y="142" width="40" height="32"/>
+            <circle class="tb-a" cx="300" cy="126" r="7"/>
+            <path class="tb-s" d="M284 152 H316"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>SimGym</h3>
+          <div class="sub">i3 SIMULATIONS · UNREAL · PC VR</div>
+          <p>
+            A PC VR training simulator. I built the scenario-creator mode and its multigrid
+            authoring system, so instructors write their own simulations instead of filing a
+            request with engineering.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" href="work/ent-surgery-vr.html">
+        <div class="thumb">
+          <svg viewBox="0 0 400 225" aria-hidden="true">
+            <rect class="tb-bg" width="400" height="225"/>
+            <rect class="tb-line" x="48" y="52" width="304" height="80" rx="6"/>
+            <circle class="tb-a" cx="74" cy="78" r="7"/>
+            <rect class="tb-d" x="92" y="73" width="60" height="9" rx="4"/>
+            <path class="tb-sm" d="M64 106 H336"/>
+            <path class="tb-s" d="M64 106 H228"/>
+            <circle class="tb-a" cx="228" cy="106" r="6"/>
+            <g class="tb-d">
+              <rect x="48" y="150" width="88" height="10" rx="5"/>
+              <rect x="48" y="170" width="140" height="10" rx="5"/>
+            </g>
+            <g class="tb-am">
+              <rect x="256" y="146" width="18" height="34"/>
+              <rect x="282" y="158" width="18" height="22"/>
+              <rect x="308" y="138" width="18" height="42"/>
+              <rect x="334" y="164" width="18" height="16"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>ENT Surgery VR</h3>
+          <div class="sub">i3 SIMULATIONS · UNITY · VR</div>
+          <p>
+            A surgical training simulator. I built the ffmpeg session recorder with multi-session
+            management, plus the analytics and instructor grading layer that turned practice into
+            assessment.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" href="work/resusvr.html">
+        <div class="thumb">
+          <svg viewBox="0 0 400 225" aria-hidden="true">
+            <rect class="tb-bg" width="400" height="225"/>
+            <path class="tb-s" d="M40 112 H108 L120 82 L138 148 L156 96 L168 112 H208"/>
+            <g class="tb-line">
+              <rect x="228" y="56" width="130" height="30" rx="6"/>
+              <rect x="228" y="98" width="130" height="30" rx="6"/>
+              <rect x="228" y="140" width="130" height="30" rx="6"/>
+            </g>
+            <rect class="tb-am" x="240" y="66" width="62" height="9" rx="4"/>
+            <rect class="tb-a" x="240" y="108" width="90" height="9" rx="4"/>
+            <rect class="tb-am" x="240" y="150" width="44" height="9" rx="4"/>
+            <path class="tb-dl" d="M208 112 H228 M214 100 L228 71 M214 124 L228 155"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>ResusVR</h3>
+          <div class="sub">i3 SIMULATIONS · UNITY · VR</div>
+          <p>
+            A resuscitation training simulator. Medical scenarios across varied situations and
+            patient age groups, and the localisation pipeline automation that cut turnaround and
+            cost on every release after it.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+    </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head">
+        <h3>Personal projects</h3>
+        <div class="ctx">Built alone, source public on GitHub</div>
+      </div>
+
+    <div class="grid">
+
+      <a class="pcard" href="work/benji-2d.html">
+        <div class="thumb">
+          <svg viewBox="0 0 400 225" aria-hidden="true">
+            <rect class="tb-bg" width="400" height="225"/>
+            <g class="tb-line">
+              <rect x="48" y="52" width="304" height="34" rx="4"/>
+              <rect x="48" y="96" width="304" height="34" rx="4"/>
+              <rect x="48" y="140" width="304" height="34" rx="4"/>
+            </g>
+            <g class="tb-a">
+              <rect x="56" y="60" width="26" height="18" rx="3"/><rect x="88" y="60" width="26" height="18" rx="3"/>
+              <rect x="120" y="60" width="26" height="18" rx="3"/><rect x="152" y="60" width="26" height="18" rx="3"/>
+              <rect x="184" y="60" width="26" height="18" rx="3"/>
+            </g>
+            <g class="tb-am">
+              <rect x="56" y="104" width="26" height="18" rx="3"/><rect x="88" y="104" width="26" height="18" rx="3"/>
+              <rect x="120" y="104" width="26" height="18" rx="3"/>
+              <rect x="56" y="148" width="26" height="18" rx="3"/><rect x="88" y="148" width="26" height="18" rx="3"/>
+              <rect x="120" y="148" width="26" height="18" rx="3"/><rect x="152" y="148" width="26" height="18" rx="3"/>
+            </g>
+            <text x="300" y="74" class="tb-d" font-family="monospace" font-size="13">pool 0</text>
+            <text x="300" y="118" class="tb-d" font-family="monospace" font-size="13">pool 1</text>
+            <text x="300" y="162" class="tb-d" font-family="monospace" font-size="13">pool 2</text>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Benji-2D</h3>
+          <div class="sub">PERSONAL · C++ · SDL2 · 2022</div>
+          <p>
+            A 2D engine built from nothing: signature-based ECS with packed component pools, a
+            frame-rate-independent loop, a type-indexed event bus and an ImGui debug layer.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" href="work/hold-of-whiterun.html">
+        <div class="thumb">
+          <svg viewBox="0 0 400 225" aria-hidden="true">
+            <rect class="tb-bg" width="400" height="225"/>
+            <path class="tb-sm" d="M120 70 L200 112 M200 112 L296 66 M120 70 L104 158 M104 158 L200 112 M200 112 L282 160 M296 66 L282 160 M104 158 L282 160"/>
+            <path class="tb-dl" style="stroke-dasharray:4 4" d="M120 70 L296 66"/>
+            <circle class="tb-a" cx="200" cy="112" r="12"/>
+            <circle class="tb-a" cx="120" cy="70" r="8"/>
+            <circle class="tb-a" cx="296" cy="66" r="8"/>
+            <circle class="tb-a" cx="104" cy="158" r="8"/>
+            <circle class="tb-a" cx="282" cy="160" r="8"/>
+            <circle class="tb-am" cx="58" cy="104" r="5"/>
+            <circle class="tb-am" cx="344" cy="112" r="5"/>
+            <circle class="tb-am" cx="196" cy="190" r="5"/>
+            <path class="tb-sm" d="M58 104 L104 158 M344 112 L296 66 M196 190 L282 160"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Hold of Whiterun</h3>
+          <div class="sub">PERSONAL · TYPESCRIPT · 2026</div>
+          <p>
+            42 NPCs with daily schedules, opinions of each other, and grudges that persist — a
+            sandbox for how much social behaviour falls out of very simple rules.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" href="work/knight.html">
+        <div class="thumb">
+          <svg viewBox="0 0 400 225" aria-hidden="true">
+            <rect class="tb-bg" width="400" height="225"/>
+            <circle class="tb-line" cx="200" cy="112" r="74"/>
+            <circle class="tb-a" cx="200" cy="112" r="14"/>
+            <g class="tb-am">
+              <circle cx="200" cy="38" r="11"/><circle cx="252" cy="60" r="11"/>
+              <circle cx="274" cy="112" r="11"/><circle cx="252" cy="164" r="11"/>
+              <circle cx="200" cy="186" r="11"/><circle cx="148" cy="164" r="11"/>
+              <circle cx="126" cy="112" r="11"/><circle cx="148" cy="60" r="11"/>
+            </g>
+            <path class="tb-sm" d="M200 98 V49 M212 104 L242 70 M214 112 H263 M212 122 L242 154 M200 126 V175 M188 122 L158 154 M186 112 H137 M188 104 L158 70"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Knight</h3>
+          <div class="sub">PERSONAL · UE5 · GAMEPLAY ABILITY SYSTEM</div>
+          <p>
+            An action RPG built on GAS — chosen deliberately to learn Unreal's ability, attribute
+            and effect model properly rather than reimplementing combat by hand for the fourth
+            time.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" href="work/blacksmith.html">
+        <div class="thumb">
+          <svg viewBox="0 0 400 225" aria-hidden="true">
+            <rect class="tb-bg" width="400" height="225"/>
+            <path class="tb-a" d="M120 128 h160 l-14 26 h-132 z"/>
+            <rect class="tb-a" x="168" y="154" width="64" height="14"/>
+            <path class="tb-a" d="M112 112 h132 a16 16 0 0 1 0 16 h-132 z"/>
+            <path class="tb-s" d="M236 76 l44 -22 l10 20 l-44 22 z"/>
+            <g class="tb-am">
+              <circle cx="150" cy="94" r="4"/><circle cx="176" cy="80" r="3"/>
+              <circle cx="196" cy="98" r="5"/><circle cx="214" cy="76" r="3"/>
+              <circle cx="132" cy="80" r="3"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Blacksmith</h3>
+          <div class="sub">PERSONAL · TYPESCRIPT · 2026</div>
+          <p>
+            A Jacksmith-style forge game where every sprite is drawn in code and every sound is
+            synthesised at runtime. Zero asset files, on purpose.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" href="work/mom-attacks.html">
+        <div class="thumb">
+          <svg viewBox="0 0 400 225" aria-hidden="true">
+            <rect class="tb-bg" width="400" height="225"/>
+            <g class="tb-d">
+              <rect x="40" y="168" width="110" height="14" rx="3"/>
+              <rect x="176" y="136" width="76" height="14" rx="3"/>
+              <rect x="272" y="104" width="88" height="14" rx="3"/>
+            </g>
+            <circle class="tb-a" cx="76" cy="152" r="10"/>
+            <path class="tb-sm" d="M92 146 C 128 108, 160 108, 196 128"/>
+            <g class="tb-am">
+              <rect x="296" y="56" width="40" height="48" rx="6"/>
+              <circle cx="306" cy="76" r="4"/><circle cx="326" cy="76" r="4"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Mom Attacks</h3>
+          <div class="sub">PERSONAL · UNITY · 2D PLATFORMER</div>
+          <p>
+            A 2D platformer with boss encounters — built to practise state-driven combat and
+            encounter pacing on something small enough to finish.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+    </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head"><h2>Experience</h2></div>
+
+    <div class="job">
+      <div class="top">
+        <h3>Project Lead — <span class="co">Nytwolf Games</span></h3>
+        <div class="when">Apr 2024 — Present</div>
+      </div>
+      <p>
+        Lead the battle and overworld layers of Project Greenleaf (UE5, PC): architecture,
+        systems design, implementation, task breakdown and code review for a team of five.
+        Shipped the battle system as a standalone, independently testable Unreal plugin,
+        retained as reusable in-house technology. Profiled and optimised the simulation,
+        navigation and rendering paths with Unreal Insights.
+      </p>
+    </div>
+
+    <div class="job">
+      <div class="top">
+        <h3>VR Gameplay Programmer — <span class="co">i3 Simulations</span></h3>
+        <div class="when">Aug 2022 — Apr 2024</div>
+      </div>
+      <p>
+        Built training simulators across Unreal and Unity: an authoring tool that put scenario
+        creation in the hands of instructors, a session recorder and grading system that turned
+        practice into assessment, and pipeline automation that cut localisation cost on every
+        release after it.
+      </p>
+    </div>
+
+    <div class="job">
+      <div class="top">
+        <h3>Technical Interviewer &amp; Code Reviewer — <span class="co">Outscal</span></h3>
+        <div class="when">Oct 2022 — Aug 2023</div>
+      </div>
+      <p>
+        Part-time, concurrent. Ran technical interviews and code reviews for game development
+        candidates, assessing engineering skill and holding code quality standards.
+      </p>
+    </div>
+
+    <div class="job">
+      <div class="top">
+        <h3>Unity Developer, Intern — <span class="co">StudioKrew</span></h3>
+        <div class="when">May 2021 — Aug 2021</div>
+      </div>
+      <p>
+        Synchronous multiplayer prototypes with Photon — a 3D Whack-A-Mole game and a four-player
+        golf game — implementing core gameplay and networked systems.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head"><h2>Technical</h2></div>
+    <dl class="skills">
+      <div>
+        <dt>Languages</dt>
+        <dd>C++, C#, C</dd>
+      </div>
+      <div>
+        <dt>Engines</dt>
+        <dd>Unreal Engine 5, Unity</dd>
+      </div>
+      <div>
+        <dt>Unreal</dt>
+        <dd>Mass Entity (ECS, data-oriented design), plugin and module architecture, UMG and Slate,
+          Common UI, navigation and pathfinding, vertex animation for crowd rendering, Niagara,
+          FMOD integration, Blueprint exposure and tooling</dd>
+      </div>
+      <div>
+        <dt>Architecture</dt>
+        <dd>Data-oriented design, ECS, MVVM and data binding, event-driven systems, MVC,
+          Factory, State, Observer, Object Pool, Service Locator, Command</dd>
+      </div>
+      <div>
+        <dt>Tools</dt>
+        <dd>Git, Plastic SCM, Visual Studio, Rider, Unreal Insights</dd>
+      </div>
+      <div>
+        <dt>Education</dt>
+        <dd>B.Tech Computer Science Engineering, APJ Abdul Kalam Technological University, 2022</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head"><h2>Contact</h2></div>
+    <p style="color:var(--text-dim); max-width:44rem; margin-top:-1rem;">
+      Open to gameplay, systems and engine-adjacent roles across games, simulation, automotive
+      and XR. Open to relocation, remote and international.
+    </p>
+    <div class="crow"><div class="k">Email</div><div><a href="mailto:milankgeorge@gmail.com">milankgeorge@gmail.com</a></div></div>
+    <div class="crow"><div class="k">LinkedIn</div><div><a href="https://www.linkedin.com/in/milan-george-0a41a4181" rel="noopener">milan-george</a></div></div>
+    <div class="crow"><div class="k">GitHub</div><div><a href="https://github.com/mln-grg" rel="noopener">mln-grg</a></div></div>
+    <div class="crow"><div class="k">CV</div><div><a href="Milan_George_Gameplay_Programmer.pdf">Milan_George_Gameplay_Programmer.pdf</a></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Built as plain HTML and CSS. No framework, no tracking.
+  </div>
+</footer>
+
+<script>
+  document.getElementById("themebtn").addEventListener("click", function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+</script>
+
+</body>
+</html>
