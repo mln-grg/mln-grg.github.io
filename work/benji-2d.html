@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Benji-2D — engine from scratch — Milan George</title>
-<meta name="description" content="A 2D game engine written from scratch in C++ and SDL2: signature-based ECS with packed component pools, a frame-rate-independent loop, a type-indexed event bus and an ImGui debug layer.">
+<title>Benji-2D — Milan George</title>
+<meta name="description" content="A 2D game engine written from scratch in C++ and SDL2: signature-based ECS with packed component pools, an event bus, and thirteen systems. Around 2,200 lines.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Benji-2D — engine from scratch — Milan George">
-<meta property="og:description" content="C++ and SDL2. Signature-based ECS with packed component pools, event bus, ImGui debug layer. Source public.">
+<meta property="og:title" content="Benji-2D — Milan George">
+<meta property="og:description" content="A 2D engine in C++ and SDL2. Signature-based ECS, packed component pools, event bus, ImGui debug layer.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -37,18 +37,17 @@
 
 <div class="phead">
   <div class="wrap">
-    <h1>Benji-2D — engine from scratch</h1>
+    <h1>Benji-2D</h1>
     <p class="deck">
-      A 2D engine built from nothing but C++ and SDL2, to understand the parts of an engine that
-      are invisible when you use someone else's. Years later it turned out to be the most directly
-      useful thing I had built: the ECS I wrote by hand here is the same idea I now run at four
-      thousand agents in Unreal.
+      A 2D game engine written from scratch in C++ with SDL2, in 2022. Around 2,200 lines of
+      engine code, not counting vendored libraries. I built it to see what an engine does
+      between a key press and a changed pixel.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
-      <div class="fact"><div class="k">Built with</div><div class="v">C++, SDL2, Dear ImGui</div></div>
-      <div class="fact"><div class="k">Core</div><div class="v">Signature-based ECS</div></div>
-      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/Benji-2D" rel="noopener">On GitHub</a></div></div>
+      <div class="fact"><div class="k">Built with</div><div class="v">C++17, SDL2, glm, Dear ImGui</div></div>
+      <div class="fact"><div class="k">Size</div><div class="v">~2,200 lines, 13 systems</div></div>
+      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/Benji-2D" rel="noopener">github.com/mln-grg/Benji-2D</a></div></div>
     </div>
   </div>
 </div>
@@ -59,30 +58,33 @@
     <!-- GIF SLOT — a capture of the engine running with the ImGui debug layer open:
     <figure class="media">
       <img src="../media/benji-debug.gif" alt="Benji-2D running with the ImGui debug layer">
-      <figcaption>The debug layer, which is most of why the engine was worth building.</figcaption>
+      <figcaption>The debug and spawn panel.</figcaption>
     </figure>
     -->
 
-    <h2>What it is</h2>
-    <ul>
-      <li>
-        <strong>A signature-based ECS with packed component pools.</strong> Each entity is an id
-        and a bitmask signature; components live in dense arrays rather than being owned by the
-        entity. Systems declare the signature they care about and iterate contiguous memory.
-      </li>
-      <li>
-        <strong>A frame-rate-independent game loop.</strong> Simulation stepping decoupled from
-        render rate, so behaviour does not change with the machine it runs on.
-      </li>
-      <li>
-        <strong>A type-indexed event bus.</strong> Subscription and dispatch keyed on event type,
-        so systems communicate without knowing about each other.
-      </li>
-      <li>
-        <strong>AABB collision handling</strong> and a <strong>Dear ImGui debug layer</strong>
-        for inspecting live state.
-      </li>
-    </ul>
+    <h2>Entities and signatures</h2>
+    <p>
+      An entity is an integer id. What it is comes from the components attached to it. Each
+      entity carries a <code>std::bitset&lt;32&gt;</code> recording which component types it has,
+      and each system declares the signature it requires. Matching an entity to a system is a
+      bitwise AND — no virtual call, no dynamic cast.
+    </p>
+    <p>
+      Component type ids come from a templated static counter, so an id is resolved once per
+      type rather than looked up per entity.
+    </p>
+
+    <h2>Packed component pools</h2>
+    <p>
+      Components live in <code>Pool&lt;T&gt;</code>, a contiguous <code>std::vector&lt;T&gt;</code>
+      kept densely packed. Two maps, <code>entityIdToIndex</code> and <code>indexToEntityId</code>,
+      translate between the sparse entity id space and the packed array.
+    </p>
+    <p>
+      Removal is the part worth explaining. Instead of leaving a hole, the last element is
+      swapped into the removed slot and both maps are patched. Iteration never has to test for
+      gaps, so systems walk a solid run of memory.
+    </p>
 
     <figure class="figure">
       <div class="frame">
@@ -122,30 +124,55 @@
           <text x="586" y="162" class="d-s">chasing</text>
         </svg>
       </div>
-      <figcaption>
-        The same principle Unreal's Mass Entity applies at a much larger scale — which is why
-        building this by hand was worth more than reading about it.
-      </figcaption>
+      <figcaption>Registry owns the pools; systems select entities by signature.</figcaption>
     </figure>
 
-    <h2>Why it still matters to me</h2>
+    <h2>Systems</h2>
     <p>
-      Writing an ECS from scratch is the difference between knowing that data-oriented design is
-      faster and knowing <em>why</em>. When I later architected soldier simulation on Unreal's
-      Mass Entity framework, none of it was unfamiliar: archetypes, signatures, dense storage,
-      systems over entities. I had already made the mistakes at small scale — the ones about
-      entity lifetime, about where component data really lives, about how much of the win is
-      memory layout and how little is cleverness.
+      Thirteen systems, each doing one job: movement integration, sprite rendering with z-sort
+      and culling, sprite animation, AABB collision, damage resolution, keyboard control,
+      projectile emission and lifetime, camera follow clamped to the map, and four debug and
+      overlay renderers including a Dear ImGui panel for inspecting and spawning entities.
+    </p>
+
+    <h2>Event bus</h2>
+    <p>
+      Systems do not call each other. <code>CollisionSystem</code> publishes a
+      <code>CollisionEvent</code> and <code>DamageSystem</code> handles it, with neither holding
+      a reference to the other. The bus keeps a <code>std::type_index</code> keyed map of
+      subscriber lists, and each subscription binds a member function pointer plus its owning
+      instance, so handlers stay ordinary methods rather than free functions or lambdas.
     </p>
     <p>
-      It is also, honestly, the code I hand to people who want to read my C++. My strongest
-      professional work is under NDA. This is not, and it is small enough to read in an evening.
+      Entities can also be tagged individually ("player") or grouped ("enemies", "projectiles").
+      That is how gameplay code finds entities without storing raw pointers into pools that
+      reshuffle on removal.
     </p>
+
+    <h2>Limitations I know about</h2>
+    <ul>
+      <li>
+        Pools grow by doubling and never shrink, and <code>Clear()</code> frees the data while
+        leaving the maps to be reset separately. That lifetime should have a single owner.
+      </li>
+      <li>
+        Systems store <code>std::vector&lt;Entity&gt;</code> by value. Sorting entity ids and
+        storing index ranges would keep iteration closer to the cache behaviour the pools were
+        built for.
+      </li>
+      <li>
+        Collision is a full pairwise sweep. A uniform grid or quadtree is the obvious next step,
+        and it is the reason I paid attention to spatial partitioning later.
+      </li>
+      <li>
+        sol2 and Lua are vendored and linked but never wired into gameplay. The repo description
+        used to claim Lua scripting; it does not any more.
+      </li>
+    </ul>
 
     <p style="margin-top:2rem">
-      <a class="btn" href="https://github.com/mln-grg/Benji-2D" rel="noopener">Read the source on GitHub →</a>
+      <a class="btn" href="https://github.com/mln-grg/Benji-2D" rel="noopener">Source on GitHub →</a>
     </p>
-
 
   </div>
 </article>

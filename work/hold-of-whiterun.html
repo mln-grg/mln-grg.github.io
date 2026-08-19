@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hold of Whiterun — Milan George</title>
-<meta name="description" content="A small social simulation: 42 NPCs with daily schedules, opinions of each other, and grudges that persist. Built in TypeScript, source public.">
+<meta name="description" content="A text-driven fantasy sandbox with a living top-down map: 42 NPCs with schedules and opinions, and a gossip system where what you do becomes a fact that spreads through the hold on its own.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hold of Whiterun — Milan George">
-<meta property="og:description" content="42 NPCs with schedules, opinions and grudges — how much social behaviour falls out of very simple rules.">
+<meta property="og:description" content="42 NPCs, schedules, opinions and a gossip system. What you do becomes a fact, and the fact spreads until it reaches the watch.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -39,15 +39,15 @@
   <div class="wrap">
     <h1>Hold of Whiterun</h1>
     <p class="deck">
-      A town of 42 people who each have somewhere to be, an opinion of everyone else, and a memory
-      for slights. A personal project, built to find out how much social texture you get from rules
-      simple enough to hold in your head — and, unlike my day job, one whose source anybody can read.
+      A text-driven fantasy sandbox with a living top-down map. Skyrim's Whiterun, scaled down
+      graphically so the simulation could scale up: forty-two people with schedules, opinions
+      and grudges, moving around a hand-drawn hold and telling each other what you did.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
-      <div class="fact"><div class="k">Built with</div><div class="v">TypeScript</div></div>
-      <div class="fact"><div class="k">Population</div><div class="v">42 simulated NPCs</div></div>
-      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/ProceduralNarrative" rel="noopener">On GitHub</a></div></div>
+      <div class="fact"><div class="k">Built with</div><div class="v">TypeScript, Vite, Canvas 2D</div></div>
+      <div class="fact"><div class="k">Size</div><div class="v">~5,900 lines, 42 NPCs</div></div>
+      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/ProceduralNarrative" rel="noopener">github.com/mln-grg/ProceduralNarrative</a></div></div>
     </div>
   </div>
 </div>
@@ -55,94 +55,106 @@
 <article>
   <div class="wrap">
 
-    <!-- GIF SLOT — the town running, or the hand-drawn map with NPCs moving on it:
+    <!-- GIF SLOT — the map with pins moving, or the What Is Known panel filling up:
     <figure class="media">
       <img src="../media/whiterun-day.gif" alt="A simulated day passing in Hold of Whiterun">
-      <figcaption>One simulated day. Everyone has somewhere to be.</figcaption>
+      <figcaption>A day passing on the hold map.</figcaption>
     </figure>
     -->
 
-    <h2>The question behind it</h2>
+    <h2>The idea</h2>
     <p>
-      Most game towns are set dressing: villagers walk a loop and say one of three lines. The
-      interesting alternative is a town where behaviour is produced rather than authored — where
-      the blacksmith avoids the miller for a reason that happened, in the simulation, on a day you
-      could point to.
+      Everything the world knows is a <strong>fact</strong>. Facts live in people's heads, and
+      people trade them when they are in the same room. When you do something — pick a pocket,
+      break a bard's hand, hand a mother proof her son is alive — that becomes a fact with your
+      name on it, seeded into whoever was standing there. From that point it spreads without any
+      further input from you.
     </p>
     <p>
-      I wanted to know how cheap that is. Not "how would a studio build Dwarf Fortress", but: what
-      is the smallest set of rules that makes a town feel inhabited rather than staged?
-    </p>
-
-    <h2>How it works</h2>
-    <p>
-      Every NPC carries a <strong>daily schedule</strong>, a set of <strong>opinions</strong> —
-      one number per other resident — and a list of <strong>grudges</strong>, which are opinions
-      with a cause attached and a much longer half-life. The simulation advances in ticks. Each
-      tick, an NPC does whatever its schedule says it should be doing, other NPCs present observe
-      it, and observation nudges opinion. Once opinion crosses a threshold, it starts to override
-      the schedule: people go out of their way to be near someone, or out of their way not to be.
+      Reactions scale by how much the hearer cares about whoever the fact concerns, so news that
+      Ysolda was robbed lands differently on Hulda than on Nazeem. When a fact reaches the watch,
+      it becomes a bounty. A panel called <em>What Is Known</em> lists every fact you have heard
+      and how many of the hold's forty-two people currently know it.
     </p>
 
     <figure class="figure">
       <div class="frame">
-        <svg viewBox="0 0 720 260" role="img" aria-label="Diagram: schedule chooses an action, the action is witnessed by nearby NPCs, witnessing updates opinions and grudges, and those feed back into action selection.">
-          <rect x="20" y="50" width="150" height="76" rx="8" class="d-box-a"/>
-          <text x="36" y="80" class="d-t">Schedule</text>
-          <text x="36" y="102" class="d-s">where to be, when</text>
+        <svg viewBox="0 0 720 250" role="img" aria-label="Diagram: an action becomes a fact seeded into witnesses, which spreads between co-located NPCs, shifts opinion weighted by bonds, and becomes a bounty when it reaches the watch.">
+          <rect x="16" y="46" width="150" height="72" rx="8" class="d-box-a"/>
+          <text x="32" y="76" class="d-t">You act</text>
+          <text x="32" y="98" class="d-s">theft, violence, aid</text>
 
-          <path class="d-l-a" d="M170 88 H190"/><polygon class="d-arrow-a" points="198,88 186,83 186,93"/>
+          <path class="d-l-a" d="M166 82 H190"/><polygon class="d-arrow-a" points="198,82 186,77 186,87"/>
 
-          <rect x="198" y="50" width="150" height="76" rx="8" class="d-box-a"/>
-          <text x="214" y="80" class="d-t">Action</text>
-          <text x="214" y="102" class="d-s">work, drink, argue</text>
+          <rect x="198" y="46" width="164" height="72" rx="8" class="d-box-a"/>
+          <text x="214" y="76" class="d-t">Fact created</text>
+          <text x="214" y="98" class="d-s">seeded into witnesses</text>
 
-          <path class="d-l-a" d="M348 88 H368"/><polygon class="d-arrow-a" points="376,88 364,83 364,93"/>
+          <path class="d-l-a" d="M362 82 H386"/><polygon class="d-arrow-a" points="394,82 382,77 382,87"/>
 
-          <rect x="376" y="50" width="150" height="76" rx="8" class="d-box-a"/>
-          <text x="392" y="80" class="d-t">Witnessed</text>
-          <text x="392" y="102" class="d-s">by whoever is near</text>
+          <rect x="394" y="46" width="164" height="72" rx="8" class="d-box-a"/>
+          <text x="410" y="76" class="d-t">Spreads</text>
+          <text x="410" y="98" class="d-s">co-located NPCs talk</text>
 
-          <path class="d-l-a" d="M526 88 H546"/><polygon class="d-arrow-a" points="554,88 542,83 542,93"/>
+          <path class="d-l-a" d="M558 82 H582"/><polygon class="d-arrow-a" points="590,82 578,77 578,87"/>
 
-          <rect x="554" y="50" width="150" height="76" rx="8" class="d-box-a"/>
-          <text x="570" y="80" class="d-t">Opinion</text>
-          <text x="570" y="102" class="d-s">and grudges, if bad</text>
+          <rect x="590" y="46" width="114" height="72" rx="8" class="d-box-a"/>
+          <text x="606" y="76" class="d-t">The watch</text>
+          <text x="606" y="98" class="d-s">bounty</text>
 
-          <path class="d-l" d="M629 126 V186 H273 V126"/>
-          <polygon class="d-arrow" points="273,118 268,130 278,130"/>
-          <text x="360" y="206" class="d-lbl">strong enough opinions override the schedule</text>
+          <rect x="198" y="152" width="360" height="60" rx="8" class="d-box"/>
+          <text x="214" y="178" class="d-t">Opinion and faction standing shift</text>
+          <text x="214" y="198" class="d-s">weighted by bonds — harming one person turns their friends</text>
+          <path class="d-l" d="M476 118 V152"/><polygon class="d-arrow" points="476,152 471,140 481,140"/>
+
+          <text x="20" y="200" class="d-lbl">unseen crimes stay unseen</text>
+          <text x="20" y="216" class="d-lbl">until someone tells someone</text>
         </svg>
       </div>
       <figcaption>
-        One loop, four rules. Everything that looks like a story is this running for a few
-        simulated weeks.
+        The gossip loop. Witnesses are rolled against the player's Guile, so an unseen crime
+        creates no fact at all.
       </figcaption>
     </figure>
 
-    <h2>What it demonstrates</h2>
+    <h2>What is in the simulation</h2>
     <ul>
-      <li>
-        <strong>Emergence is a data problem.</strong> The behaviour people find interesting comes
-        from what state each agent keeps and who is allowed to observe it — not from the
-        sophistication of any single decision routine.
-      </li>
-      <li>
-        <strong>Persistence is what makes it read as narrative.</strong> An opinion that resets is
-        noise. A grudge that survives a week of simulated time is a character trait, and it costs
-        one extra field to store.
-      </li>
-      <li>
-        <strong>Small, complete, and readable.</strong> The whole thing is public. It exists partly
-        because my strongest professional work is under an NDA, and an interviewer who wants to see
-        how I actually write code should have something to open.
-      </li>
+      <li><strong>Clock.</strong> Ten-minute steps. Every action costs time and the world runs while it passes.</li>
+      <li><strong>Schedules.</strong> Each NPC has a day. Eorlund is at the Skyforge by six and home by eight. Corvus only exists between midnight and four.</li>
+      <li><strong>Knowledge.</strong> Facts propagate between co-located NPCs, weighted by heat, freshness, and how much of a gossip the teller is. Secrets need trust to move at all.</li>
+      <li><strong>Opinion.</strong> Per-person disposition plus per-faction standing, with bonds between NPCs, so harming one person turns their friends against you.</li>
+      <li><strong>Crime.</strong> Witnesses are rolled against Guile. What nobody saw did not happen, until it is repeated.</li>
+      <li><strong>Quests.</strong> Six threads, most with genuinely different endings. Selling Olfrid your silence closes the Gray-Mane story as surely as telling Fralia the truth does.</li>
     </ul>
 
-    <p style="margin-top:2rem">
-      <a class="btn" href="https://github.com/mln-grg/ProceduralNarrative" rel="noopener">Read the source on GitHub →</a>
+    <h2>The map</h2>
+    <p>
+      A heightfield with hillshading, contour lines, a snow line and a treeline, drawn once at
+      load into an offscreen layer. Pins, labels and lighting composite on top each frame.
+      Day/night tints the whole hold and window-light pools come up after dark. Pin colour is
+      faction; a hollow pin means you have not met them, and a dim pin with an arc over it means
+      they are indoors.
     </p>
 
+    <h2>Layout</h2>
+    <p>
+      <code>core/</code> holds the RNG, value noise and world clock. <code>world/</code> is
+      content — the atlas of places and roads, the NPCs, factions, and the fact and item
+      definitions. <code>sim/</code> is the simulation: state, world tick, gossip, crime, combat
+      and the log. <code>game/</code> holds player actions, dialogue and quests, and
+      <code>render/</code> draws the map. Adding a person is one entry in <code>npcs.ts</code>;
+      adding a place is one entry in <code>atlas.ts</code>.
+    </p>
+
+    <h2>Not done</h2>
+    <p>
+      Combat is a placeholder — strike, press, guard, flee. There is no save/load. Bleak Falls
+      Barrow is mentioned and does not exist.
+    </p>
+
+    <p style="margin-top:2rem">
+      <a class="btn" href="https://github.com/mln-grg/ProceduralNarrative" rel="noopener">Source on GitHub →</a>
+    </p>
 
   </div>
 </article>

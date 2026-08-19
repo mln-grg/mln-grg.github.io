@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Blacksmith — Milan George</title>
-<meta name="description" content="A Jacksmith-style forge game where every sprite is drawn in code and every sound is synthesised at runtime. Zero asset files, on purpose.">
+<meta name="description" content="A Jacksmith-style forge game in plain JavaScript and canvas. Every sprite drawn with path commands, every sound synthesised at runtime, and the weapon you cast is literally the geometry your soldier carries.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Blacksmith — Milan George">
-<meta property="og:description" content="A forge game with no asset files: every sprite drawn in code, every sound synthesised at runtime.">
+<meta property="og:description" content="A forge game with no asset files. One silhouette function drives the pour, the anvil, the grindstone and the battlefield.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -39,15 +39,16 @@
   <div class="wrap">
     <h1>Blacksmith</h1>
     <p class="deck">
-      A Jacksmith-style forge game with a self-imposed rule: no asset files. Every sprite is
-      drawn in code, every sound is synthesised at runtime. The whole game is a program, not a
-      program plus a folder of art.
+      A browser game in the mould of Flipline's Jacksmith: you are the smith, not the hero.
+      Soldiers queue up outside the forge and tell you what they want. You cast it, beat it into
+      shape, put an edge on it, fit it out, then watch them march off and find out whether your
+      work was good enough.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
-      <div class="fact"><div class="k">Built with</div><div class="v">TypeScript, canvas, Web Audio</div></div>
-      <div class="fact"><div class="k">Constraint</div><div class="v">Zero asset files</div></div>
-      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/Blacksmith" rel="noopener">On GitHub</a></div></div>
+      <div class="fact"><div class="k">Built with</div><div class="v">Plain JS, canvas, WebAudio</div></div>
+      <div class="fact"><div class="k">Size</div><div class="v">~9,000 lines, no asset files</div></div>
+      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/Blacksmith" rel="noopener">github.com/mln-grg/Blacksmith</a></div></div>
     </div>
   </div>
 </div>
@@ -55,49 +56,129 @@
 <article>
   <div class="wrap">
 
-    <!-- GIF SLOT — this project is entirely visual, it needs a capture:
+    <!-- GIF SLOT — the pour or the anvil stage is the one to capture:
     <figure class="media">
-      <img src="../media/blacksmith.gif" alt="Forging a blade in Blacksmith">
-      <figcaption>Every pixel on screen is drawn by code at runtime.</figcaption>
+      <img src="../media/blacksmith.gif" alt="Pouring metal into a mould in Blacksmith">
+      <figcaption>Every pixel is drawn by code at runtime.</figcaption>
     </figure>
     -->
 
-    <h2>The constraint, and why it is interesting</h2>
+    <h2>The loop</h2>
     <p>
-      "No assets" sounds like a gimmick and works like a design tool. If a sword sprite is a PNG,
-      changing it is an art task. If it is a function of blade length, taper, guard shape and
-      metal colour, then the game can generate a sword the player designed, and the visual
-      system and the gameplay system are the same system.
+      Take a job from the campaign map. Read the order — every soldier has a weapon type, a
+      favourite metal, a favourite gem and a favourite shape, and matching them is worth real
+      stats. Then craft, in four stages:
     </p>
-    <p>
-      The same applies to audio. A hammer strike synthesised at runtime can carry the weight of
-      the blow, the metal it hit and how hot it was — parameters the simulation already has —
-      rather than picking one of three recorded clips.
-    </p>
-
-    <h2>What I got out of it</h2>
     <ul>
       <li>
-        <strong>Procedural drawing forces you to understand the shape.</strong> You cannot fake
-        an anvil you have not decomposed into primitives. It is the same muscle as writing a
-        shader: describe it, don't paint it.
+        <strong>Cast.</strong> Hold to pour, and move the cursor to control how far the crucible
+        tips. A hard stream folds air into the metal and splashes; a gentle trickle runs clean.
+        The melt is setting the whole time, so dawdling makes the cast porous too. There is a
+        sweet spot in the middle.
       </li>
       <li>
-        <strong>Runtime audio synthesis is 3D-math practice wearing a hat.</strong> Envelopes,
-        oscillators and filters are the same kind of continuous-parameter thinking as
-        interpolation and easing in gameplay code.
+        <strong>Forge.</strong> Beat the lumps out of the hot blank. Lumps sit on the spine and
+        the edge, so the hammer moves in both axes. Steel cools as you work and cold steel barely
+        moves, so it goes back in the fire — but every reheat costs you.
       </li>
       <li>
-        <strong>Small enough to finish.</strong> I have prototypes going back to 2020. The ones
-        I learned most from are the ones I closed out, and a hard constraint is a reliable way to
-        keep scope from expanding.
+        <strong>Grind.</strong> Optional. Run the edge along the wheel keeping pressure in the
+        green. Too light and it never sharpens; too heavy and you grind the blade away.
+      </li>
+      <li>
+        <strong>Fit.</strong> Pick a grip, guard, pommel and gem, then place each one. The part
+        hangs from the tongs and swings, so you settle it over the mark and click.
       </li>
     </ul>
-
-    <p style="margin-top:2rem">
-      <a class="btn" href="https://github.com/mln-grg/Blacksmith" rel="noopener">Read the source on GitHub →</a>
+    <p>
+      Then the squad auto-fights three waves, you click the ore and coins that drop, and you get
+      graded on who came home alive.
     </p>
 
+    <h2>The part worth explaining</h2>
+    <p>
+      A mould is two edge functions over <code>t ∈ [0,1]</code>, and everything samples that same
+      silhouette. The pour fills it, the anvil puts lumps in it, the grindstone sharpens its
+      edges, the battlefield swings it. The blade you cast is the blade your soldier carries.
+    </p>
+    <p>
+      <code>profileAt()</code> is where the craft becomes geometry. It takes the mould's shape,
+      thins it wherever a chamber was under-filled, and swells it wherever un-hammered lumps
+      remain. Mistakes are not a hidden multiplier applied to a stat — they are the outline of
+      the object. Chambers become colour bands, a splashy pour becomes visible pitting, hammering
+      flattens the bulges back out in real time, and grinding writes per-segment sharpness that
+      shows up as edge highlights.
+    </p>
+    <p>
+      Measured end to end on a three-chamber broadsword, with lumps hammered flat so only the
+      geometry is left. A clean blade is 0.92 half-width at mid-blade:
+    </p>
+
+    <div style="overflow-x:auto; margin:1.5rem 0;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.92rem; min-width:32rem;">
+        <thead>
+          <tr style="text-align:left; color:var(--text-mute);">
+            <th style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line);">Pour</th>
+            <th style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line);">Cast</th>
+            <th style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line);">Lumps at the anvil</th>
+            <th style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line);">Mid-blade once flattened</th>
+          </tr>
+        </thead>
+        <tbody style="color:var(--text-dim);">
+          <tr>
+            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">careful</td>
+            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">1.00</td>
+            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">6</td>
+            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">0.908 — full thickness</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">held too long (1.5×)</td>
+            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">0.00</td>
+            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">16 (capped)</td>
+            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">0.920 — recoverable, but a long shift</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem 0.75rem;">stingy (0.68×)</td>
+            <td style="padding:0.5rem 0.75rem;">0.63</td>
+            <td style="padding:0.5rem 0.75rem;">6</td>
+            <td style="padding:0.5rem 0.75rem; color:var(--text);">0.733 — permanently 20% thinner</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Hot metal is rendered by blending the whole cross-section onto a temperature ramp rather
+      than tinting the alloy colour, with the bevels driving local temperature, so glowing steel
+      still reads as a shaped object instead of an orange blob.
+    </p>
+
+    <h2>Content and tuning</h2>
+    <p>
+      Eleven ores, each with its own pour viscosity, working heat, hardness and anvil ring.
+      Eighteen moulds across swords, axes, bows and shields. Nineteen fittings and seven gems
+      with elemental effects. Eight soldiers, twelve enemy types, three bosses, ten campaign
+      levels.
+    </p>
+    <p>
+      Appending <code>?dev=1</code> exposes a debug harness: step frames manually, jump to a
+      scene, render a contact sheet of every mould, run a battle headlessly, or simulate the
+      whole campaign at a given craft quality. That last one, <code>dev.sweep</code>, is how the
+      difficulty curve was tuned. Near-flawless crafting clears all ten levels at three stars;
+      decent crafting clears nine and loses the finale; sloppy crafting hits a wall at level
+      four.
+    </p>
+
+    <h2>No asset files</h2>
+    <p>
+      Every sprite is drawn with 2D path commands and every sound is synthesised with WebAudio at
+      runtime. There is no build step and no framework. It runs off a small Node static server
+      only because the game is ES modules.
+    </p>
+
+    <p style="margin-top:2rem">
+      <a class="btn" href="https://github.com/mln-grg/Blacksmith" rel="noopener">Source on GitHub →</a>
+    </p>
 
   </div>
 </article>

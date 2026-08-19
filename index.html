@@ -47,9 +47,9 @@
     <p class="lede">
       Six years in game development, four of them across real-time strategy and VR training
       simulation. I currently lead the battle and overworld layers of a Total War style strategy
-      title, where 4,000 individually simulated soldiers run on Unreal's Mass Entity framework.
-      I like the problems where the architecture <em>is</em> the feature: simulation at scale,
-      systems other people build on, and the profiler tells you whether you were right.
+      title in UE5, where soldiers are simulated on Mass Entity and rendered as instanced meshes
+      with baked vertex animation. Most of my work is simulation at scale, AI, and the systems
+      other people on the team build content with.
     </p>
     <div class="actions">
       <a class="btn primary" href="#projects">See the projects</a>
@@ -234,8 +234,9 @@
           <h3>Benji-2D</h3>
           <div class="sub">PERSONAL · C++ · SDL2 · 2022</div>
           <p>
-            A 2D engine built from nothing: signature-based ECS with packed component pools, a
-            frame-rate-independent loop, a type-indexed event bus and an ImGui debug layer.
+            A 2D engine written from scratch, around 2,200 lines. Signature-based ECS with
+            packed component pools, an event bus keyed on type, thirteen systems and an ImGui
+            debug layer.
           </p>
           <div class="more">Open →</div>
         </div>
@@ -262,8 +263,8 @@
           <h3>Hold of Whiterun</h3>
           <div class="sub">PERSONAL · TYPESCRIPT · 2026</div>
           <p>
-            42 NPCs with daily schedules, opinions of each other, and grudges that persist — a
-            sandbox for how much social behaviour falls out of very simple rules.
+            42 NPCs with schedules and opinions. What you do becomes a fact seeded into whoever
+            saw it, and the fact spreads through the hold on its own until it reaches the watch.
           </p>
           <div class="more">Open →</div>
         </div>
@@ -288,9 +289,9 @@
           <h3>Knight</h3>
           <div class="sub">PERSONAL · UE5 · GAMEPLAY ABILITY SYSTEM</div>
           <p>
-            An action RPG built on GAS — chosen deliberately to learn Unreal's ability, attribute
-            and effect model properly rather than reimplementing combat by hand for the fourth
-            time.
+            An action RPG on GAS, structured after Lyra: abilities granted from a data asset on
+            possession, input bound by gameplay tag. In progress, and the page says what is and
+            is not built.
           </p>
           <div class="more">Open →</div>
         </div>
@@ -313,10 +314,10 @@
         </div>
         <div class="body">
           <h3>Blacksmith</h3>
-          <div class="sub">PERSONAL · TYPESCRIPT · 2026</div>
+          <div class="sub">PERSONAL · JAVASCRIPT · CANVAS · 2026</div>
           <p>
-            A Jacksmith-style forge game where every sprite is drawn in code and every sound is
-            synthesised at runtime. Zero asset files, on purpose.
+            A forge game with no asset files. One mould silhouette drives the pour, the anvil,
+            the grindstone and the battlefield, so a bad cast is visibly a thinner blade.
           </p>
           <div class="more">Open →</div>
         </div>
@@ -341,10 +342,10 @@
         </div>
         <div class="body">
           <h3>Mom Attacks</h3>
-          <div class="sub">PERSONAL · UNITY · 2D PLATFORMER</div>
+          <div class="sub">PERSONAL · UNITY 6.5 · BOSS RUSH</div>
           <p>
-            A 2D platformer with boss encounters — built to practise state-driven combat and
-            encounter pacing on something small enough to finish.
+            Three boss fights where attacks, phases, arenas and tuning are all ScriptableObjects,
+            plus the editor tools that scaffold a fight and validate it before it fails silently.
           </p>
           <div class="more">Open →</div>
         </div>

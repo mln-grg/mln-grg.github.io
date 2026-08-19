@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Knight — Milan George</title>
-<meta name="description" content="A UE5 action RPG built on the Gameplay Ability System — deliberately chosen to learn Unreal's ability, attribute and effect model properly.">
+<meta name="description" content="A UE5 action RPG built on the Gameplay Ability System, structured after Lyra: data-driven ability granting, tag-based input, and component composition over inheritance. Work in progress.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Knight — Milan George">
-<meta property="og:description" content="An action RPG on UE5's Gameplay Ability System. Built to learn GAS the way it is meant to be used.">
+<meta property="og:description" content="UE5 and GAS. Data-driven ability granting, tag-based input binding, component composition. Honest state of play included.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -39,15 +39,16 @@
   <div class="wrap">
     <h1>Knight</h1>
     <p class="deck">
-      An action RPG in Unreal Engine 5, built on the Gameplay Ability System. The game is the
-      excuse; the point is to use GAS the way it is actually designed to be used, rather than
-      hand-rolling combat for the fourth time because it is faster on day one.
+      An Unreal Engine 5 action RPG built on the Gameplay Ability System. GAS was the significant
+      gap in four years of UE5 work, because the projects I shipped did not use it. This is me
+      closing that gap: built alongside a structured course, but read against the engine source
+      rather than followed step by step.
     </p>
     <div class="facts">
-      <div class="fact"><div class="k">Type</div><div class="v">Personal project, ongoing</div></div>
+      <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
       <div class="fact"><div class="k">Engine</div><div class="v">Unreal Engine 5, C++</div></div>
-      <div class="fact"><div class="k">Core</div><div class="v">Gameplay Ability System</div></div>
-      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/Knight" rel="noopener">On GitHub</a></div></div>
+      <div class="fact"><div class="k">Status</div><div class="v">In progress, started Aug 2026</div></div>
+      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/Knight" rel="noopener">github.com/mln-grg/Knight</a></div></div>
     </div>
   </div>
 </div>
@@ -55,57 +56,113 @@
 <article>
   <div class="wrap">
 
-    <!-- GIF SLOT — combat footage would do more for this page than any paragraph:
+    <!-- GIF SLOT — equip / ability activation once there is combat worth showing:
     <figure class="media">
-      <img src="../media/knight-combat.gif" alt="Combat in Knight">
-      <figcaption>Ability activation, effects and attribute changes driven through GAS.</figcaption>
+      <img src="../media/knight-combat.gif" alt="Ability activation in Knight">
+      <figcaption>Axe equip driven through a granted ability.</figcaption>
     </figure>
     -->
 
-    <h2>Why GAS, deliberately</h2>
+    <h2>Structure</h2>
     <p>
-      Every gameplay programmer can build a combat system. Health as a float, an attack function,
-      a cooldown timer, and it works — until you need a buff that scales with another stat, a
-      damage-over-time that stacks, an ability that is predicted client-side, or a designer who
-      wants to change any of it without a programmer. Then the hand-rolled version becomes a
-      second, worse ability framework living inside your game.
-    </p>
-    <p>
-      GAS is Unreal's answer to that, it is what studios building this genre actually use, and
-      it has a reputation for being hard to learn because it is a real framework with opinions.
-      I chose it precisely for that: I would rather spend personal-project time on the thing that
-      is hard to pick up on the job than on the thing I can already do.
+      The project follows the layered structure Epic uses in Lyra, scaled down.
+      <code>KnightBaseCharacter</code> holds what any pawn needs;
+      <code>KnightHeroCharacter</code> adds the player. The ability system component, combat
+      component and input component hang off the pawn rather than accumulating on the character
+      class.
     </p>
 
-    <h2>What it covers</h2>
+    <figure class="figure">
+      <div class="frame">
+        <svg viewBox="0 0 720 260" role="img" aria-label="Diagram: start-up data grants abilities to the ability system component on possession, input config maps gameplay tags to input actions, and combat components hang off the hero character.">
+          <rect x="250" y="24" width="200" height="52" rx="8" class="d-box-a"/>
+          <text x="266" y="46" class="d-t">KnightHeroCharacter</text>
+          <text x="266" y="64" class="d-s">extends KnightBaseCharacter</text>
+
+          <path class="d-l" d="M350 76 V104"/><polygon class="d-arrow" points="350,112 345,100 355,100"/>
+          <path class="d-l" d="M290 76 V104 H150 V132"/><polygon class="d-arrow" points="150,140 145,128 155,128"/>
+          <path class="d-l" d="M410 76 V104 H560 V132"/><polygon class="d-arrow" points="560,140 555,128 565,128"/>
+
+          <rect x="60" y="140" width="180" height="56" rx="8" class="d-box"/>
+          <text x="76" y="164" class="d-t">KnightInputComponent</text>
+          <text x="76" y="182" class="d-s">binds by gameplay tag</text>
+
+          <rect x="260" y="112" width="180" height="56" rx="8" class="d-box"/>
+          <text x="276" y="136" class="d-t">AbilitySystemComponent</text>
+          <text x="276" y="154" class="d-s">+ KnightAttributeSet</text>
+
+          <rect x="470" y="140" width="180" height="56" rx="8" class="d-box"/>
+          <text x="486" y="164" class="d-t">HeroCombatComponent</text>
+          <text x="486" y="182" class="d-s">extends PawnCombatComponent</text>
+
+          <rect x="60" y="212" width="180" height="36" rx="8" class="d-box-a"/>
+          <text x="76" y="235" class="d-s">DataAsset_InputConfig</text>
+          <path class="d-l-a" d="M150 212 V196"/><polygon class="d-arrow-a" points="150,196 145,208 155,208"/>
+
+          <rect x="260" y="188" width="180" height="36" rx="8" class="d-box-a"/>
+          <text x="276" y="211" class="d-s">DataAsset_HeroStartUpData</text>
+          <path class="d-l-a" d="M350 188 V172"/><polygon class="d-arrow-a" points="350,172 345,184 355,184"/>
+          <text x="272" y="242" class="d-lbl">grants abilities on possession</text>
+
+          <rect x="470" y="212" width="180" height="36" rx="8" class="d-box-a"/>
+          <text x="486" y="235" class="d-s">KnightHeroWeapon</text>
+          <path class="d-l-a" d="M560 212 V196"/><polygon class="d-arrow-a" points="560,196 555,208 565,208"/>
+        </svg>
+      </div>
+      <figcaption>Data assets on the bottom row; nothing about the hero's kit is hardcoded.</figcaption>
+    </figure>
+
+    <h2>Data-driven start-up</h2>
+    <p>
+      Abilities are not hardcoded into the character. <code>DataAsset_HeroStartUpData</code>
+      declares which abilities a pawn is granted, and the ability system component applies them
+      when the pawn is possessed. Adding an ability to the hero is a data change, not a code
+      change.
+    </p>
+
+    <h2>Tag-driven input</h2>
+    <p>
+      <code>DataAsset_InputConfig</code> maps gameplay tags — <code>InputTag.Move</code>,
+      <code>InputTag.Look</code>, <code>InputTag.EquipAxe</code> — to input actions, and
+      <code>KnightInputComponent</code> binds them by tag. Input routing lives in data instead of
+      a switch statement in the controller.
+    </p>
+
+    <h2>Component composition</h2>
+    <p>
+      <code>UPawnExtensionComponentBase</code> is a shared base for every component hung off a
+      pawn. It carries no logic, only typed accessors with compile-time checks, so subclasses
+      reach their owner without repeating casts. Combat splits into
+      <code>PawnCombatComponent</code> for shared behaviour and <code>HeroCombatComponent</code>
+      for player-specific behaviour.
+    </p>
+    <p>
+      Animation follows the same idea: <code>KnightBaseAnimInstance</code> and
+      <code>KnightCharacterAnimInstance</code> hold shared state, and
+      <code>KnightHeroLinkedAnimLayer</code> lets weapon-specific animation be swapped in as a
+      linked layer rather than branching inside one large graph.
+    </p>
+
+    <h2>Where it actually is</h2>
+    <p>Implemented:</p>
     <ul>
-      <li>
-        <strong>Abilities as first-class objects</strong> — granted, activated, cancelled and
-        cost-checked through the ability system, rather than as functions on a character class.
-      </li>
-      <li>
-        <strong>Attributes and effects</strong> — health, stamina and damage expressed as
-        attributes modified by gameplay effects, so buffs, costs and damage all flow through one
-        mechanism.
-      </li>
-      <li>
-        <strong>Tags driving state</strong> — the part that changes how you think. Conditions
-        become tag queries rather than booleans scattered across the character.
-      </li>
+      <li>Ability system component, attribute set scaffolding, gameplay ability base classes</li>
+      <li>Data-driven ability granting on possession</li>
+      <li>Tag-based input configuration and binding</li>
+      <li>Character hierarchy, combat component split, weapon base and hero weapon</li>
+      <li>Animation instance hierarchy with linked anim layers</li>
+      <li>Axe equip and unequip</li>
+    </ul>
+    <p>Not implemented:</p>
+    <ul>
+      <li>Attributes are declared but not populated, so there is no health, damage or ability cost yet</li>
+      <li>No enemies, no damage resolution, no death handling</li>
+      <li>One weapon, and no UI</li>
     </ul>
 
-    <div class="callout">
-      <p>
-        This is in progress and the page says so on purpose. Gameplay Ability System depth was a
-        gap I identified in myself, and closing it in public is more honest — and more useful in
-        an interview — than only showing finished things.
-      </p>
-    </div>
-
     <p style="margin-top:2rem">
-      <a class="btn" href="https://github.com/mln-grg/Knight" rel="noopener">Read the source on GitHub →</a>
+      <a class="btn" href="https://github.com/mln-grg/Knight" rel="noopener">Source on GitHub →</a>
     </p>
-
 
   </div>
 </article>

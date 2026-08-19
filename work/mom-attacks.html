@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mom Attacks — Milan George</title>
-<meta name="description" content="A Unity 2D platformer with boss fights — built to practise state-driven combat and encounter pacing on something small enough to finish.">
+<meta name="description" content="A boss-rush action platformer in Unity 6.5 URP where attacks, phases and arenas are ScriptableObjects, with editor tooling to scaffold and validate a fight. ~13,000 lines of C#.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mom Attacks — Milan George">
-<meta property="og:description" content="A 2D platformer with boss encounters, built in Unity.">
+<meta property="og:description" content="Boss fights as data: attacks, phases and arenas as ScriptableObjects, plus the editor tools to build and validate them.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -39,15 +39,16 @@
   <div class="wrap">
     <h1>Mom Attacks</h1>
     <p class="deck">
-      A 2D platformer with boss encounters, built in Unity. Small on purpose: boss fights are the
-      cheapest way to practise state-driven combat, telegraphing and encounter pacing, because
-      everything that makes a fight readable has to be explicit.
+      A boss-rush action platformer in Unity 6.5 URP, built as an exercise in making boss fights
+      a designer can author and tune without touching code. Three fights are implemented, all
+      homages to Hollow Knight encounters. Around 13,000 lines of C# across 82 scripts, with no
+      art or audio files in the repository.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
-      <div class="fact"><div class="k">Engine</div><div class="v">Unity, C#</div></div>
-      <div class="fact"><div class="k">Focus</div><div class="v">Boss state machines, feel</div></div>
-      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/MomAttacks" rel="noopener">On GitHub</a></div></div>
+      <div class="fact"><div class="k">Engine</div><div class="v">Unity 6.5, URP, C#</div></div>
+      <div class="fact"><div class="k">Size</div><div class="v">~13,000 lines, 82 scripts</div></div>
+      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/MomAttacks" rel="noopener">github.com/mln-grg/MomAttacks</a></div></div>
     </div>
   </div>
 </div>
@@ -55,39 +56,109 @@
 <article>
   <div class="wrap">
 
-    <!-- GIF SLOT — a boss fight is the single best thing this page could show:
+    <!-- GIF SLOT — a telegraph into a sword rain is the clearest thing to show:
     <figure class="media">
-      <img src="../media/mom-attacks-boss.gif" alt="A boss encounter in Mom Attacks">
-      <figcaption>Telegraph, window, punish — the whole loop in six seconds.</figcaption>
+      <img src="../media/mom-attacks-boss.gif" alt="A boss attack in Mom Attacks">
+      <figcaption>Sword rain, telegraphed and clipped to the arena bounds.</figcaption>
     </figure>
     -->
 
-    <h2>What it was for</h2>
+    <h2>The idea</h2>
     <p>
-      A boss fight is a state machine that the player has to be able to read without being told
-      the rules. Every attack needs a telegraph long enough to react to and short enough to feel
-      fair; every phase transition needs to be legible; and the whole thing has to stay
-      interesting on the twentieth attempt, when the player already knows the pattern.
+      A boss fight is mostly data. Which attacks exist, what order they come in, how long the
+      telegraph lasts, when the next phase starts, where the arena walls are. Encoding that in
+      code means every balance change is a recompile and only a programmer can make one.
     </p>
     <p>
-      That makes it good practice for exactly the thing gameplay programming is judged on — feel.
-      Not whether the mechanic works, but whether the timing windows, animation cancels and
-      recovery frames add up to something that reads as fair when the player loses.
+      So none of it lives in code here. Attacks, phases, arenas and tuning are ScriptableObjects.
+      The things that stayed in code are the ones that need to be: the actual motion of a sword
+      rain, the geometry of a beam sweep clipped to the arena bounds.
     </p>
 
-    <h2>What carried forward</h2>
+    <figure class="figure">
+      <div class="frame">
+        <svg viewBox="0 0 720 250" role="img" aria-label="Diagram: a boss fight config holds ordered phases, each phase holds an attack pool and a health gate, attacks are ScriptableObjects, and tuning scalars are applied by the boss controller.">
+          <rect x="16" y="40" width="170" height="60" rx="8" class="d-box-a"/>
+          <text x="32" y="64" class="d-t">BossFightConfig</text>
+          <text x="32" y="84" class="d-s">ordered phases</text>
+
+          <path class="d-l-a" d="M186 70 H214"/><polygon class="d-arrow-a" points="222,70 210,65 210,75"/>
+
+          <rect x="222" y="40" width="180" height="60" rx="8" class="d-box-a"/>
+          <text x="238" y="64" class="d-t">BossPhaseConfig</text>
+          <text x="238" y="84" class="d-s">attack pool + HP gate</text>
+
+          <path class="d-l-a" d="M402 70 H430"/><polygon class="d-arrow-a" points="438,70 426,65 426,75"/>
+
+          <rect x="438" y="40" width="180" height="60" rx="8" class="d-box-a"/>
+          <text x="454" y="64" class="d-t">BossAttack assets</text>
+          <text x="454" y="84" class="d-s">one Execute() coroutine</text>
+
+          <rect x="222" y="140" width="180" height="60" rx="8" class="d-box"/>
+          <text x="238" y="164" class="d-t">BossController</text>
+          <text x="238" y="184" class="d-s">runs the fight</text>
+          <path class="d-l" d="M312 100 V132"/><polygon class="d-arrow" points="312,140 307,128 317,128"/>
+
+          <rect x="16" y="140" width="170" height="60" rx="8" class="d-box"/>
+          <text x="32" y="164" class="d-t">ArenaLayoutSet</text>
+          <text x="32" y="184" class="d-s">bounds and geometry</text>
+          <path class="d-l" d="M186 170 H214"/><polygon class="d-arrow" points="222,170 210,165 210,175"/>
+
+          <rect x="438" y="140" width="180" height="60" rx="8" class="d-box"/>
+          <text x="454" y="164" class="d-t">Tuning scalars</text>
+          <text x="454" y="184" class="d-s">damage · telegraph · speed</text>
+          <path class="d-l" d="M438 170 H410"/><polygon class="d-arrow" points="402,170 414,165 414,175"/>
+
+          <text x="222" y="228" class="d-lbl">attacks read tuning through the boss, never their raw serialized numbers</text>
+        </svg>
+      </div>
+      <figcaption>Fight, phase, attack and arena are all assets. The controller is the only runtime piece that knows about all of them.</figcaption>
+    </figure>
+
+    <h2>Attacks as ScriptableObjects</h2>
     <p>
-      The state-machine discipline. Boss behaviour written as explicit states with explicit
-      entry, exit and transition conditions stays debuggable when it grows; boss behaviour
-      written as flags and coroutines does not. That is the same pattern I later used for
-      soldier presentation states in a battle with four thousand of them — the scale changed,
-      the argument for explicit states did not.
+      <code>BossAttack</code> is an abstract <code>ScriptableObject</code> exposing one method,
+      <code>IEnumerator Execute(BossController boss)</code>. Each concrete attack —
+      <code>SwordRainAttack</code>, <code>BeamSweepAttack</code>,
+      <code>FeatherBarrageAttack</code>, <code>LandAblazeAttack</code> and a dozen more — is an
+      asset in the project, not an instance in a scene. The same attack asset can be dropped into
+      any phase of any fight, and editing its damage or telegraph in the inspector changes it
+      everywhere.
+    </p>
+
+    <h2>Tuning is applied, not baked</h2>
+    <p>
+      Attacks never read their raw serialized numbers. They go through the boss:
+      damage is multiplied by <code>boss.Tuning.damageScale</code>, telegraph duration by
+      <code>telegraphScale</code>, projectile speed by <code>projectileSpeedScale</code>. So
+      difficulty is one set of multipliers on the fight rather than thirty numbers spread across
+      thirty assets, and making a fight globally slower to telegraph is one field.
+    </p>
+
+    <h2>Editor tooling</h2>
+    <p>
+      This is the part I would want to talk through in an interview.
+      <code>NewFightWindow</code> scaffolds a new fight — configs, phases, scene, wiring.
+      <code>BossFightBuilder</code> and the two fight-specific builders construct a fight scene
+      from its config assets. <code>ArenaBuilder</code> generates arena geometry from an
+      <code>ArenaLayoutSet</code>. Custom inspectors sit on the config assets.
+    </p>
+    <p>
+      <code>FightValidator</code> is the one that earns its keep. Data-driven content fails
+      silently when a reference goes missing, so the validator turns "the boss just stands there"
+      into a specific error naming the phase and the field.
+    </p>
+
+    <h2>Status</h2>
+    <p>
+      A sandbox rather than a game. There is no menu, no progression and no connective tissue
+      between the fights. The player controller has movement, dash, double jump, attack and a
+      ranged projectile, which is enough to fight with.
     </p>
 
     <p style="margin-top:2rem">
-      <a class="btn" href="https://github.com/mln-grg/MomAttacks" rel="noopener">Read the source on GitHub →</a>
+      <a class="btn" href="https://github.com/mln-grg/MomAttacks" rel="noopener">Source on GitHub →</a>
     </p>
-
 
   </div>
 </article>
