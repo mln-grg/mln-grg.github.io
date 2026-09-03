@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cartino — 3D bullet hell on Android — Milan George</title>
+<meta name="description" content="A 3D bullet hell car shooter built in Unity for Android in 2020, and the first project where I picked design patterns on purpose rather than by accident.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cartino — 3D bullet hell on Android — Milan George">
+<meta property="og:description" content="Unity, Android, 2020. Object pooling, a finite state machine for enemies, and an event layer so nothing had to know about anything else.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../style.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var sysLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+    document.documentElement.setAttribute("data-theme", saved || (sysLight ? "light" : "dark"));
+  })();
+</script>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="../index.html">Milan George</a>
+    <nav>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#experience" class="hide-sm">Experience</a>
+      <a href="../index.html#contact">Contact</a>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap crumb"><a href="../index.html#projects">← All projects</a></div>
+
+<div class="phead">
+  <div class="wrap">
+    <h1>Cartino</h1>
+    <p class="deck">
+      A 3D bullet hell where you drive. Built in Unity for Android over three months in late 2020,
+      and the first thing I made where the structure was a decision rather than whatever the
+      tutorial did.
+    </p>
+    <div class="facts">
+      <div class="fact"><div class="k">Engine</div><div class="v">Unity</div></div>
+      <div class="fact"><div class="k">Platform</div><div class="v">Android</div></div>
+      <div class="fact"><div class="k">Built</div><div class="v">Oct to Dec 2020</div></div>
+      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/Cartino" rel="noopener">github.com/mln-grg/Cartino</a></div></div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="wrap">
+
+    <figure class="media">
+      <a class="ytlite" href="https://www.youtube.com/watch?v=1K5QdXoQiUA" target="_blank" rel="noopener"
+         style="background-image:url('../media/cartino-video-poster.jpg')"
+         aria-label="Watch the Cartino gameplay video on YouTube">
+        <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+      </a>
+      <figcaption>Cartino gameplay. Opens on YouTube.</figcaption>
+    </figure>
+
+    <figure class="media">
+      <img src="../media/cartino.jpg" alt="The player buggy in a low poly desert canyon, with a radar mast and rock formations behind it">
+      <figcaption>Low poly desert, one armoured buggy, a turret on the roof.</figcaption>
+    </figure>
+
+    <h2>What it is</h2>
+    <p>
+      Bullet hell rules on a driveable vehicle. Waves of enemies fill the arena with projectiles and
+      the only way through is reading patterns and keeping the car moving. The build target was
+      Android, which set the budget for everything: how many projectiles could be alive, how much
+      the enemies were allowed to think per frame, and how much of the arena could be on screen.
+    </p>
+
+    <h2>The patterns, and why each one</h2>
+    <p>
+      This is a learning project and I will not pretend otherwise. What makes it worth keeping is
+      that it is the first time I chose a structure because of a problem rather than because a video
+      told me to.
+    </p>
+    <ul>
+      <li><strong>Object pooling</strong> for projectiles. On a phone, allocating and collecting a
+        few hundred bullets a second is the difference between a game and a slideshow. I pooled them
+        because I could feel the stutter, not because I measured it, which is a habit I have since
+        replaced with measuring.</li>
+      <li><strong>A finite state machine</strong> for enemy behaviour, so adding an enemy type meant
+        adding states and transitions rather than adding branches to something already too long.</li>
+      <li><strong>Observer</strong> for the events several systems care about, so the UI and the
+        audio could react to the game without holding references into it.</li>
+      <li><strong>Singleton</strong> for the manager objects. I would use fewer of these now. They
+        make a dependency graph invisible rather than absent.</li>
+    </ul>
+
+    <!-- MILAN — I wrote the four bullets above from the description on the old site, which named
+         Singleton, Observer, Object Pooling and Finite State Machines but not what each one held.
+         Correct anything that is not how you actually built it, then delete this comment. -->
+
+
+    <div class="callout">
+      <p>
+        Six years later the direct line from this project is the object pool. It is the same idea
+        as the pooled state objects in the battle system I lead now, and the same idea as the packed
+        component pools in the 2D engine I wrote two years after this. The thing I got wrong here,
+        reaching for a singleton whenever two objects needed to talk, is the thing the event bus in
+        that engine exists to avoid.
+      </p>
+    </div>
+
+  </div>
+</article>
+
+<div class="wrap pagenav">
+  <a href="boss-fight-kit.html">← BossFightKit</a>
+  <a class="next" href="horror-demo.html">Horror Game Demo →</a>
+</div>
+
+<script>
+  document.getElementById("themebtn").addEventListener("click", function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+</script>
+
+
+</body>
+</html>

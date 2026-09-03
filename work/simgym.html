@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SimGym — scenario creator — Milan George</title>
+<title>SimGym — scenario and patient designer — Milan George</title>
 <meta name="description" content="A scenario-creator mode with a full multigrid system for SimGym, a PC VR training simulator — letting instructors author simulations without engineering support.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SimGym — scenario creator — Milan George">
+<meta property="og:title" content="SimGym — scenario and patient designer — Milan George">
 <meta property="og:description" content="An authoring tool that moved scenario creation out of the engineering backlog and into the instructor's hands.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
@@ -37,16 +37,18 @@
 
 <div class="phead">
   <div class="wrap">
-    <h1>SimGym — scenario creator</h1>
+    <h1>SimGym — scenario and patient designer</h1>
     <p class="deck">
-      SimGym is a PC VR training simulator. Every new training scenario used to be an engineering
-      task: someone described what they wanted, it went in a backlog, and weeks later they got
-      something close. I built the mode that removed us from that loop.
+      SimGym is a medical training simulator that runs on Meta Quest 2 and 3 and on PC VR. Every
+      new training scenario used to be an engineering task: someone described what they wanted, it
+      went in a backlog, and weeks later they got something close. I built the mode that took us
+      out of that loop, so an instructor sets up the case, picks the patient and dresses the room
+      themselves.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Company</div><div class="v">i3 Simulations</div></div>
-      <div class="fact"><div class="k">Engine</div><div class="v">Unreal Engine, PC VR</div></div>
-      <div class="fact"><div class="k">Core system</div><div class="v">Multigrid authoring</div></div>
+      <div class="fact"><div class="k">Engine</div><div class="v">Unreal Engine</div></div>
+      <div class="fact"><div class="k">Platforms</div><div class="v">Meta Quest 2 and 3, PC VR</div></div>
       <div class="fact"><div class="k">Users</div><div class="v">Instructors, not engineers</div></div>
     </div>
   </div>
@@ -55,56 +57,111 @@
 <article>
   <div class="wrap">
 
-    <!-- GIF SLOT — a capture of the creator mode in use would carry this page:
     <figure class="media">
-      <img src="../media/simgym-creator.gif" alt="Authoring a scenario in SimGym's creator mode">
-      <figcaption>Building a scenario without touching the engine.</figcaption>
+      <img src="../media/simgym-room-dressed.jpg" alt="The SimGym room designer: an asset library on the left, a resuscitation bay laid out with a trolley, monitor, drip stand and drug cart">
+      <figcaption>
+        The room designer. Library on the left, the bay being dressed on the right, and the
+        placement grid visible on the floor.
+      </figcaption>
     </figure>
-    -->
 
     <h2>The problem</h2>
     <p>
-      A training simulator lives or dies on the breadth of its content. One scenario is a demo;
-      forty scenarios is a product. But scenario content was authored in-engine by programmers,
-      which meant the people who actually understood the training — instructors and subject
-      matter experts — could only describe what they wanted and wait. Every iteration cost a
-      round trip through engineering, and the total content the product could hold was capped by
-      how much programmer time it could buy.
+      A training simulator lives or dies on the breadth of its content. One scenario is a demo,
+      forty scenarios is a product. But scenario content was authored in engine by programmers,
+      which meant the people who actually understood the training, instructors and subject matter
+      experts, could only describe what they wanted and wait. Every iteration cost a round trip
+      through engineering, and the total content the product could hold was capped by how much
+      programmer time it could buy.
     </p>
 
-    <h2>What I built</h2>
+    <h2>What an instructor actually does</h2>
     <p>
-      A creator mode inside the application, built on a <strong>multigrid system</strong>: a
-      structured authoring space where scenario elements are placed, constrained and related to
-      one another, rather than positioned freehand and hoped over. The grid is what makes the
-      tool usable by non-engineers — it turns "arrange this correctly" from a judgement call
-      into a set of legal moves.
+      The designer runs as four steps, and none of them require knowing what an actor or a
+      blueprint is.
+    </p>
+
+    <div class="media-row">
+      <figure class="media">
+        <img src="../media/simgym-scenario-creator.jpg" alt="A Creating a scenario dialog with fields for scenario name, tags and description">
+        <figcaption>1. The case. Name, tags, description, then the rules.</figcaption>
+      </figure>
+      <figure class="media">
+        <img src="../media/simgym-patient-selector.jpg" alt="The patient selector: a grid of metahuman patients on trolleys, with filters for sex and ethnicity">
+        <figcaption>2. The patient, filtered down from the metahuman library.</figcaption>
+      </figure>
+    </div>
+
+    <ul>
+      <li><strong>Scenario setting.</strong> What kind of case this is, and the data and
+        modifications that go with it.</li>
+      <li><strong>Scenario rules.</strong> What counts as correct, and what the simulation should
+        do in response.</li>
+      <li><strong>Environment.</strong> The room, and everything in it.</li>
+      <li><strong>Patient.</strong> Filter the metahuman library down by the attributes the case
+        needs, then pick one. Training on the same face every time teaches the face.</li>
+    </ul>
+
+    <h2>Dressing the room is the hard part</h2>
+    <p>
+      Placing equipment is where a freehand editor falls apart in the hands of a non engineer.
+      A defibrillator that floats two centimetres above the trolley, a drug that ends up inside a
+      drawer rather than in it, a monitor facing the wall: all of it looks fine in the editor and
+      all of it breaks the moment someone reaches for it in VR.
     </p>
     <p>
-      The design constraint that shaped everything: whatever an instructor builds must be a
-      valid scenario. A tool that lets its user produce something broken and only tells them at
-      runtime hasn't removed the engineer from the loop, it has just moved when they get called.
-      So validity is enforced during authoring, not after it.
+      So placement is constrained rather than free. Surfaces carry their own grids, the floor,
+      the trolley tops, the inside of each drawer, and an object placed on one snaps to that
+      surface in a valid orientation. It turns "arrange this correctly" from a judgement call into
+      a set of legal moves, which is what makes the tool usable by the people who should be using it.
     </p>
+
+    <div class="media-row">
+      <figure class="media">
+        <img src="../media/simgym-room-empty.jpg" alt="An empty resuscitation bay with only a trolley and patient, the asset library open on furniture">
+        <figcaption>Before.</figcaption>
+      </figure>
+      <figure class="media">
+        <img src="../media/simgym-playmode.jpg" alt="The finished room in play mode, seen from inside VR, with equipment placed and a patient on the trolley">
+        <figcaption>After, in play mode. Same room, now a scenario.</figcaption>
+      </figure>
+    </div>
+
+    <!-- MILAN — the paragraph about per surface grids is my reading of the multigrid system from
+         your description and the screenshots. Correct it to how it actually works, then delete
+         this comment. -->
+
+    <h2>Two headsets and a PC</h2>
+    <p>
+      Everything above ships to Quest 2, Quest 3 and PC VR from one build path. The standalone
+      headsets set the budget: what an instructor is allowed to place, how much of it can be in a
+      room at once, and how much the authoring UI itself is allowed to cost while the scene is
+      loaded behind it.
+    </p>
+
+    <figure class="media">
+      <img src="../media/simgym-vr-hands.jpg" alt="A first person VR view of hands reaching for an item on a trolley, with a highlight on the grabbable object">
+      <figcaption>
+        The point of all the placement rules: it has to be where a hand expects it.
+      </figcaption>
+    </figure>
 
     <h2>Why it mattered</h2>
     <ul>
       <li>
-        <strong>It changed who could make content.</strong> Instructors author their own detailed
-        simulations. Engineering stopped being the bottleneck on the product's most valuable
-        axis.
+        <strong>It changed who could make content.</strong> Instructors author their own
+        simulations. Engineering stopped being the bottleneck on the product's most valuable axis.
       </li>
       <li>
-        <strong>It changed iteration speed.</strong> Adjusting a scenario went from a ticket to
-        a session, which means scenarios get refined rather than shipped as first drafts.
+        <strong>It changed iteration speed.</strong> Adjusting a scenario went from a ticket to a
+        session, which means scenarios get refined rather than shipped as first drafts.
       </li>
       <li>
         <strong>It is the same instinct as my UI framework work.</strong> Given a choice between
         building a feature and building the thing that lets other people build features, I have
-        repeatedly chosen the second — and on both projects it was the decision that aged best.
+        repeatedly chosen the second, and on both projects it was the decision that aged best.
       </li>
     </ul>
-
 
   </div>
 </article>

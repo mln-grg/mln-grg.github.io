@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Horror Game Demo — one house, told in rooms — Milan George</title>
+<meta name="description" content="A first person story horror demo set inside a single house, built in Unity over the winter of 2020, taking the What Remains of Edith Finch approach to structure.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Horror Game Demo — one house, told in rooms — Milan George">
+<meta property="og:description" content="Unity, 2020. A house where each room is a chapter, and the lighting does the work the enemy would usually do.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../style.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var sysLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+    document.documentElement.setAttribute("data-theme", saved || (sysLight ? "light" : "dark"));
+  })();
+</script>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="../index.html">Milan George</a>
+    <nav>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#experience" class="hide-sm">Experience</a>
+      <a href="../index.html#contact">Contact</a>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap crumb"><a href="../index.html#projects">← All projects</a></div>
+
+<div class="phead">
+  <div class="wrap">
+    <h1>Horror Game Demo</h1>
+    <p class="deck">
+      A first person story horror demo that never leaves one house. Built in Unity over the winter
+      of 2020, structured after What Remains of Edith Finch: the house is the level, each room is a
+      chapter, and walking into one is how you turn the page.
+    </p>
+    <div class="facts">
+      <div class="fact"><div class="k">Engine</div><div class="v">Unity</div></div>
+      <div class="fact"><div class="k">Perspective</div><div class="v">First person</div></div>
+      <div class="fact"><div class="k">Built</div><div class="v">Dec 2020 to Jan 2021</div></div>
+      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/Horror-Prototype" rel="noopener">github.com/mln-grg/Horror-Prototype</a></div></div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="wrap">
+
+    <figure class="media">
+      <a class="ytlite" href="https://www.youtube.com/watch?v=Z8LycaXvo9s" target="_blank" rel="noopener"
+         style="background-image:url('../media/horror-video-poster.jpg')"
+         aria-label="Watch the Horror Game Demo walkthrough on YouTube">
+        <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+      </a>
+      <figcaption>Horror Game Demo walkthrough. Opens on YouTube.</figcaption>
+    </figure>
+
+    <figure class="media">
+      <img src="../media/horror-demo.jpg" alt="A dark corridor with a figure standing at the far end, lit from behind in red">
+      <figcaption>
+        The whole frame is two lights and a silhouette. Turn your brightness up before you look at
+        this one.
+      </figcaption>
+    </figure>
+
+    <h2>One house, on purpose</h2>
+    <p>
+      A single building is a hard constraint that solves more problems than it makes. There is no
+      streaming, no level transitions, no navigation problem, and no budget spent on places the
+      player will walk past once. Everything that is left goes into the rooms, and every room can
+      afford to be authored rather than assembled.
+    </p>
+    <p>
+      Edith Finch is the reference because it does the same thing and never has to invent a reason
+      for you to keep going. The house is the reason. You want the next room because the last one
+      told you something.
+    </p>
+
+    <h2>Lighting instead of a monster</h2>
+    <p>
+      Most of the fear budget went into what you cannot see. The screenshot above is a corridor with
+      almost no light in it, one red source at the far end, and a shape between you and it. Nothing
+      in that frame is chasing anybody. It is unpleasant to look at anyway, and it costs one light
+      and one silhouette.
+    </p>
+
+    <!-- MILAN — this page is written from the design intent on the old portfolio and from the
+         screenshot. If there is anything specific about the implementation worth naming, the
+         interaction system, the trigger and sequence setup, the audio, add it here and delete
+         this comment. -->
+
+    <div class="callout">
+      <p>
+        This is early work and it sits on the site as early work. It is here because it is the
+        first thing I built where the design question came before the code question, and because
+        the answer to that question shaped what got built rather than the other way round.
+      </p>
+    </div>
+
+  </div>
+</article>
+
+<div class="wrap pagenav">
+  <a href="cartino.html">← Cartino</a>
+  <a class="next" href="koi.html">Koi →</a>
+</div>
+
+<script>
+  document.getElementById("themebtn").addEventListener("click", function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+</script>
+
+
+</body>
+</html>

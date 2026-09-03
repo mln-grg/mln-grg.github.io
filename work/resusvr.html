@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ResusVR — scenarios &amp; localisation — Milan George</title>
-<meta name="description" content="Medical training scenarios across varied situations and age groups, and an automated localisation pipeline that cut turnaround time and cost. Unity.">
+<title>ResusVR — interaction, localisation and analytics — Milan George</title>
+<meta name="description" content="VR interaction systems, scoring computed by querying a SQLite event log, and a localisation system that changes the procedure and the score, not just the words. Unity.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ResusVR — scenarios &amp; localisation — Milan George">
-<meta property="og:description" content="Medical VR training scenarios, and the pipeline automation that made shipping them in every language affordable.">
+<meta property="og:title" content="ResusVR — interaction, localisation and analytics — Milan George">
+<meta property="og:description" content="Interaction systems, a SQLite backed scoring layer, and localisation wired straight to Google Sheets.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -37,17 +37,18 @@
 
 <div class="phead">
   <div class="wrap">
-    <h1>ResusVR — scenarios &amp; localisation</h1>
+    <h1>ResusVR — interaction, localisation and analytics</h1>
     <p class="deck">
-      A resuscitation training simulator, in Unity. I built training scenarios across a wide
-      spread of clinical situations and patient age groups — and then automated the part of
-      shipping them that was quietly eating the project.
+      A resuscitation training simulator in Unity. I built the VR interaction systems and a
+      spread of clinical scenarios, then two things that turned it from a demo into a product
+      that could ship anywhere: a localisation system that translates the procedure and not just
+      the words, and an analytics layer that tells you how you actually did.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Company</div><div class="v">i3 Simulations</div></div>
-      <div class="fact"><div class="k">Engine</div><div class="v">Unity</div></div>
-      <div class="fact"><div class="k">Built</div><div class="v">Scenarios + localisation pipeline</div></div>
-      <div class="fact"><div class="k">Effect</div><div class="v">Lower turnaround and cost</div></div>
+      <div class="fact"><div class="k">Engine</div><div class="v">Unity, VR</div></div>
+      <div class="fact"><div class="k">Built</div><div class="v">Interaction, scenarios, localisation, analytics</div></div>
+      <div class="fact"><div class="k">Analytics</div><div class="v">SQLite event log</div></div>
     </div>
   </div>
 </div>
@@ -55,49 +56,94 @@
 <article>
   <div class="wrap">
 
-    <!-- GIF SLOT:
     <figure class="media">
-      <img src="../media/resusvr-scenario.gif" alt="A resuscitation training scenario running in VR">
-      <figcaption>One of the training scenarios.</figcaption>
+      <img src="../media/resusvr-check-pulse.jpg" alt="A VR view of a paediatric patient on a trolley with interaction prompts floating over the body, one of them reading Check Pulse">
+      <figcaption>
+        Interaction points on the patient. Every one of these is an event the analytics layer
+        will later ask questions about.
+      </figcaption>
     </figure>
-    -->
 
-    <h2>Scenario work</h2>
+    <h2>Interaction first</h2>
     <p>
-      Medical training content is unusually unforgiving: a scenario has to be clinically correct
-      before it is allowed to be good software. I designed and implemented scenarios spanning
-      varied emergency situations and patient age groups — and paediatric and adult cases are not
-      the same content with a different model, they differ in protocol, in timing, and in what
-      counts as a correct action.
-    </p>
-    <p>
-      That constraint pushes the implementation toward data. When the difference between two
-      scenarios is a set of clinical parameters rather than a set of behaviours, the scenarios
-      become authorable and reviewable by the people qualified to review them, instead of being
-      buried in code only an engineer can audit.
+      In a resuscitation sim the interaction layer is the product. If picking up a stethoscope,
+      finding a pulse or reaching for the right vial feels approximate, nothing built on top of it
+      is worth measuring. So the first work was the interaction systems: what can be grabbed, what
+      it does when you have it, what the patient does in response, and how any of that reads
+      through a headset at arm's length.
     </p>
 
-    <h2>The localisation pipeline</h2>
+    <div class="media-row">
+      <figure class="media">
+        <img src="../media/resusvr-stethoscope.jpg" alt="A stethoscope held over a patient's chest in VR">
+        <figcaption>Tools behave like tools.</figcaption>
+      </figure>
+      <figure class="media">
+        <img src="../media/resusvr-medications.jpg" alt="A medication trolley with labelled drug bottles, one highlighted and named Hydrocortisone IV">
+        <figcaption>The drug trolley, and the reason localisation got complicated.</figcaption>
+      </figure>
+    </div>
+
+    <h2>Localising a procedure, not a string table</h2>
     <p>
-      The product shipped in multiple languages, and localisation was a manual process — export,
-      send, receive, re-import, verify, discover the strings that were missed, repeat. It cost
-      real money per release and, worse, cost time on the critical path of every release.
+      The obvious version of localisation is a dictionary: swap the labels, ship the language.
+      That is not enough here, and the reason is on the trolley above. A hospital in one country
+      reaches for a different drug than a hospital in another, and the order of the steps is not
+      always the same either. Translate only the words and you have shipped a simulator that
+      teaches the wrong procedure in a convincing accent.
     </p>
     <p>
-      I automated it. The measurable result was reduced turnaround time and reduced cost on
-      every release afterwards; the structural result was that adding a language stopped being a
-      decision and became a setting.
+      So the locale drives the scenario, not just its text. A scenario plays out differently, the
+      medications available differ, and it <strong>scores differently</strong>, because the
+      correct sequence in that locale is a different sequence. The same case is genuinely a
+      different exam depending on where you are sitting.
     </p>
+
+    <h2>The pipeline, automated</h2>
+    <p>
+      Localisation was a manual round trip: export, send, receive, re-import, verify, discover the
+      strings that were missed, repeat. It cost real money per release and, worse, cost time on the
+      critical path of every release.
+    </p>
+    <p>
+      I connected the localisation dictionary directly to Google Sheets. Translators and clinical
+      reviewers work in the sheet, the project pulls from it, and the export and re-import steps
+      stop existing. The measurable result was less turnaround time and less cost on every release
+      afterwards. The structural result was that adding a language stopped being a decision and
+      became a setting.
+    </p>
+
+    <h2>Analytics, from an event log</h2>
+    <p>
+      A trainee finishing a scenario needs to know more than pass or fail. They need to know which
+      step was late, which one was out of order, and which one never happened.
+    </p>
+    <p>
+      Everything the trainee does is written as an event into a <strong>SQLite</strong> store as
+      the session runs. Scoring is then a set of queries over that log rather than a pile of flags
+      maintained by the gameplay code: did this assessment happen, did it happen before that
+      intervention, did it happen inside the window it needed to. That separation is what makes
+      the scoring auditable. When a clinician disagrees with a score you can show them the events
+      and the query, instead of arguing about what the game thought it saw.
+    </p>
+
+    <figure class="media">
+      <img src="../media/resusvr-analytics.jpg" alt="The end of session analytics screen: assessment and intervention steps in two columns, each colour coded green, amber or red">
+      <figcaption>
+        End of session. Green is correct and timely, amber is correct but delayed, red is out of
+        sequence or never done. Note the column headings: this is the same screen in a different
+        locale.
+      </figcaption>
+    </figure>
 
     <div class="callout">
       <p>
-        This is the work I point at when someone asks whether I only care about engine internals.
-        Nobody demos a localisation pipeline. It was still the highest-leverage thing I could
-        build on that project, because it removed a recurring cost from every future release
-        rather than a one-off cost from this one.
+        Nobody demos a localisation pipeline. It was still the highest leverage thing I could build
+        on that project, because it removed a recurring cost from every future release rather than
+        a one off cost from this one. The analytics work is the same shape: the score is a
+        consequence of the log, so improving the scoring never means touching the gameplay code.
       </p>
     </div>
-
 
   </div>
 </article>

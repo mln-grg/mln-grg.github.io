@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Milan George — Gameplay &amp; Systems Programmer</title>
-<meta name="description" content="Gameplay and systems programmer. Unreal Engine 5, C++. Large-scale unit simulation on Mass Entity, data-driven UI frameworks, and VR training simulators.">
+<title>Milan George — Gameplay, Systems &amp; Graphics Programmer</title>
+<meta name="description" content="Gameplay, systems and graphics programmer. Unreal Engine 5, Unity, C++, C#, SDL2. Large-scale unit simulation on Mass Entity, crowd rendering, engines and renderers written from scratch, and VR training simulators.">
 <meta name="author" content="Milan George">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Milan George — Gameplay &amp; Systems Programmer">
-<meta property="og:description" content="Unreal Engine 5 and C++. Leads the battle layer of a Total War style RTS: 4,000 individually simulated soldiers on Mass Entity.">
+<meta property="og:title" content="Milan George — Gameplay, Systems &amp; Graphics Programmer">
+<meta property="og:description" content="Unreal Engine 5, Unity, C++, C#, SDL2. Leads the battle layer of a Total War style RTS: 4,000 individually simulated soldiers on Mass Entity, rendered as instanced meshes with baked vertex animation.">
 <meta property="og:site_name" content="Milan George">
 <meta name="twitter:card" content="summary">
 
@@ -40,16 +40,19 @@
 </header>
 
 <div class="hero">
+  <canvas class="pfield fill" aria-hidden="true"></canvas>
   <div class="wrap">
     <div class="eyebrow">Bangalore, India</div>
     <h1>Milan George</h1>
-    <div class="role">Gameplay &amp; Systems Programmer — Unreal Engine 5, C++</div>
+    <div class="role">Gameplay, Systems &amp; Graphics Programmer</div>
+    <div class="stack">Unreal Engine 5 · Unity · C++ · C# · SDL2</div>
     <p class="lede">
       Six years in game development, four of them across real-time strategy and VR training
       simulation. I currently lead the battle and overworld layers of a Total War style strategy
       title in UE5, where soldiers are simulated on Mass Entity and rendered as instanced meshes
-      with baked vertex animation. Most of my work is simulation at scale, AI, and the systems
-      other people on the team build content with.
+      with baked vertex animation. Most of my work is simulation at scale, AI, the rendering path
+      that gets four thousand of them on screen, and the systems other people on the team build
+      content with. Outside work I write engines and renderers from scratch in C++ and SDL2.
     </p>
     <div class="actions">
       <a class="btn primary" href="#projects">See the projects</a>
@@ -61,10 +64,17 @@
 </div>
 
 <section id="projects">
+  <canvas class="pfield stick" aria-hidden="true"></canvas>
   <div class="wrap">
     <div class="sec-head">
       <h2>Projects</h2>
       <div class="note">Open any project for the full write-up</div>
+    </div>
+
+    <div class="tabs" id="tabs" role="group" aria-label="Filter projects">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="graphics" aria-pressed="false">Graphics</button>
+      <button type="button" data-filter="systems" aria-pressed="false">Gameplay &amp; systems</button>
     </div>
 
     <div class="group">
@@ -75,7 +85,7 @@
 
     <div class="grid">
 
-      <a class="pcard" href="work/greenleaf.html">
+      <a class="pcard" data-cat="systems" href="work/greenleaf.html">
         <div class="thumb">
           <svg viewBox="0 0 400 225" aria-hidden="true">
             <rect class="tb-bg" width="400" height="225"/>
@@ -107,52 +117,25 @@
         </div>
       </a>
 
-      <a class="pcard" href="work/simgym.html">
+      <a class="pcard" data-cat="systems" href="work/simgym.html">
         <div class="thumb">
-          <svg viewBox="0 0 400 225" aria-hidden="true">
-            <rect class="tb-bg" width="400" height="225"/>
-            <path class="tb-line" d="M60 58 H220 M60 90 H220 M60 122 H220 M60 154 H220 M60 58 V154 M92 58 V154 M124 58 V154 M156 58 V154 M188 58 V154 M220 58 V154"/>
-            <path class="tb-sm" d="M120 78 H280 M120 110 H280 M120 142 H280 M120 174 H280 M120 78 V174 M160 78 V174 M200 78 V174 M240 78 V174 M280 78 V174"/>
-            <rect class="tb-a" x="160" y="110" width="40" height="32"/>
-            <rect class="tb-am" x="200" y="78" width="40" height="32"/>
-            <rect class="tb-am" x="120" y="142" width="40" height="32"/>
-            <circle class="tb-a" cx="300" cy="126" r="7"/>
-            <path class="tb-s" d="M284 152 H316"/>
-          </svg>
+          <img src="media/simgym-room-dressed.jpg" alt="The SimGym room designer with an asset library open beside a resuscitation bay being laid out" loading="lazy">
         </div>
         <div class="body">
           <h3>SimGym</h3>
-          <div class="sub">i3 SIMULATIONS · UNREAL · PC VR</div>
+          <div class="sub">i3 SIMULATIONS · UNREAL · QUEST + PC VR</div>
           <p>
-            A PC VR training simulator. I built the scenario-creator mode and its multigrid
-            authoring system, so instructors write their own simulations instead of filing a
-            request with engineering.
+            A medical training simulator on Quest 2, Quest 3 and PC VR. I built the scenario
+            and patient designer: set the case, filter the metahuman patient, dress the room, and
+            never file a ticket with engineering.
           </p>
           <div class="more">Open →</div>
         </div>
       </a>
 
-      <a class="pcard" href="work/ent-surgery-vr.html">
+      <a class="pcard" data-cat="systems" href="work/ent-surgery-vr.html">
         <div class="thumb">
-          <svg viewBox="0 0 400 225" aria-hidden="true">
-            <rect class="tb-bg" width="400" height="225"/>
-            <rect class="tb-line" x="48" y="52" width="304" height="80" rx="6"/>
-            <circle class="tb-a" cx="74" cy="78" r="7"/>
-            <rect class="tb-d" x="92" y="73" width="60" height="9" rx="4"/>
-            <path class="tb-sm" d="M64 106 H336"/>
-            <path class="tb-s" d="M64 106 H228"/>
-            <circle class="tb-a" cx="228" cy="106" r="6"/>
-            <g class="tb-d">
-              <rect x="48" y="150" width="88" height="10" rx="5"/>
-              <rect x="48" y="170" width="140" height="10" rx="5"/>
-            </g>
-            <g class="tb-am">
-              <rect x="256" y="146" width="18" height="34"/>
-              <rect x="282" y="158" width="18" height="22"/>
-              <rect x="308" y="138" width="18" height="42"/>
-              <rect x="334" y="164" width="18" height="16"/>
-            </g>
-          </svg>
+          <img src="media/ent-surgical-view.jpg" alt="A rendered view down a surgical microscope during a temporal bone procedure" loading="lazy">
         </div>
         <div class="body">
           <h3>ENT Surgery VR</h3>
@@ -166,29 +149,17 @@
         </div>
       </a>
 
-      <a class="pcard" href="work/resusvr.html">
+      <a class="pcard" data-cat="systems" href="work/resusvr.html">
         <div class="thumb">
-          <svg viewBox="0 0 400 225" aria-hidden="true">
-            <rect class="tb-bg" width="400" height="225"/>
-            <path class="tb-s" d="M40 112 H108 L120 82 L138 148 L156 96 L168 112 H208"/>
-            <g class="tb-line">
-              <rect x="228" y="56" width="130" height="30" rx="6"/>
-              <rect x="228" y="98" width="130" height="30" rx="6"/>
-              <rect x="228" y="140" width="130" height="30" rx="6"/>
-            </g>
-            <rect class="tb-am" x="240" y="66" width="62" height="9" rx="4"/>
-            <rect class="tb-a" x="240" y="108" width="90" height="9" rx="4"/>
-            <rect class="tb-am" x="240" y="150" width="44" height="9" rx="4"/>
-            <path class="tb-dl" d="M208 112 H228 M214 100 L228 71 M214 124 L228 155"/>
-          </svg>
+          <img src="media/resusvr-analytics.jpg" alt="The ResusVR end of session analytics screen, assessment steps colour coded green amber and red" loading="lazy">
         </div>
         <div class="body">
           <h3>ResusVR</h3>
           <div class="sub">i3 SIMULATIONS · UNITY · VR</div>
           <p>
-            A resuscitation training simulator. Medical scenarios across varied situations and
-            patient age groups, and the localisation pipeline automation that cut turnaround and
-            cost on every release after it.
+            A resuscitation training simulator. VR interaction systems, scoring computed by
+            querying a SQLite event log, and localisation that changes the procedure and not just
+            the words.
           </p>
           <div class="more">Open →</div>
         </div>
@@ -205,30 +176,9 @@
 
     <div class="grid">
 
-      <a class="pcard" href="work/benji-2d.html">
+      <a class="pcard" data-cat="graphics" href="work/benji-2d.html">
         <div class="thumb">
-          <svg viewBox="0 0 400 225" aria-hidden="true">
-            <rect class="tb-bg" width="400" height="225"/>
-            <g class="tb-line">
-              <rect x="48" y="52" width="304" height="34" rx="4"/>
-              <rect x="48" y="96" width="304" height="34" rx="4"/>
-              <rect x="48" y="140" width="304" height="34" rx="4"/>
-            </g>
-            <g class="tb-a">
-              <rect x="56" y="60" width="26" height="18" rx="3"/><rect x="88" y="60" width="26" height="18" rx="3"/>
-              <rect x="120" y="60" width="26" height="18" rx="3"/><rect x="152" y="60" width="26" height="18" rx="3"/>
-              <rect x="184" y="60" width="26" height="18" rx="3"/>
-            </g>
-            <g class="tb-am">
-              <rect x="56" y="104" width="26" height="18" rx="3"/><rect x="88" y="104" width="26" height="18" rx="3"/>
-              <rect x="120" y="104" width="26" height="18" rx="3"/>
-              <rect x="56" y="148" width="26" height="18" rx="3"/><rect x="88" y="148" width="26" height="18" rx="3"/>
-              <rect x="120" y="148" width="26" height="18" rx="3"/><rect x="152" y="148" width="26" height="18" rx="3"/>
-            </g>
-            <text x="300" y="74" class="tb-d" font-family="monospace" font-size="13">pool 0</text>
-            <text x="300" y="118" class="tb-d" font-family="monospace" font-size="13">pool 1</text>
-            <text x="300" y="162" class="tb-d" font-family="monospace" font-size="13">pool 2</text>
-          </svg>
+          <img src="media/benji-chopper.jpg" alt="The chopper demo running on Benji-2D: a helicopter, tanks and a truck over a tiled jungle map" loading="lazy">
         </div>
         <div class="body">
           <h3>Benji-2D</h3>
@@ -242,22 +192,39 @@
         </div>
       </a>
 
-      <a class="pcard" href="work/hold-of-whiterun.html">
+      <a class="pcard" data-cat="graphics" href="work/automata-engine.html">
         <div class="thumb">
-          <svg viewBox="0 0 400 225" aria-hidden="true">
-            <rect class="tb-bg" width="400" height="225"/>
-            <path class="tb-sm" d="M120 70 L200 112 M200 112 L296 66 M120 70 L104 158 M104 158 L200 112 M200 112 L282 160 M296 66 L282 160 M104 158 L282 160"/>
-            <path class="tb-dl" style="stroke-dasharray:4 4" d="M120 70 L296 66"/>
-            <circle class="tb-a" cx="200" cy="112" r="12"/>
-            <circle class="tb-a" cx="120" cy="70" r="8"/>
-            <circle class="tb-a" cx="296" cy="66" r="8"/>
-            <circle class="tb-a" cx="104" cy="158" r="8"/>
-            <circle class="tb-a" cx="282" cy="160" r="8"/>
-            <circle class="tb-am" cx="58" cy="104" r="5"/>
-            <circle class="tb-am" cx="344" cy="112" r="5"/>
-            <circle class="tb-am" cx="196" cy="190" r="5"/>
-            <path class="tb-sm" d="M58 104 L104 158 M344 112 L296 66 M196 190 L282 160"/>
-          </svg>
+          <img src="media/automata-hud.jpg" alt="Conway's Game of Life filling the screen, with a live readout of simulation and draw time in the corner" loading="lazy">
+        </div>
+        <div class="body">
+          <h3>automata-engine</h3>
+          <div class="sub">PERSONAL · C++20 · SDL2 · 2026</div>
+          <p>
+            Two million cells simulated and drawn every frame, with the cost of both on screen.
+            Version one of four, each a rewrite of the same inner loop, benchmarked the same way.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" data-cat="graphics" href="work/mandelbrot.html">
+        <div class="thumb">
+          <img src="media/mandelbrot-zoom.jpg" alt="A zoomed view of the Mandelbrot boundary, satellite bulbs and branching filaments in blue and green" loading="lazy">
+        </div>
+        <div class="body">
+          <h3>Mandelbrot</h3>
+          <div class="sub">PERSONAL · C++20 · SDL2 · 2026</div>
+          <p>
+            A set viewer in one file. Smooth escape time colouring instead of banding, and a zoom
+            that holds the point under the cursor so you can explore rather than chase.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" data-cat="systems" href="work/hold-of-whiterun.html">
+        <div class="thumb">
+          <img src="media/whiterun-map.jpg" alt="The hand drawn map of Whiterun hold with coloured dots for each of the 42 people in it" loading="lazy">
         </div>
         <div class="body">
           <h3>Hold of Whiterun</h3>
@@ -270,7 +237,7 @@
         </div>
       </a>
 
-      <a class="pcard" href="work/knight.html">
+      <a class="pcard" data-cat="systems" href="work/knight.html">
         <div class="thumb">
           <svg viewBox="0 0 400 225" aria-hidden="true">
             <rect class="tb-bg" width="400" height="225"/>
@@ -297,20 +264,9 @@
         </div>
       </a>
 
-      <a class="pcard" href="work/blacksmith.html">
+      <a class="pcard" data-cat="systems" href="work/blacksmith.html">
         <div class="thumb">
-          <svg viewBox="0 0 400 225" aria-hidden="true">
-            <rect class="tb-bg" width="400" height="225"/>
-            <path class="tb-a" d="M120 128 h160 l-14 26 h-132 z"/>
-            <rect class="tb-a" x="168" y="154" width="64" height="14"/>
-            <path class="tb-a" d="M112 112 h132 a16 16 0 0 1 0 16 h-132 z"/>
-            <path class="tb-s" d="M236 76 l44 -22 l10 20 l-44 22 z"/>
-            <g class="tb-am">
-              <circle cx="150" cy="94" r="4"/><circle cx="176" cy="80" r="3"/>
-              <circle cx="196" cy="98" r="5"/><circle cx="214" cy="76" r="3"/>
-              <circle cx="132" cy="80" r="3"/>
-            </g>
-          </svg>
+          <img src="media/blacksmith-forge.jpg" alt="The Blacksmith forge stage: a glowing blade on the anvil, a heat gauge, and a four perfect chain readout" loading="lazy">
         </div>
         <div class="body">
           <h3>Blacksmith</h3>
@@ -323,7 +279,7 @@
         </div>
       </a>
 
-      <a class="pcard" href="work/boss-fight-kit.html">
+      <a class="pcard" data-cat="systems" href="work/boss-fight-kit.html">
         <div class="thumb">
           <svg viewBox="0 0 400 225" aria-hidden="true">
             <rect class="tb-bg" width="400" height="225"/>
@@ -347,6 +303,51 @@
             Three Hollow Knight boss fights rebuilt as data: attacks, phases, arenas and tuning
             are all ScriptableObjects, plus the editor tools that scaffold a fight and validate
             it before it fails silently.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" data-cat="systems" href="work/cartino.html">
+        <div class="thumb">
+          <img src="media/cartino.jpg" alt="An armoured buggy with a roof turret in a low poly desert canyon" loading="lazy">
+        </div>
+        <div class="body">
+          <h3>Cartino</h3>
+          <div class="sub">PERSONAL · UNITY · ANDROID · 2020</div>
+          <p>
+            A 3D bullet hell where you drive. Built for Android, and the first thing I made where
+            the structure was a decision rather than whatever the tutorial did.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" data-cat="systems" href="work/horror-demo.html">
+        <div class="thumb">
+          <img src="media/horror-demo-card.jpg" alt="A dark corridor with a figure silhouetted against red light at the far end" loading="lazy">
+        </div>
+        <div class="body">
+          <h3>Horror Game Demo</h3>
+          <div class="sub">PERSONAL · UNITY · FIRST PERSON · 2020</div>
+          <p>
+            A story horror demo that never leaves one house, structured after Edith Finch: the
+            house is the level, each room is a chapter, and the lighting does the frightening.
+          </p>
+          <div class="more">Open →</div>
+        </div>
+      </a>
+
+      <a class="pcard" data-cat="systems" href="work/koi.html">
+        <div class="thumb">
+          <img src="media/koi-level.jpg" alt="A low poly island split by a river, a hen inside a dashed circle, chicks scattered, a red flag on the far bank" loading="lazy">
+        </div>
+        <div class="body">
+          <h3>Koi</h3>
+          <div class="sub">PERSONAL · UNITY · GAME JAM · 2021</div>
+          <p>
+            A jam puzzle game on the theme Reset. Chicks follow you only inside your circle, and
+            the one order you can give them sends them back to where they started.
           </p>
           <div class="more">Open →</div>
         </div>
@@ -382,10 +383,11 @@
         <div class="when">Aug 2022 — Apr 2024</div>
       </div>
       <p>
-        Built training simulators across Unreal and Unity: an authoring tool that put scenario
-        creation in the hands of instructors, a session recorder and grading system that turned
-        practice into assessment, and pipeline automation that cut localisation cost on every
-        release after it.
+        Built training simulators across Unreal and Unity for Meta Quest and PC VR: a scenario and
+        patient designer that put content creation in the hands of instructors, VR interaction
+        systems, a session recorder and grading layer that turned practice into assessment, scoring
+        computed by querying a SQLite event log, and a localisation pipeline wired to Google Sheets
+        that cut cost on every release after it.
       </p>
     </div>
 
@@ -474,6 +476,154 @@
     document.documentElement.setAttribute("data-theme", next);
     try { localStorage.setItem("theme", next); } catch (e) {}
   });
+</script>
+
+<script>
+//drifting points joined when they get close, and pushed around by the cursor
+(function () {
+  var canvases = Array.prototype.slice.call(document.querySelectorAll("canvas.pfield"));
+  if (!canvases.length) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var LINK = 132, PUSH = 110;
+  var ink = "100,214,160";
+  var fields = [];
+
+  function readInk() {
+    var c = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+    var m = c.match(/^#([0-9a-f]{6})$/i);
+    if (!m) return;
+    var n = parseInt(m[1], 16);
+    ink = ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255);
+  }
+
+  function sizeField(f) {
+    var r = f.canvas.getBoundingClientRect();
+    f.w = r.width; f.h = r.height;
+    if (f.w < 2 || f.h < 2) return;
+    f.canvas.width = Math.round(f.w * dpr);
+    f.canvas.height = Math.round(f.h * dpr);
+    f.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    var want = Math.min(120, Math.max(24, Math.round(f.w * f.h / 9000)));
+    f.points.length = 0;
+    for (var i = 0; i < want; i++) {
+      f.points.push({
+        x: Math.random() * f.w,
+        y: Math.random() * f.h,
+        vx: (Math.random() - 0.5) * 0.22,
+        vy: (Math.random() - 0.5) * 0.22
+      });
+    }
+  }
+
+  function drawField(f) {
+    if (f.w < 2 || f.h < 2) return;
+    var ctx = f.ctx, pts = f.points, i, a, b;
+    ctx.clearRect(0, 0, f.w, f.h);
+
+    for (i = 0; i < pts.length; i++) {
+      var pt = pts[i];
+      pt.x += pt.vx; pt.y += pt.vy;
+      if (pt.x < 0 || pt.x > f.w) pt.vx *= -1;
+      if (pt.y < 0 || pt.y > f.h) pt.vy *= -1;
+
+      var mdx = pt.x - f.mouse.x, mdy = pt.y - f.mouse.y;
+      var md = Math.sqrt(mdx * mdx + mdy * mdy);
+      if (md < PUSH && md > 0.01) {
+        var force = (PUSH - md) / PUSH * 0.9;
+        pt.x += mdx / md * force;
+        pt.y += mdy / md * force;
+      }
+
+      ctx.fillStyle = "rgba(" + ink + ",0.62)";
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, 1.6, 0, 6.2832);
+      ctx.fill();
+    }
+
+    for (a = 0; a < pts.length; a++) {
+      for (b = a + 1; b < pts.length; b++) {
+        var dx = pts[a].x - pts[b].x, dy = pts[a].y - pts[b].y;
+        var d = Math.sqrt(dx * dx + dy * dy);
+        if (d > LINK) continue;
+        ctx.strokeStyle = "rgba(" + ink + "," + (0.30 * (1 - d / LINK)).toFixed(3) + ")";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(pts[a].x, pts[a].y);
+        ctx.lineTo(pts[b].x, pts[b].y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  canvases.forEach(function (canvas) {
+    var f = {
+      canvas: canvas,
+      ctx: canvas.getContext("2d"),
+      w: 0, h: 0,
+      points: [],
+      mouse: { x: -999, y: -999 }
+    };
+    var host = canvas.parentNode;
+    host.addEventListener("pointermove", function (e) {
+      var r = canvas.getBoundingClientRect();
+      f.mouse.x = e.clientX - r.left;
+      f.mouse.y = e.clientY - r.top;
+    });
+    host.addEventListener("pointerleave", function () {
+      f.mouse.x = -999; f.mouse.y = -999;
+    });
+    fields.push(f);
+  });
+
+  function resizeAll() { fields.forEach(sizeField); }
+
+  function frame() {
+    fields.forEach(drawField);
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener("resize", resizeAll);
+  document.getElementById("themebtn").addEventListener("click", function () {
+    setTimeout(readInk, 0);
+  });
+
+  readInk();
+  resizeAll();
+  //the sticky field is only the right height once layout has settled
+  window.addEventListener("load", resizeAll);
+  requestAnimationFrame(frame);
+})();
+</script>
+
+<script>
+//project filter
+(function () {
+  var tabs = document.getElementById("tabs");
+  if (!tabs) return;
+  var buttons = Array.prototype.slice.call(tabs.querySelectorAll("button"));
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".pcard"));
+  var groups = Array.prototype.slice.call(document.querySelectorAll("#projects .group"));
+
+  function apply(filter) {
+    cards.forEach(function (c) {
+      c.hidden = filter !== "all" && c.getAttribute("data-cat") !== filter;
+    });
+    groups.forEach(function (g) {
+      var shown = g.querySelectorAll(".pcard:not([hidden])").length;
+      g.hidden = shown === 0;
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-filter") === filter));
+    });
+  }
+
+  buttons.forEach(function (b) {
+    b.addEventListener("click", function () { apply(b.getAttribute("data-filter")); });
+  });
+})();
 </script>
 
 </body>

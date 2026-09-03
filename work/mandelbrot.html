@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandelbrot — smooth escape time in C++20 — Milan George</title>
+<meta name="description" content="A Mandelbrot set viewer in C++20 and SDL2. Smooth escape time colouring with a large bailout radius, and a zoom that keeps the point under the cursor fixed.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mandelbrot — smooth escape time in C++20 — Milan George">
+<meta property="og:description" content="C++20 and SDL2. The colour banding problem, the log2 log2 fix, and a zoom that holds the point under the cursor.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../style.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var sysLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+    document.documentElement.setAttribute("data-theme", saved || (sysLight ? "light" : "dark"));
+  })();
+</script>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="../index.html">Milan George</a>
+    <nav>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#experience" class="hide-sm">Experience</a>
+      <a href="../index.html#contact">Contact</a>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap crumb"><a href="../index.html#projects">← All projects</a></div>
+
+<div class="phead">
+  <div class="wrap">
+    <h1>Mandelbrot</h1>
+    <p class="deck">
+      A Mandelbrot set viewer in C++20 with SDL2. Small on purpose: one file, one loop, and two
+      problems worth solving properly. Making the colour continuous instead of banded, and making
+      the zoom hold the point you are pointing at.
+    </p>
+    <div class="facts">
+      <div class="fact"><div class="k">Language</div><div class="v">C++20, SDL2</div></div>
+      <div class="fact"><div class="k">Render</div><div class="v">500 x 500, 500 iterations</div></div>
+      <div class="fact"><div class="k">Threads</div><div class="v">One</div></div>
+      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/mandelbrot" rel="noopener">github.com/mln-grg/mandelbrot</a></div></div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="wrap">
+
+    <figure class="media square">
+      <img src="../media/mandelbrot-zoom.gif" alt="Zooming into the boundary of the Mandelbrot set, spiral structures repeating at every scale">
+      <figcaption>
+        Forty four wheel notches into seahorse valley. Each notch is 1.25x, so the last frame is
+        roughly 20,000 times closer than the first, and the cursor never moved.
+      </figcaption>
+    </figure>
+
+    <h2>The banding problem</h2>
+    <p>
+      The obvious way to colour the set is by iteration count: how many steps before the point
+      escapes. It works, and it looks wrong. Iteration count is an integer, so the image comes out
+      in hard rings, and every zoom makes the rings more obvious rather than less.
+    </p>
+    <p>
+      The fix is to stop bailing out early. With a large escape radius, 256 here rather than the
+      usual 2, the magnitude at the moment of escape carries information about where inside that
+      step the point actually left. The fractional escape time is then
+    </p>
+    <p><code>i + 1 - log2(log2(|z|))</code></p>
+    <p>
+      which is continuous across the boundary between one iteration count and the next. Normalise
+      that, use it to interpolate through a fifteen stop palette, and the gradient stays smooth at
+      any depth.
+    </p>
+
+    <div class="media-row">
+      <figure class="media">
+        <img src="../media/mandelbrot-full.jpg" alt="The whole Mandelbrot set, cardioid and bulbs, coloured in blue and violet">
+        <figcaption>The whole set.</figcaption>
+      </figure>
+      <figure class="media">
+        <img src="../media/mandelbrot-zoom.jpg" alt="A zoomed view of the boundary showing satellite bulbs and branching filaments">
+        <figcaption>Six notches in, on the boundary.</figcaption>
+      </figure>
+    </div>
+
+    <h2>Zooming without losing your place</h2>
+    <p>
+      A viewer that zooms to the centre of the window is a viewer you fight. Every time you get
+      close to something interesting it slides off the edge and you have to pan back. So the wheel
+      handler converts the cursor position to a complex coordinate first, applies the zoom factor to
+      the view size, then moves the centre so that same coordinate lands back under the cursor.
+    </p>
+    <p>
+      That is four lines of arithmetic and it is the difference between exploring the set and
+      chasing it. It is also why the GIF above works: the cursor was parked on one point in
+      seahorse valley and never moved for forty four notches.
+    </p>
+
+    <h2>What it does not do</h2>
+    <ul>
+      <li>500 iterations, fixed. Deep zooms into the boundary run out of detail before they run out
+        of precision, which is what the flat regions at the end of a long zoom are.</li>
+      <li>Double precision gives out somewhere around a view width of 1e-14. Past that you need
+        perturbation theory and arbitrary precision reference orbits, which is a different project.</li>
+      <li>Single threaded, and the row loop is embarrassingly parallel. Splitting it is the obvious
+        first change and a fragment shader is the obvious second one, which is the same ladder
+        <a href="automata-engine.html">automata-engine</a> is climbing.</li>
+    </ul>
+
+  </div>
+</article>
+
+<div class="wrap pagenav">
+  <a href="automata-engine.html">← automata-engine</a>
+  <a class="next" href="hold-of-whiterun.html">Hold of Whiterun →</a>
+</div>
+
+<script>
+  document.getElementById("themebtn").addEventListener("click", function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+</script>
+
+</body>
+</html>

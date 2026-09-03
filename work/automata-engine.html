@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>automata-engine — two million cells a frame — Milan George</title>
+<meta name="description" content="Conway's Game of Life on a 1920x1080 grid in C++20 and SDL2, with a live readout of simulation and draw cost. Version one of four planned rewrites of the same inner loop.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="automata-engine — two million cells a frame — Milan George">
+<meta property="og:description" content="Two million cells simulated and drawn every frame, with the cost of both on screen. The first of four planned versions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../style.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var sysLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+    document.documentElement.setAttribute("data-theme", saved || (sysLight ? "light" : "dark"));
+  })();
+</script>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="../index.html">Milan George</a>
+    <nav>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#experience" class="hide-sm">Experience</a>
+      <a href="../index.html#contact">Contact</a>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap crumb"><a href="../index.html#projects">← All projects</a></div>
+
+<div class="phead">
+  <div class="wrap">
+    <h1>automata-engine</h1>
+    <p class="deck">
+      Conway's Game of Life on a 1920 by 1080 grid, written in C++20 with SDL2. Two million cells
+      simulated and drawn every frame, with a live readout of how long each of those two things
+      took. The rules and the visuals are finished. The inner loop is not, and that is the point.
+    </p>
+    <div class="facts">
+      <div class="fact"><div class="k">Language</div><div class="v">C++20, SDL2</div></div>
+      <div class="fact"><div class="k">Grid</div><div class="v">2,073,600 cells</div></div>
+      <div class="fact"><div class="k">Version</div><div class="v">1 of a planned 4</div></div>
+      <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/automata-engine" rel="noopener">github.com/mln-grg/automata-engine</a></div></div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="wrap">
+
+    <figure class="media">
+      <img src="../media/automata-life.gif" alt="Conway's Game of Life running on a full screen grid, with a performance readout in the top left corner">
+      <figcaption>
+        Random soup at 4x zoom. The readout is the whole point of the project: SIM is the number
+        the rewrites are aimed at.
+      </figcaption>
+    </figure>
+
+    <h2>Why build this at all</h2>
+    <p>
+      Life is a solved problem. What is not solved is my ability to say, from memory and with
+      numbers, what the difference is between arranging work better and doing less work. Those two
+      things get conflated constantly in interviews, including by me. So the plan is four versions
+      of the same program, benchmarked on the same machine with the same flags, seed and grid size,
+      and a record of what I predicted before each measurement and what I actually got.
+    </p>
+
+    <h2>Where it stands</h2>
+    <p>
+      Version one is the obvious one, and it is what is on GitHub today. On an i7-12700F, release
+      build, the readout sits at roughly:
+    </p>
+    <ul>
+      <li><code>SIM</code> 14.3 ms, the simulation step</li>
+      <li><code>DRAW</code> 1.6 ms, filling the pixel buffer</li>
+      <li><code>MCELLS/S</code> 145, millions of cell updates per second</li>
+      <li><code>FPS</code> 51.8</li>
+    </ul>
+    <p>
+      Everything after this is a rewrite of the inner loop with the same rules and the same output.
+    </p>
+
+    <h2>The four versions</h2>
+    <ol style="color:var(--text-dim); max-width:44rem; padding-left:1.1rem">
+      <li style="margin-bottom:.6rem"><strong>Naive.</strong> The obvious implementation, allocating as it goes.</li>
+      <li style="margin-bottom:.6rem"><strong>Mechanical sympathy.</strong> A flat <code>vector&lt;uint8_t&gt;</code> indexed
+        <code>y*W+x</code>, both buffers allocated once. Identical algorithm. Every gain comes from cache
+        locality and from not allocating in the hot loop.</li>
+      <li style="margin-bottom:.6rem"><strong>Algorithmic.</strong> Bit pack 32 cells into a <code>uint32</code> and compute all
+        32 at once with bitwise full adders on the neighbour counts. Less work, not better arranged work.</li>
+      <li><strong>Parallel.</strong> The grid lives in a texture, a fragment shader reads eight
+        neighbours and writes the next state to a second texture, ping ponged, never read back to the CPU.</li>
+    </ol>
+
+    <div class="callout">
+      <p>
+        Two things would invalidate the headline number, so they are rules rather than intentions.
+        Every version gets benchmarked on the same machine, flags, seed and grid size, because a
+        debug versus release comparison is worth about ten times on this loop and an interviewer
+        catches it in one question. And vsync goes off before the GPU version is measured, or the
+        answer is 60 generations a second and the conclusion is wrong.
+      </p>
+    </div>
+
+    <h2>Patterns are data, not code</h2>
+    <p>
+      Every pattern loads at startup from <code>patterns/</code> as an RLE file, the format Golly and
+      the LifeWiki use. Nothing is hard coded. There are 22 in the folder now, from a glider up to a
+      switch engine breeder, and dropping a new <code>.rle</code> in there is the entire process for
+      adding one. Left drag paints cells, the number keys stamp patterns under the cursor, the wheel
+      zooms while keeping the cell under the cursor fixed.
+    </p>
+
+    <h2>The architecture rule</h2>
+    <p>
+      The grid is a flat <code>std::vector&lt;uint8_t&gt;</code> indexed <code>y*W+x</code>, never a
+      vector of vectors, and the simulation step is a function that knows nothing about rendering.
+      That was decided at version one specifically so version four is a swap rather than a rewrite.
+    </p>
+
+    <div class="callout">
+      <p>
+        <a href="mandelbrot.html">Mandelbrot</a> came out of the same sitting and is the same
+        exercise: a tight numeric loop, a window, and nothing between me and the pixels. It has its
+        own page.
+      </p>
+    </div>
+
+  </div>
+</article>
+
+<div class="wrap pagenav">
+  <a href="benji-2d.html">← Benji-2D</a>
+  <a class="next" href="mandelbrot.html">Mandelbrot →</a>
+</div>
+
+<script>
+  document.getElementById("themebtn").addEventListener("click", function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+</script>
+
+</body>
+</html>

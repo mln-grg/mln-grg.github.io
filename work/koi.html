@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koi — a game jam built on one rule — Milan George</title>
+<meta name="description" content="A puzzle game made for BYOG 2021 on the theme Reset. A mother hen herds her chicks across a broken island, and every order she gives costs her the ground she has gained.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Koi — a game jam built on one rule — Milan George">
+<meta property="og:description" content="BYOG 2021, theme Reset. Sole programmer and designer. Herding, a follow radius, and a command that always costs something.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../style.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var sysLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+    document.documentElement.setAttribute("data-theme", saved || (sysLight ? "light" : "dark"));
+  })();
+</script>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="../index.html">Milan George</a>
+    <nav>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#experience" class="hide-sm">Experience</a>
+      <a href="../index.html#contact">Contact</a>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap crumb"><a href="../index.html#projects">← All projects</a></div>
+
+<div class="phead">
+  <div class="wrap">
+    <h1>Koi</h1>
+    <p class="deck">
+      A puzzle game made for BYOG 2021 on the theme Reset. You are a mother hen with chicks that
+      follow you only while they are inside your circle, across an island cut into pieces by water.
+      You can give them exactly one order, and giving it sends them back to where they started.
+    </p>
+    <div class="facts">
+      <div class="fact"><div class="k">Engine</div><div class="v">Unity</div></div>
+      <div class="fact"><div class="k">Event</div><div class="v">BYOG 2021, theme Reset</div></div>
+      <div class="fact"><div class="k">My role</div><div class="v">Sole programmer and designer</div></div>
+      <div class="fact"><div class="k">Play it</div><div class="v"><a href="https://sh4nks0.itch.io/koi" rel="noopener">sh4nks0.itch.io/koi</a></div></div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="wrap">
+
+    <figure class="media">
+      <img src="../media/koi-level.jpg" alt="A low poly isometric island split by a river, with a hen inside a dashed circle, two chicks nearby, and a red flag on the far bank">
+      <figcaption>
+        The hen, her circle, two chicks, and the flag on the far side of the water. The counter in
+        the corner is how many are home.
+      </figcaption>
+    </figure>
+
+    <h2>The rule the whole game is made of</h2>
+    <p>
+      Chicks follow the hen while they are inside her radius. Let one fall too far behind for too
+      long and it resets to where the level started it. That is the entire failure state, and it is
+      also the entire clock: every second you spend solving the far half of the puzzle is a second
+      the near half is drifting out of range.
+    </p>
+    <p>
+      The second half of the design is the command. Standing close to a chick lets you lock it in
+      place, or point at the ground and send it there. It is the only tool that lets you split the
+      flock, which is the only way to cross a gap that will not take all of you at once. And it
+      resets the chick after it executes. Every solution costs you the thing that made it possible.
+    </p>
+
+    <div class="callout">
+      <p>
+        A jam theme is usually a word you decorate a game with. The whole exercise here was to make
+        Reset the load bearing rule instead: not a fail state, not a restart button, but the price
+        attached to the only interesting verb in the game.
+      </p>
+    </div>
+
+    <div class="media-row">
+      <figure class="media">
+        <img src="../media/koi-title.jpg" alt="The Koi title screen: the game name over a low poly island with the hen and her circle near the flag">
+        <figcaption>Title screen.</figcaption>
+      </figure>
+      <figure class="media">
+        <img src="../media/koi-ending.jpg" alt="The end screen: a farm with the chicks safely penned beside a red barn, and the words Thanks For Playing">
+        <figcaption>The end screen. Everyone made it home.</figcaption>
+      </figure>
+    </div>
+
+    <h2>What a jam does to the code</h2>
+    <p>
+      A jam weekend means the follow behaviour, the radius test, the reset timer, the command state
+      and the level flow all get written once and have to be right enough. The known bug is on the
+      itch page in my own words: the move order is unreliable if you click on an object instead of
+      on the ground. So is the line under the play button, which reads "the game might contain
+      several bugs, please be patient". Shipping something honest and slightly broken beat shipping
+      nothing, and it still does.
+    </p>
+
+    <h2>Credits</h2>
+    <p>
+      I was the sole programmer and designer. Arjun M Suresh did the level design. Liyons Varghese,
+      Sundev Nallees and Nandhu S playtested. The itch page lists all five of us as the team, which
+      is how a jam entry is normally credited.
+    </p>
+
+  </div>
+</article>
+
+<div class="wrap pagenav">
+  <a href="horror-demo.html">← Horror Game Demo</a>
+  <a class="next" href="../index.html#projects">All projects →</a>
+</div>
+
+<script>
+  document.getElementById("themebtn").addEventListener("click", function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+</script>
+
+</body>
+</html>
