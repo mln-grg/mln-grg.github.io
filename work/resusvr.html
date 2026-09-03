@@ -44,7 +44,7 @@
     <div class="facts">
       <div class="fact"><div class="k">Company</div><div class="v">i3 Simulations</div></div>
       <div class="fact"><div class="k">Engine</div><div class="v">Unity, VR</div></div>
-      <div class="fact"><div class="k">Built</div><div class="v">Interaction, scenarios, localisation, analytics</div></div>
+      <div class="fact"><div class="k">Built</div><div class="v">Interaction, scenario scripter, localisation, analytics</div></div>
       <div class="fact"><div class="k">Analytics</div><div class="v">SQLite event log</div></div>
     </div>
   </div>
@@ -94,6 +94,22 @@
         </figcaption>
       </figure>
     </div>
+
+    <h2>Scenario scripter</h2>
+    <p>
+      I designed the framework instructors use to script a scenario: every beat is a ScriptableObject
+      instead of scene-specific code.
+    </p>
+    <ul>
+      <li>A scenario is a sequence of <strong>ScriptableObject beats</strong>: show a widget, trigger an
+        NPC to walk in on root motion to a marked location, play a voice line, then update the current
+        objective. Each beat is a self-contained asset, not a line in a script.</li>
+      <li>The active <strong>objective SO drives a listener</strong> that watches player actions against
+        the conditions it defines as correct, and resolves the scene, a side effect, or a failure state
+        if the right actions do not happen before time runs out.</li>
+      <li>Because every beat and every objective is the same kind of asset, a new scenario is built by
+        composing existing units rather than writing new code for it.</li>
+    </ul>
 
   </div>
 </article>

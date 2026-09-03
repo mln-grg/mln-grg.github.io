@@ -70,16 +70,13 @@
     </figure>
 
     <ul>
+      <li>A learning project, built to practise clean code and design patterns on purpose rather than by accident.</li>
       <li>Bullet hell rules on a driveable vehicle. The Android target set the budget for how many projectiles could be alive and how much the enemies could think per frame.</li>
       <li><strong>Object pooling</strong> for projectiles, because allocating a few hundred bullets a second on a phone is the difference between a game and a slideshow.</li>
       <li><strong>A finite state machine</strong> for enemy behaviour, so a new enemy type meant new states rather than new branches.</li>
       <li><strong>Observer</strong> for the events several systems care about, so UI and audio could react without holding references into gameplay.</li>
       <li>Singletons for the managers. I would use fewer now: they make a dependency graph invisible rather than absent.</li>
     </ul>
-
-    <!-- MILAN — the pattern bullets come from the description on the old site, which named
-         the four patterns but not what each one held. Correct anything that is not how you
-         built it, then delete this comment. -->
 
   </div>
 </article>

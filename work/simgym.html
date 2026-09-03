@@ -69,7 +69,10 @@
     <ul>
       <li>Built the <strong>scenario and patient designer</strong> as a four step flow: scenario setting, rules, environment, patient.</li>
       <li>Filtered a <strong>metahuman patient library</strong> down by the attributes a case needs, so training is not always the same face.</li>
-      <li>Constrained the room authoring rather than leaving it freehand. Surfaces carry their own grids, the floor, trolley tops, the inside of each drawer, so an object lands somewhere a hand can actually reach it in VR.</li>
+      <li><strong>Refactored the room designer's placement system into a state machine</strong> to manage player interaction with the grid: idle, object clicked, object focused.</li>
+      <li><strong>Grids nest inside grids, one active at a time.</strong> The floor is a grid for placing beds and furniture. Focus a table and it exposes its own grid for placing tools on top. Open a drawer and that focuses a further grid inside it.</li>
+      <li>Any placeable surface, floor, tabletop, wall, drawer, is a <strong>grid</strong>; any placeable object is a <strong>GridItem</strong>. Wall mounted equipment uses the same system as a bed on the floor.</li>
+      <li>Saved and restored the <strong>position and rotation of every GridItem</strong> in a scene, so a dressed room reloads exactly as it was left.</li>
       <li>One build path to <strong>Quest 2, Quest 3 and PC VR</strong>. The standalone headsets set the budget for what can be in a room and what the authoring UI costs while the scene is loaded behind it.</li>
       <li>The effect: instructors author their own simulations, and engineering stopped being the bottleneck on content.</li>
     </ul>
@@ -102,9 +105,6 @@
         The point of all the placement rules: it has to be where a hand expects it.
       </figcaption>
     </figure>
-
-    <!-- MILAN — the per surface grid line is my reading of the multigrid system from your
-         description and the screenshots. Correct it, then delete this comment. -->
 
   </div>
 </article>
