@@ -39,8 +39,7 @@
   <div class="wrap">
     <h1>Benji-2D</h1>
     <p class="deck">
-      A 2D game engine written from scratch in C++ with SDL2, in 2022. I built it to see what an
-      engine does between a key press and a changed pixel.
+      A 2D game engine written from scratch in C++ and SDL2, in 2022. I built it to see what an engine does between a key press and a changed pixel.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
@@ -54,7 +53,7 @@
 <article>
   <div class="wrap">
 
-    <figure class="media">
+<figure class="media">
       <img src="../media/benji-chopper.jpg" alt="The chopper demo running on the engine: a helicopter, an enemy tank, a truck and trees on a tiled jungle map">
       <figcaption>
         The demo game the engine runs. Chopper, tanks, trucks and trees are all the same thing to
@@ -62,31 +61,16 @@
       </figcaption>
     </figure>
 
-    <h2>Entities and signatures</h2>
-    <p>
-      An entity is an integer id. What it is comes from the components attached to it. Each
-      entity carries a <code>std::bitset&lt;32&gt;</code> recording which component types it has,
-      and each system declares the signature it requires. Matching an entity to a system is a
-      bitwise AND — no virtual call, no dynamic cast.
-    </p>
-    <p>
-      Component type ids come from a templated static counter, so an id is resolved once per
-      type rather than looked up per entity.
-    </p>
+    <ul>
+      <li><strong>Signature based ECS.</strong> An entity is an integer id plus a <code>std::bitset&lt;32&gt;</code> of the components it has. Matching an entity to a system is a bitwise AND, no virtual call and no dynamic cast.</li>
+      <li><strong>Packed component pools.</strong> Components live in a contiguous vector kept densely packed. Removal swaps the last element into the hole and patches both index maps, so iteration never tests for gaps.</li>
+      <li><strong>Thirteen systems</strong>, one job each: movement, sprite rendering with z sort and culling, animation, AABB collision, damage, input, projectile emission and lifetime, camera follow, and four debug renderers.</li>
+      <li><strong>Event bus keyed on <code>std::type_index</code>.</strong> Collision publishes, damage handles it, neither holds a reference to the other.</li>
+      <li>Dear ImGui debug layer for inspecting and spawning entities at runtime.</li>
+      <li>Same family of ideas I later worked with on UE5 Mass Entity: separate data from behaviour, keep components contiguous, select by signature.</li>
+    </ul>
 
-    <h2>Packed component pools</h2>
-    <p>
-      Components live in <code>Pool&lt;T&gt;</code>, a contiguous <code>std::vector&lt;T&gt;</code>
-      kept densely packed. Two maps, <code>entityIdToIndex</code> and <code>indexToEntityId</code>,
-      translate between the sparse entity id space and the packed array.
-    </p>
-    <p>
-      Removal is the part worth explaining. Instead of leaving a hole, the last element is
-      swapped into the removed slot and both maps are patched. Iteration never has to test for
-      gaps, so systems walk a solid run of memory.
-    </p>
-
-    <figure class="figure">
+<figure class="figure">
       <div class="frame">
         <svg viewBox="0 0 720 240" role="img" aria-label="Diagram: entities are ids with a component signature; components live in dense packed arrays; systems iterate the arrays for entities matching a signature.">
           <text x="16" y="26" class="d-s">entity = id + signature. the data lives in the pools, not in the entity.</text>
@@ -126,53 +110,6 @@
       </div>
       <figcaption>Registry owns the pools; systems select entities by signature.</figcaption>
     </figure>
-
-    <h2>Systems</h2>
-    <p>
-      Thirteen systems, each doing one job: movement integration, sprite rendering with z-sort
-      and culling, sprite animation, AABB collision, damage resolution, keyboard control,
-      projectile emission and lifetime, camera follow clamped to the map, and four debug and
-      overlay renderers including a Dear ImGui panel for inspecting and spawning entities.
-    </p>
-
-    <h2>Event bus</h2>
-    <p>
-      Systems do not call each other. <code>CollisionSystem</code> publishes a
-      <code>CollisionEvent</code> and <code>DamageSystem</code> handles it, with neither holding
-      a reference to the other. The bus keeps a <code>std::type_index</code> keyed map of
-      subscriber lists, and each subscription binds a member function pointer plus its owning
-      instance, so handlers stay ordinary methods rather than free functions or lambdas.
-    </p>
-    <p>
-      Entities can also be tagged individually ("player") or grouped ("enemies", "projectiles").
-      That is how gameplay code finds entities without storing raw pointers into pools that
-      reshuffle on removal.
-    </p>
-
-    <h2>Limitations I know about</h2>
-    <ul>
-      <li>
-        Pools grow by doubling and never shrink, and <code>Clear()</code> frees the data while
-        leaving the maps to be reset separately. That lifetime should have a single owner.
-      </li>
-      <li>
-        Systems store <code>std::vector&lt;Entity&gt;</code> by value. Sorting entity ids and
-        storing index ranges would keep iteration closer to the cache behaviour the pools were
-        built for.
-      </li>
-      <li>
-        Collision is a full pairwise sweep. A uniform grid or quadtree is the obvious next step,
-        and it is the reason I paid attention to spatial partitioning later.
-      </li>
-      <li>
-        sol2 and Lua are vendored and linked but never wired into gameplay. The repo description
-        used to claim Lua scripting; it does not any more.
-      </li>
-    </ul>
-
-    <p style="margin-top:2rem">
-      <a class="btn" href="https://github.com/mln-grg/Benji-2D" rel="noopener">Source on GitHub →</a>
-    </p>
 
   </div>
 </article>

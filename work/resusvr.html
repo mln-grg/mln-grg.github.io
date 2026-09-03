@@ -39,10 +39,7 @@
   <div class="wrap">
     <h1>ResusVR — interaction, localisation and analytics</h1>
     <p class="deck">
-      A resuscitation training simulator in Unity. I built the VR interaction systems and a
-      spread of clinical scenarios, then two things that turned it from a demo into a product
-      that could ship anywhere: a localisation system that translates the procedure and not just
-      the words, and an analytics layer that tells you how you actually did.
+      A resuscitation training simulator in Unity. I built the VR interaction systems, a localisation layer that changes the procedure and not just the words, and the analytics that score a session.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Company</div><div class="v">i3 Simulations</div></div>
@@ -56,98 +53,46 @@
 <article>
   <div class="wrap">
 
-    <figure class="media">
+<figure class="media">
       <img src="../media/resusvr-title.jpg" alt="A clinician in scrubs placing a stethoscope on an elderly patient lying on an examination couch">
       <figcaption>ResusVR.</figcaption>
     </figure>
 
-    <figure class="media">
-      <img src="../media/resusvr-check-pulse.jpg" alt="A VR view of a paediatric patient on a trolley with interaction prompts floating over the body, one of them reading Check Pulse">
-      <figcaption>
-        Interaction points on the patient. Every one of these is an event the analytics layer
-        will later ask questions about.
-      </figcaption>
-    </figure>
-
-    <h2>Interaction first</h2>
-    <p>
-      In a resuscitation sim the interaction layer is the product. If picking up a stethoscope,
-      finding a pulse or reaching for the right vial feels approximate, nothing built on top of it
-      is worth measuring. So the first work was the interaction systems: what can be grabbed, what
-      it does when you have it, what the patient does in response, and how any of that reads
-      through a headset at arm's length.
-    </p>
+    <ul>
+      <li>Built the <strong>VR interaction systems</strong>: what can be picked up, what it does in the hand, and how the patient responds.</li>
+      <li>Built clinical scenarios across varied situations and patient age groups.</li>
+      <li><strong>Localised the procedure, not the string table.</strong> Locale changes which medications are on the trolley, how the scenario plays out and how it is scored, because hospitals in different regions follow different protocols.</li>
+      <li><strong>Automated the localisation pipeline</strong> by wiring the localisation dictionary to Google Sheets. Translators and clinical reviewers work in the sheet and builds pull from it, so export and re-import stopped existing. Cut cost and turnaround on every release after.</li>
+      <li>Built the <strong>analytics layer</strong>. Every trainee action is written as an event into <strong>SQLite</strong> as the session runs, and scoring is a set of queries over that log rather than flags maintained by gameplay code. A disputed score can be shown as events and a query.</li>
+    </ul>
 
     <div class="media-row">
-      <figure class="media">
-        <img src="../media/resusvr-stethoscope.jpg" alt="A stethoscope held over a patient's chest in VR">
-        <figcaption>Tools behave like tools.</figcaption>
+  <figure class="media">
+        <img src="../media/resusvr-check-pulse.jpg" alt="A VR view of a paediatric patient on a trolley with interaction prompts floating over the body, one of them reading Check Pulse">
+        <figcaption>
+          Interaction points on the patient. Every one of these is an event the analytics layer
+          will later ask questions about.
+        </figcaption>
       </figure>
-      <figure class="media">
-        <img src="../media/resusvr-medications.jpg" alt="A medication trolley with labelled drug bottles, one highlighted and named Hydrocortisone IV">
-        <figcaption>The drug trolley, and the reason localisation got complicated.</figcaption>
-      </figure>
+  <figure class="media">
+          <img src="../media/resusvr-stethoscope.jpg" alt="A stethoscope held over a patient's chest in VR">
+          <figcaption>Tools behave like tools.</figcaption>
+        </figure>
     </div>
 
-    <h2>Localising a procedure, not a string table</h2>
-    <p>
-      The obvious version of localisation is a dictionary: swap the labels, ship the language.
-      That is not enough here, and the reason is on the trolley above. A hospital in one country
-      reaches for a different drug than a hospital in another, and the order of the steps is not
-      always the same either. Translate only the words and you have shipped a simulator that
-      teaches the wrong procedure in a convincing accent.
-    </p>
-    <p>
-      So the locale drives the scenario, not just its text. A scenario plays out differently, the
-      medications available differ, and it <strong>scores differently</strong>, because the
-      correct sequence in that locale is a different sequence. The same case is genuinely a
-      different exam depending on where you are sitting.
-    </p>
-
-    <h2>The pipeline, automated</h2>
-    <p>
-      Localisation was a manual round trip: export, send, receive, re-import, verify, discover the
-      strings that were missed, repeat. It cost real money per release and, worse, cost time on the
-      critical path of every release.
-    </p>
-    <p>
-      I connected the localisation dictionary directly to Google Sheets. Translators and clinical
-      reviewers work in the sheet, the project pulls from it, and the export and re-import steps
-      stop existing. The measurable result was less turnaround time and less cost on every release
-      afterwards. The structural result was that adding a language stopped being a decision and
-      became a setting.
-    </p>
-
-    <h2>Analytics, from an event log</h2>
-    <p>
-      A trainee finishing a scenario needs to know more than pass or fail. They need to know which
-      step was late, which one was out of order, and which one never happened.
-    </p>
-    <p>
-      Everything the trainee does is written as an event into a <strong>SQLite</strong> store as
-      the session runs. Scoring is then a set of queries over that log rather than a pile of flags
-      maintained by the gameplay code: did this assessment happen, did it happen before that
-      intervention, did it happen inside the window it needed to. That separation is what makes
-      the scoring auditable. When a clinician disagrees with a score you can show them the events
-      and the query, instead of arguing about what the game thought it saw.
-    </p>
-
-    <figure class="media">
-      <img src="../media/resusvr-analytics.jpg" alt="The end of session analytics screen: assessment and intervention steps in two columns, each colour coded green, amber or red">
-      <figcaption>
-        End of session. Green is correct and timely, amber is correct but delayed, red is out of
-        sequence or never done. Note the column headings: this is the same screen in a different
-        locale.
-      </figcaption>
-    </figure>
-
-    <div class="callout">
-      <p>
-        Nobody demos a localisation pipeline. It was still the highest leverage thing I could build
-        on that project, because it removed a recurring cost from every future release rather than
-        a one off cost from this one. The analytics work is the same shape: the score is a
-        consequence of the log, so improving the scoring never means touching the gameplay code.
-      </p>
+    <div class="media-row">
+  <figure class="media">
+          <img src="../media/resusvr-medications.jpg" alt="A medication trolley with labelled drug bottles, one highlighted and named Hydrocortisone IV">
+          <figcaption>The drug trolley, and the reason localisation got complicated.</figcaption>
+        </figure>
+  <figure class="media">
+        <img src="../media/resusvr-analytics.jpg" alt="The end of session analytics screen: assessment and intervention steps in two columns, each colour coded green, amber or red">
+        <figcaption>
+          End of session. Green is correct and timely, amber is correct but delayed, red is out of
+          sequence or never done. Note the column headings: this is the same screen in a different
+          locale.
+        </figcaption>
+      </figure>
     </div>
 
   </div>

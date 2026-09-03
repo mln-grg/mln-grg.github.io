@@ -39,10 +39,7 @@
   <div class="wrap">
     <h1>Knight</h1>
     <p class="deck">
-      An Unreal Engine 5 action RPG built on the Gameplay Ability System. GAS was the significant
-      gap in four years of UE5 work, because the projects I shipped did not use it. This is me
-      closing that gap: built alongside a structured course, but read against the engine source
-      rather than followed step by step.
+      An action RPG on the Unreal Gameplay Ability System, structured after Lyra. In progress, and this page says what is and is not built.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
@@ -56,23 +53,15 @@
 <article>
   <div class="wrap">
 
-    <!-- GIF SLOT — equip / ability activation once there is combat worth showing:
-    <figure class="media">
-      <img src="../media/knight-combat.gif" alt="Ability activation in Knight">
-      <figcaption>Axe equip driven through a granted ability.</figcaption>
-    </figure>
-    -->
+    <ul>
+      <li><strong>Layered pawn structure</strong> after Lyra: a base character for what any pawn needs, a hero character for the player, with ability, combat and input components hanging off the pawn rather than accumulating on one class.</li>
+      <li><strong>Abilities granted from a data asset</strong> on possession, so adding one to the hero is a data change rather than a code change.</li>
+      <li><strong>Input bound by gameplay tag.</strong> A data asset maps tags to input actions and the input component binds by tag, so routing lives in data instead of a switch statement.</li>
+      <li><strong>Component composition.</strong> A shared base for every pawn component carrying typed accessors with compile time checks, so subclasses reach their owner without repeating casts.</li>
+      <li>Weapon specific animation swapped in as a linked layer rather than branching inside one large graph.</li>
+    </ul>
 
-    <h2>Structure</h2>
-    <p>
-      The project follows the layered structure Epic uses in Lyra, scaled down.
-      <code>KnightBaseCharacter</code> holds what any pawn needs;
-      <code>KnightHeroCharacter</code> adds the player. The ability system component, combat
-      component and input component hang off the pawn rather than accumulating on the character
-      class.
-    </p>
-
-    <figure class="figure">
+<figure class="figure">
       <div class="frame">
         <svg viewBox="0 0 720 260" role="img" aria-label="Diagram: start-up data grants abilities to the ability system component on possession, input config maps gameplay tags to input actions, and combat components hang off the hero character.">
           <rect x="250" y="24" width="200" height="52" rx="8" class="d-box-a"/>
@@ -111,58 +100,6 @@
       </div>
       <figcaption>Data assets on the bottom row; nothing about the hero's kit is hardcoded.</figcaption>
     </figure>
-
-    <h2>Data-driven start-up</h2>
-    <p>
-      Abilities are not hardcoded into the character. <code>DataAsset_HeroStartUpData</code>
-      declares which abilities a pawn is granted, and the ability system component applies them
-      when the pawn is possessed. Adding an ability to the hero is a data change, not a code
-      change.
-    </p>
-
-    <h2>Tag-driven input</h2>
-    <p>
-      <code>DataAsset_InputConfig</code> maps gameplay tags — <code>InputTag.Move</code>,
-      <code>InputTag.Look</code>, <code>InputTag.EquipAxe</code> — to input actions, and
-      <code>KnightInputComponent</code> binds them by tag. Input routing lives in data instead of
-      a switch statement in the controller.
-    </p>
-
-    <h2>Component composition</h2>
-    <p>
-      <code>UPawnExtensionComponentBase</code> is a shared base for every component hung off a
-      pawn. It carries no logic, only typed accessors with compile-time checks, so subclasses
-      reach their owner without repeating casts. Combat splits into
-      <code>PawnCombatComponent</code> for shared behaviour and <code>HeroCombatComponent</code>
-      for player-specific behaviour.
-    </p>
-    <p>
-      Animation follows the same idea: <code>KnightBaseAnimInstance</code> and
-      <code>KnightCharacterAnimInstance</code> hold shared state, and
-      <code>KnightHeroLinkedAnimLayer</code> lets weapon-specific animation be swapped in as a
-      linked layer rather than branching inside one large graph.
-    </p>
-
-    <h2>Where it actually is</h2>
-    <p>Implemented:</p>
-    <ul>
-      <li>Ability system component, attribute set scaffolding, gameplay ability base classes</li>
-      <li>Data-driven ability granting on possession</li>
-      <li>Tag-based input configuration and binding</li>
-      <li>Character hierarchy, combat component split, weapon base and hero weapon</li>
-      <li>Animation instance hierarchy with linked anim layers</li>
-      <li>Axe equip and unequip</li>
-    </ul>
-    <p>Not implemented:</p>
-    <ul>
-      <li>Attributes are declared but not populated, so there is no health, damage or ability cost yet</li>
-      <li>No enemies, no damage resolution, no death handling</li>
-      <li>One weapon, and no UI</li>
-    </ul>
-
-    <p style="margin-top:2rem">
-      <a class="btn" href="https://github.com/mln-grg/Knight" rel="noopener">Source on GitHub →</a>
-    </p>
 
   </div>
 </article>

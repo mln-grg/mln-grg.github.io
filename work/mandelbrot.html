@@ -39,9 +39,7 @@
   <div class="wrap">
     <h1>Mandelbrot</h1>
     <p class="deck">
-      A Mandelbrot set viewer in C++20 with SDL2. Small on purpose: one file, one loop, and two
-      problems worth solving properly. Making the colour continuous instead of banded, and making
-      the zoom hold the point you are pointing at.
+      A Mandelbrot viewer in C++20 and SDL2. One file, one loop, and two problems worth solving properly.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Language</div><div class="v">C++20, SDL2</div></div>
@@ -55,7 +53,7 @@
 <article>
   <div class="wrap">
 
-    <figure class="media square">
+<figure class="media square">
       <img src="../media/mandelbrot-zoom.gif" alt="Zooming into the boundary of the Mandelbrot set, spiral structures repeating at every scale">
       <figcaption>
         Forty four wheel notches into seahorse valley. Each notch is 1.25x, so the last frame is
@@ -63,58 +61,23 @@
       </figcaption>
     </figure>
 
-    <h2>The banding problem</h2>
-    <p>
-      The obvious way to colour the set is by iteration count: how many steps before the point
-      escapes. It works, and it looks wrong. Iteration count is an integer, so the image comes out
-      in hard rings, and every zoom makes the rings more obvious rather than less.
-    </p>
-    <p>
-      The fix is to stop bailing out early. With a large escape radius, 256 here rather than the
-      usual 2, the magnitude at the moment of escape carries information about where inside that
-      step the point actually left. The fractional escape time is then
-    </p>
-    <p><code>i + 1 - log2(log2(|z|))</code></p>
-    <p>
-      which is continuous across the boundary between one iteration count and the next. Normalise
-      that, use it to interpolate through a fifteen stop palette, and the gradient stays smooth at
-      any depth.
-    </p>
+    <ul>
+      <li><strong>Smooth colour instead of banding.</strong> Colouring by iteration count gives hard rings. A large escape radius of 256 plus the fractional escape time <code>i + 1 - log2(log2(|z|))</code> is continuous across the band boundary, and interpolates through a fifteen stop palette.</li>
+      <li><strong>Zoom anchored to the cursor.</strong> The wheel handler converts the cursor to a complex coordinate, applies the zoom, then moves the centre so that coordinate lands back under the cursor. Four lines, and the difference between exploring the set and chasing it.</li>
+      <li>Computed at 500 by 500 with 500 iterations and stretched to a 1000 pixel window, so it stays interactive on one CPU thread.</li>
+      <li><strong>Limits, stated:</strong> fixed iteration count, double precision gives out near a view width of 1e-14, and the row loop is embarrassingly parallel but still single threaded.</li>
+    </ul>
 
     <div class="media-row">
-      <figure class="media">
-        <img src="../media/mandelbrot-full.jpg" alt="The whole Mandelbrot set, cardioid and bulbs, coloured in blue and violet">
-        <figcaption>The whole set.</figcaption>
-      </figure>
-      <figure class="media">
-        <img src="../media/mandelbrot-zoom.jpg" alt="A zoomed view of the boundary showing satellite bulbs and branching filaments">
-        <figcaption>Six notches in, on the boundary.</figcaption>
-      </figure>
+  <figure class="media">
+          <img src="../media/mandelbrot-full.jpg" alt="The whole Mandelbrot set, cardioid and bulbs, coloured in blue and violet">
+          <figcaption>The whole set.</figcaption>
+        </figure>
+  <figure class="media">
+          <img src="../media/mandelbrot-zoom.jpg" alt="A zoomed view of the boundary showing satellite bulbs and branching filaments">
+          <figcaption>Six notches in, on the boundary.</figcaption>
+        </figure>
     </div>
-
-    <h2>Zooming without losing your place</h2>
-    <p>
-      A viewer that zooms to the centre of the window is a viewer you fight. Every time you get
-      close to something interesting it slides off the edge and you have to pan back. So the wheel
-      handler converts the cursor position to a complex coordinate first, applies the zoom factor to
-      the view size, then moves the centre so that same coordinate lands back under the cursor.
-    </p>
-    <p>
-      That is four lines of arithmetic and it is the difference between exploring the set and
-      chasing it. It is also why the GIF above works: the cursor was parked on one point in
-      seahorse valley and never moved for forty four notches.
-    </p>
-
-    <h2>What it does not do</h2>
-    <ul>
-      <li>500 iterations, fixed. Deep zooms into the boundary run out of detail before they run out
-        of precision, which is what the flat regions at the end of a long zoom are.</li>
-      <li>Double precision gives out somewhere around a view width of 1e-14. Past that you need
-        perturbation theory and arbitrary precision reference orbits, which is a different project.</li>
-      <li>Single threaded, and the row loop is embarrassingly parallel. Splitting it is the obvious
-        first change and a fragment shader is the obvious second one, which is the same ladder
-        <a href="automata-engine.html">automata-engine</a> is climbing.</li>
-    </ul>
 
   </div>
 </article>

@@ -39,9 +39,7 @@
   <div class="wrap">
     <h1>ENT Surgery VR — recording &amp; grading</h1>
     <p class="deck">
-      A surgical training simulator is only half a product. The other half is evidence: what the
-      trainee did, whether it was right, and something an instructor can review afterwards. I
-      built that half.
+      A surgical training simulator in Unity. I built the session recorder and the grading layer that turns a practice run into an assessment.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Company</div><div class="v">i3 Simulations</div></div>
@@ -55,7 +53,7 @@
 <article>
   <div class="wrap">
 
-    <figure class="media">
+<figure class="media">
       <img src="../media/ent-surgical-view.jpg" alt="A rendered view down a surgical microscope: drilled temporal bone with irrigation and a burr, retractors holding the field open">
       <figcaption>
         The trainee's view down the microscope. Everything the recorder captures is this, plus
@@ -63,41 +61,13 @@
       </figcaption>
     </figure>
 
-    <h2>Session recording, in engine</h2>
-    <p>
-      Trainees needed their sessions captured for review. I built the recorder on
-      <strong>ffmpeg</strong>, driven from the running Unity application, with multi-session
-      management so a machine used all day by successive trainees keeps their recordings
-      separate, identified and retrievable rather than producing one enormous unusable file.
-    </p>
-    <p>
-      Recording out of a real-time application is a performance problem before it is a video
-      problem. The simulation cannot stutter because encoding is happening — in VR especially,
-      a frame hitch is not a cosmetic issue, it is a comfort and safety one. The work was
-      mostly in keeping capture off the critical path and making the encoder's cost predictable.
-    </p>
-
-    <h2>Analytics and instructor grading</h2>
-    <p>
-      Recording shows what happened. Grading says whether it was correct. I built the layer that
-      captures what the trainee actually did during a procedure and presents it to an instructor
-      as something reviewable and scoreable — which is what converts a simulator from a practice
-      toy into an assessment instrument, and is usually what a customer is actually buying.
-    </p>
-    <p>
-      The design question that dominated: what to record. Capture too little and the instructor
-      cannot judge anything; capture everything and you have an unreadable log and a
-      storage bill. The useful unit turned out to be the decision, not the frame.
-    </p>
-
-    <h2>Load times</h2>
-    <p>
-      Significantly improved, and worth listing because of who felt it. A simulator used in
-      teaching sessions is started and restarted constantly; every second of load is multiplied
-      by every trainee in the room and paid in front of an audience. This is the kind of
-      optimisation that never appears in a feature list and changes how a product feels to use.
-    </p>
-
+    <ul>
+      <li>Built a <strong>session recorder on ffmpeg</strong>, driven from the running Unity application, with multi session management so a machine used all day by successive trainees keeps their recordings separate and retrievable.</li>
+      <li>Kept capture off the critical path. A frame hitch in VR is a comfort problem, not a cosmetic one, so the encoder's cost had to be predictable.</li>
+      <li>Built the <strong>analytics and instructor grading layer</strong>: what the trainee did during a procedure, presented to an instructor as something reviewable and scoreable.</li>
+      <li>The unit that turned out to be worth recording was the decision, not the frame.</li>
+      <li>Cut load times significantly, which matters on a machine that is restarted between every trainee.</li>
+    </ul>
 
   </div>
 </article>

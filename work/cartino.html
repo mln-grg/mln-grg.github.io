@@ -39,9 +39,7 @@
   <div class="wrap">
     <h1>Cartino</h1>
     <p class="deck">
-      A 3D bullet hell where you drive. Built in Unity for Android over three months in late 2020,
-      and the first thing I made where the structure was a decision rather than whatever the
-      tutorial did.
+      A 3D bullet hell where you drive, built in Unity for Android in late 2020. The first thing I made where the structure was a decision.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Engine</div><div class="v">Unity</div></div>
@@ -55,7 +53,7 @@
 <article>
   <div class="wrap">
 
-    <figure class="media">
+<figure class="media">
       <button class="ytlite" type="button" data-yt="1K5QdXoQiUA"
               style="background-image:url('../media/cartino-video-poster.jpg')"
               aria-label="Play the Cartino gameplay video">
@@ -66,52 +64,22 @@
       </figcaption>
     </figure>
 
-    <figure class="media">
+<figure class="media">
       <img src="../media/cartino.jpg" alt="The player buggy in a low poly desert canyon, with a radar mast and rock formations behind it">
       <figcaption>Low poly desert, one armoured buggy, a turret on the roof.</figcaption>
     </figure>
 
-    <h2>What it is</h2>
-    <p>
-      Bullet hell rules on a driveable vehicle. Waves of enemies fill the arena with projectiles and
-      the only way through is reading patterns and keeping the car moving. The build target was
-      Android, which set the budget for everything: how many projectiles could be alive, how much
-      the enemies were allowed to think per frame, and how much of the arena could be on screen.
-    </p>
-
-    <h2>The patterns, and why each one</h2>
-    <p>
-      This is a learning project and I will not pretend otherwise. What makes it worth keeping is
-      that it is the first time I chose a structure because of a problem rather than because a video
-      told me to.
-    </p>
     <ul>
-      <li><strong>Object pooling</strong> for projectiles. On a phone, allocating and collecting a
-        few hundred bullets a second is the difference between a game and a slideshow. I pooled them
-        because I could feel the stutter, not because I measured it, which is a habit I have since
-        replaced with measuring.</li>
-      <li><strong>A finite state machine</strong> for enemy behaviour, so adding an enemy type meant
-        adding states and transitions rather than adding branches to something already too long.</li>
-      <li><strong>Observer</strong> for the events several systems care about, so the UI and the
-        audio could react to the game without holding references into it.</li>
-      <li><strong>Singleton</strong> for the manager objects. I would use fewer of these now. They
-        make a dependency graph invisible rather than absent.</li>
+      <li>Bullet hell rules on a driveable vehicle. The Android target set the budget for how many projectiles could be alive and how much the enemies could think per frame.</li>
+      <li><strong>Object pooling</strong> for projectiles, because allocating a few hundred bullets a second on a phone is the difference between a game and a slideshow.</li>
+      <li><strong>A finite state machine</strong> for enemy behaviour, so a new enemy type meant new states rather than new branches.</li>
+      <li><strong>Observer</strong> for the events several systems care about, so UI and audio could react without holding references into gameplay.</li>
+      <li>Singletons for the managers. I would use fewer now: they make a dependency graph invisible rather than absent.</li>
     </ul>
 
-    <!-- MILAN — I wrote the four bullets above from the description on the old site, which named
-         Singleton, Observer, Object Pooling and Finite State Machines but not what each one held.
-         Correct anything that is not how you actually built it, then delete this comment. -->
-
-
-    <div class="callout">
-      <p>
-        Six years later the direct line from this project is the object pool. It is the same idea
-        as the pooled state objects in the battle system I lead now, and the same idea as the packed
-        component pools in the 2D engine I wrote two years after this. The thing I got wrong here,
-        reaching for a singleton whenever two objects needed to talk, is the thing the event bus in
-        that engine exists to avoid.
-      </p>
-    </div>
+    <!-- MILAN — the pattern bullets come from the description on the old site, which named
+         the four patterns but not what each one held. Correct anything that is not how you
+         built it, then delete this comment. -->
 
   </div>
 </article>

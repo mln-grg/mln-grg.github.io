@@ -39,9 +39,7 @@
   <div class="wrap">
     <h1>automata-engine</h1>
     <p class="deck">
-      Conway's Game of Life on a 1920 by 1080 grid, written in C++20 with SDL2. Two million cells
-      simulated and drawn every frame, with a live readout of how long each of those two things
-      took. The rules and the visuals are finished. The inner loop is not, and that is the point.
+      Conway's Game of Life on a 1920 by 1080 grid in C++20 and SDL2. Two million cells simulated and drawn every frame, with the cost of both on screen.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Language</div><div class="v">C++20, SDL2</div></div>
@@ -55,7 +53,7 @@
 <article>
   <div class="wrap">
 
-    <figure class="media">
+<figure class="media">
       <img src="../media/automata-life.gif" alt="Conway's Game of Life running on a full screen grid, with a performance readout in the top left corner">
       <figcaption>
         Random soup at 4x zoom. The readout is the whole point of the project: SIM is the number
@@ -63,73 +61,19 @@
       </figcaption>
     </figure>
 
-    <h2>Why build this at all</h2>
-    <p>
-      Life is a solved problem. What is not solved is my ability to say, from memory and with
-      numbers, what the difference is between arranging work better and doing less work. Those two
-      things get conflated constantly in interviews, including by me. So the plan is four versions
-      of the same program, benchmarked on the same machine with the same flags, seed and grid size,
-      and a record of what I predicted before each measurement and what I actually got.
-    </p>
-
-    <h2>Where it stands</h2>
-    <p>
-      Version one is the obvious one, and it is what is on GitHub today. On an i7-12700F, release
-      build, the readout sits at roughly:
-    </p>
     <ul>
-      <li><code>SIM</code> 14.3 ms, the simulation step</li>
-      <li><code>DRAW</code> 1.6 ms, filling the pixel buffer</li>
-      <li><code>MCELLS/S</code> 145, millions of cell updates per second</li>
-      <li><code>FPS</code> 51.8</li>
+      <li><strong>Version one of four.</strong> Same rules, same output, four rewrites of the inner loop, benchmarked on the same machine, flags, seed and grid size.</li>
+      <li>On an i7-12700F, release build: <code>SIM 14.3 ms</code>, <code>DRAW 1.6 ms</code>, <code>145 MCELLS/S</code>, <code>FPS 51.8</code>. <code>SIM</code> is the number the rewrites are aimed at.</li>
+      <li><strong>Planned ladder:</strong> naive, then mechanical sympathy (flat <code>vector&lt;uint8_t&gt;</code>, both buffers allocated once), then algorithmic (bit pack 32 cells into a <code>uint32</code> and compute all 32 with bitwise full adders), then a fragment shader ping ponging two textures.</li>
+      <li>The grid is a flat vector indexed <code>y*W+x</code> and the simulation step knows nothing about rendering, decided at version one so version four is a swap rather than a rewrite.</li>
+      <li>Patterns load from <code>patterns/</code> as RLE files, the format Golly and the LifeWiki use. 22 in the folder, nothing hard coded.</li>
+      <li>Why it exists: to be able to say, with numbers, what the difference is between arranging work better and doing less work.</li>
     </ul>
-    <p>
-      Everything after this is a rewrite of the inner loop with the same rules and the same output.
-    </p>
-
-    <h2>The four versions</h2>
-    <ol style="color:var(--text-dim); max-width:44rem; padding-left:1.1rem">
-      <li style="margin-bottom:.6rem"><strong>Naive.</strong> The obvious implementation, allocating as it goes.</li>
-      <li style="margin-bottom:.6rem"><strong>Mechanical sympathy.</strong> A flat <code>vector&lt;uint8_t&gt;</code> indexed
-        <code>y*W+x</code>, both buffers allocated once. Identical algorithm. Every gain comes from cache
-        locality and from not allocating in the hot loop.</li>
-      <li style="margin-bottom:.6rem"><strong>Algorithmic.</strong> Bit pack 32 cells into a <code>uint32</code> and compute all
-        32 at once with bitwise full adders on the neighbour counts. Less work, not better arranged work.</li>
-      <li><strong>Parallel.</strong> The grid lives in a texture, a fragment shader reads eight
-        neighbours and writes the next state to a second texture, ping ponged, never read back to the CPU.</li>
-    </ol>
-
-    <div class="callout">
-      <p>
-        Two things would invalidate the headline number, so they are rules rather than intentions.
-        Every version gets benchmarked on the same machine, flags, seed and grid size, because a
-        debug versus release comparison is worth about ten times on this loop and an interviewer
-        catches it in one question. And vsync goes off before the GPU version is measured, or the
-        answer is 60 generations a second and the conclusion is wrong.
-      </p>
-    </div>
-
-    <h2>Patterns are data, not code</h2>
-    <p>
-      Every pattern loads at startup from <code>patterns/</code> as an RLE file, the format Golly and
-      the LifeWiki use. Nothing is hard coded. There are 22 in the folder now, from a glider up to a
-      switch engine breeder, and dropping a new <code>.rle</code> in there is the entire process for
-      adding one. Left drag paints cells, the number keys stamp patterns under the cursor, the wheel
-      zooms while keeping the cell under the cursor fixed.
-    </p>
-
-    <h2>The architecture rule</h2>
-    <p>
-      The grid is a flat <code>std::vector&lt;uint8_t&gt;</code> indexed <code>y*W+x</code>, never a
-      vector of vectors, and the simulation step is a function that knows nothing about rendering.
-      That was decided at version one specifically so version four is a swap rather than a rewrite.
-    </p>
 
     <div class="callout">
       <p>
         <a href="mandelbrot.html">Mandelbrot</a> came out of the same sitting and is the same
-        exercise: a tight numeric loop, a window, and nothing between me and the pixels. It has its
-        own page.
+        exercise: a tight numeric loop, a window, and nothing between me and the pixels.
       </p>
     </div>
 

@@ -39,10 +39,7 @@
   <div class="wrap">
     <h1>Blacksmith</h1>
     <p class="deck">
-      A browser game in the mould of Flipline's Jacksmith: you are the smith, not the hero.
-      Soldiers queue up outside the forge and tell you what they want. You cast it, beat it into
-      shape, put an edge on it, fit it out, then watch them march off and find out whether your
-      work was good enough.
+      A browser forge game in the mould of Jacksmith. You are the smith, not the hero. Pure HTML5 canvas, no asset files and no libraries.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
@@ -56,7 +53,7 @@
 <article>
   <div class="wrap">
 
-    <figure class="media">
+<figure class="media">
       <img src="../media/blacksmith-forge.jpg" alt="The forge stage: a glowing blade on the anvil, a heat gauge on the right, and a four perfect chain readout">
       <figcaption>
         The forge stage. Every pixel here is a 2D path drawn at runtime, and every sound is
@@ -64,133 +61,24 @@
       </figcaption>
     </figure>
 
-    <div class="media-row">
-      <figure class="media">
-        <img src="../media/blacksmith-cast.jpg" alt="Molten metal pouring into a sword mould, with fill gauges per chamber">
-        <figcaption>Casting.</figcaption>
-      </figure>
-      <figure class="media">
-        <img src="../media/blacksmith-battle.jpg" alt="Three soldiers fighting with the weapons the player made, health bars along the top">
-        <figcaption>The same weapons, in the fight.</figcaption>
-      </figure>
-    </div>
-
-    <h2>The loop</h2>
-    <p>
-      Take a job from the campaign map. Read the order — every soldier has a weapon type, a
-      favourite metal, a favourite gem and a favourite shape, and matching them is worth real
-      stats. Then craft, in four stages:
-    </p>
     <ul>
-      <li>
-        <strong>Cast.</strong> Hold to pour, and move the cursor to control how far the crucible
-        tips. A hard stream folds air into the metal and splashes; a gentle trickle runs clean.
-        The melt is setting the whole time, so dawdling makes the cast porous too. There is a
-        sweet spot in the middle.
-      </li>
-      <li>
-        <strong>Forge.</strong> Beat the lumps out of the hot blank. Lumps sit on the spine and
-        the edge, so the hammer moves in both axes. Steel cools as you work and cold steel barely
-        moves, so it goes back in the fire — but every reheat costs you.
-      </li>
-      <li>
-        <strong>Grind.</strong> Optional. Run the edge along the wheel keeping pressure in the
-        green. Too light and it never sharpens; too heavy and you grind the blade away.
-      </li>
-      <li>
-        <strong>Fit.</strong> Pick a grip, guard, pommel and gem, then place each one. The part
-        hangs from the tongs and swings, so you settle it over the mark and click.
-      </li>
+      <li><strong>Every sprite is drawn in code</strong> with 2D path commands and every sound is synthesised with WebAudio at runtime. There are no asset files in the repository.</li>
+      <li><strong>One mould silhouette drives everything.</strong> The same pair of edge functions defines the pour, the anvil, the grindstone and the blade on the battlefield, so a bad cast is visibly a thinner blade later.</li>
+      <li><strong>Four craft stages</strong>, each its own skill: cast, forge, grind, fit. Pour too hard and you fold air into the metal; dawdle and the melt sets porous anyway.</li>
+      <li>Squads auto-fight three waves with the weapons you made, and you are graded on who came home.</li>
+      <li>Ships with a dev harness that steps the game frame by frame and captures the canvas, which is how every screenshot on this page was taken.</li>
     </ul>
-    <p>
-      Then the squad auto-fights three waves, you click the ore and coins that drop, and you get
-      graded on who came home alive.
-    </p>
 
-    <h2>The part worth explaining</h2>
-    <p>
-      A mould is two edge functions over <code>t ∈ [0,1]</code>, and everything samples that same
-      silhouette. The pour fills it, the anvil puts lumps in it, the grindstone sharpens its
-      edges, the battlefield swings it. The blade you cast is the blade your soldier carries.
-    </p>
-    <p>
-      <code>profileAt()</code> is where the craft becomes geometry. It takes the mould's shape,
-      thins it wherever a chamber was under-filled, and swells it wherever un-hammered lumps
-      remain. Mistakes are not a hidden multiplier applied to a stat — they are the outline of
-      the object. Chambers become colour bands, a splashy pour becomes visible pitting, hammering
-      flattens the bulges back out in real time, and grinding writes per-segment sharpness that
-      shows up as edge highlights.
-    </p>
-    <p>
-      Measured end to end on a three-chamber broadsword, with lumps hammered flat so only the
-      geometry is left. A clean blade is 0.92 half-width at mid-blade:
-    </p>
-
-    <div style="overflow-x:auto; margin:1.5rem 0;">
-      <table style="width:100%; border-collapse:collapse; font-size:0.92rem; min-width:32rem;">
-        <thead>
-          <tr style="text-align:left; color:var(--text-mute);">
-            <th style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line);">Pour</th>
-            <th style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line);">Cast</th>
-            <th style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line);">Lumps at the anvil</th>
-            <th style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line);">Mid-blade once flattened</th>
-          </tr>
-        </thead>
-        <tbody style="color:var(--text-dim);">
-          <tr>
-            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">careful</td>
-            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">1.00</td>
-            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">6</td>
-            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">0.908 — full thickness</td>
-          </tr>
-          <tr>
-            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">held too long (1.5×)</td>
-            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">0.00</td>
-            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">16 (capped)</td>
-            <td style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--line-soft);">0.920 — recoverable, but a long shift</td>
-          </tr>
-          <tr>
-            <td style="padding:0.5rem 0.75rem;">stingy (0.68×)</td>
-            <td style="padding:0.5rem 0.75rem;">0.63</td>
-            <td style="padding:0.5rem 0.75rem;">6</td>
-            <td style="padding:0.5rem 0.75rem; color:var(--text);">0.733 — permanently 20% thinner</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="media-row">
+  <figure class="media">
+          <img src="../media/blacksmith-cast.jpg" alt="Molten metal pouring into a sword mould, with fill gauges per chamber">
+          <figcaption>Casting.</figcaption>
+        </figure>
+  <figure class="media">
+          <img src="../media/blacksmith-battle.jpg" alt="Three soldiers fighting with the weapons the player made, health bars along the top">
+          <figcaption>The same weapons, in the fight.</figcaption>
+        </figure>
     </div>
-
-    <p>
-      Hot metal is rendered by blending the whole cross-section onto a temperature ramp rather
-      than tinting the alloy colour, with the bevels driving local temperature, so glowing steel
-      still reads as a shaped object instead of an orange blob.
-    </p>
-
-    <h2>Content and tuning</h2>
-    <p>
-      Eleven ores, each with its own pour viscosity, working heat, hardness and anvil ring.
-      Eighteen moulds across swords, axes, bows and shields. Nineteen fittings and seven gems
-      with elemental effects. Eight soldiers, twelve enemy types, three bosses, ten campaign
-      levels.
-    </p>
-    <p>
-      Appending <code>?dev=1</code> exposes a debug harness: step frames manually, jump to a
-      scene, render a contact sheet of every mould, run a battle headlessly, or simulate the
-      whole campaign at a given craft quality. That last one, <code>dev.sweep</code>, is how the
-      difficulty curve was tuned. Near-flawless crafting clears all ten levels at three stars;
-      decent crafting clears nine and loses the finale; sloppy crafting hits a wall at level
-      four.
-    </p>
-
-    <h2>No asset files</h2>
-    <p>
-      Every sprite is drawn with 2D path commands and every sound is synthesised with WebAudio at
-      runtime. There is no build step and no framework. It runs off a small Node static server
-      only because the game is ES modules.
-    </p>
-
-    <p style="margin-top:2rem">
-      <a class="btn" href="https://github.com/mln-grg/Blacksmith" rel="noopener">Source on GitHub →</a>
-    </p>
 
   </div>
 </article>

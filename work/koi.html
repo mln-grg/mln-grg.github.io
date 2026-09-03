@@ -39,9 +39,7 @@
   <div class="wrap">
     <h1>Koi</h1>
     <p class="deck">
-      A puzzle game made for BYOG 2021 on the theme Reset. You are a mother hen with chicks that
-      follow you only while they are inside your circle, across an island cut into pieces by water.
-      You can give them exactly one order, and giving it sends them back to where they started.
+      A puzzle game made for the BYOG 2021 jam on the theme Reset. Sole programmer and designer.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Engine</div><div class="v">Unity</div></div>
@@ -55,7 +53,7 @@
 <article>
   <div class="wrap">
 
-    <figure class="media">
+<figure class="media">
       <img src="../media/koi-level.jpg" alt="A low poly isometric island split by a river, with a hen inside a dashed circle, two chicks nearby, and a red flag on the far bank">
       <figcaption>
         The hen, her circle, two chicks, and the flag on the far side of the water. The counter in
@@ -63,55 +61,24 @@
       </figcaption>
     </figure>
 
-    <h2>The rule the whole game is made of</h2>
-    <p>
-      Chicks follow the hen while they are inside her radius. Let one fall too far behind for too
-      long and it resets to where the level started it. That is the entire failure state, and it is
-      also the entire clock: every second you spend solving the far half of the puzzle is a second
-      the near half is drifting out of range.
-    </p>
-    <p>
-      The second half of the design is the command. Standing close to a chick lets you lock it in
-      place, or point at the ground and send it there. It is the only tool that lets you split the
-      flock, which is the only way to cross a gap that will not take all of you at once. And it
-      resets the chick after it executes. Every solution costs you the thing that made it possible.
-    </p>
-
-    <div class="callout">
-      <p>
-        A jam theme is usually a word you decorate a game with. The whole exercise here was to make
-        Reset the load bearing rule instead: not a fail state, not a restart button, but the price
-        attached to the only interesting verb in the game.
-      </p>
-    </div>
+    <ul>
+      <li><strong>One rule carries the game.</strong> Chicks follow the hen only while inside her radius. Fall too far behind for too long and a chick resets to where the level started it, which is both the failure state and the clock.</li>
+      <li><strong>The only interesting verb costs you.</strong> You can lock a chick in place or send it to a point, which is the only way to split the flock across a gap, and it resets that chick once it lands.</li>
+      <li>The point of the exercise was to make Reset the load bearing rule rather than a word decorating a restart button.</li>
+      <li>Built over a jam weekend: follow behaviour, radius test, reset timer, command state and level flow, all written once.</li>
+      <li>Credits: I was sole programmer and designer, Arjun M Suresh did level design, Liyons Varghese, Sundev Nallees and Nandhu S playtested.</li>
+    </ul>
 
     <div class="media-row">
-      <figure class="media">
-        <img src="../media/koi-title.jpg" alt="The Koi title screen: the game name over a low poly island with the hen and her circle near the flag">
-        <figcaption>Title screen.</figcaption>
-      </figure>
-      <figure class="media">
-        <img src="../media/koi-ending.jpg" alt="The end screen: a farm with the chicks safely penned beside a red barn, and the words Thanks For Playing">
-        <figcaption>The end screen. Everyone made it home.</figcaption>
-      </figure>
+  <figure class="media">
+          <img src="../media/koi-title.jpg" alt="The Koi title screen: the game name over a low poly island with the hen and her circle near the flag">
+          <figcaption>Title screen.</figcaption>
+        </figure>
+  <figure class="media">
+          <img src="../media/koi-ending.jpg" alt="The end screen: a farm with the chicks safely penned beside a red barn, and the words Thanks For Playing">
+          <figcaption>The end screen. Everyone made it home.</figcaption>
+        </figure>
     </div>
-
-    <h2>What a jam does to the code</h2>
-    <p>
-      A jam weekend means the follow behaviour, the radius test, the reset timer, the command state
-      and the level flow all get written once and have to be right enough. The known bug is on the
-      itch page in my own words: the move order is unreliable if you click on an object instead of
-      on the ground. So is the line under the play button, which reads "the game might contain
-      several bugs, please be patient". Shipping something honest and slightly broken beat shipping
-      nothing, and it still does.
-    </p>
-
-    <h2>Credits</h2>
-    <p>
-      I was the sole programmer and designer. Arjun M Suresh did the level design. Liyons Varghese,
-      Sundev Nallees and Nandhu S playtested. The itch page lists all five of us as the team, which
-      is how a jam entry is normally credited.
-    </p>
 
   </div>
 </article>

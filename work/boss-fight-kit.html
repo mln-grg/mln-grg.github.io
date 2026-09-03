@@ -39,10 +39,7 @@
   <div class="wrap">
     <h1>BossFightKit</h1>
     <p class="deck">
-      A 2D combat prototype in Unity 6.5 URP, built as an exercise in making boss fights a
-      designer can author and tune without touching code. Three fights are implemented, all
-      rebuilt from Hollow Knight encounters: Absolute Radiance, the Mantis Lords and the Heart.
-      There are no art or audio files in the repository.
+      Three Hollow Knight boss fights rebuilt in Unity as data rather than code, plus the editor tools that scaffold and validate a fight.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
@@ -56,26 +53,15 @@
 <article>
   <div class="wrap">
 
-    <!-- GIF SLOT — a telegraph into a sword rain is the clearest thing to show:
-    <figure class="media">
-      <img src="../media/bossfightkit-radiance.gif" alt="A boss attack in BossFightKit">
-      <figcaption>Sword rain, telegraphed and clipped to the arena bounds.</figcaption>
-    </figure>
-    -->
+    <ul>
+      <li><strong>Attacks, phases, arenas and tuning are ScriptableObjects.</strong> A balance change is an inspector edit, not a recompile, and a designer can make one.</li>
+      <li>Each attack is an asset exposing a single coroutine, so the same attack drops into any phase of any fight and editing it changes it everywhere.</li>
+      <li><strong>Tuning is applied, not baked.</strong> Attacks never read their raw serialised numbers; damage, telegraph and projectile speed all pass through the boss's tuning scale first.</li>
+      <li>What stayed in code is what had to: the motion of a sword rain, the geometry of a beam sweep clipped to the arena bounds.</li>
+      <li><strong>Editor tools</strong> that scaffold a fight and validate it, so a broken reference is caught at author time rather than failing silently at runtime.</li>
+    </ul>
 
-    <h2>The idea</h2>
-    <p>
-      A boss fight is mostly data. Which attacks exist, what order they come in, how long the
-      telegraph lasts, when the next phase starts, where the arena walls are. Encoding that in
-      code means every balance change is a recompile and only a programmer can make one.
-    </p>
-    <p>
-      So none of it lives in code here. Attacks, phases, arenas and tuning are ScriptableObjects.
-      The things that stayed in code are the ones that need to be: the actual motion of a sword
-      rain, the geometry of a beam sweep clipped to the arena bounds.
-    </p>
-
-    <figure class="figure">
+<figure class="figure">
       <div class="frame">
         <svg viewBox="0 0 720 250" role="img" aria-label="Diagram: a boss fight config holds ordered phases, each phase holds an attack pool and a health gate, attacks are ScriptableObjects, and tuning scalars are applied by the boss controller.">
           <rect x="16" y="40" width="170" height="60" rx="8" class="d-box-a"/>
@@ -115,46 +101,6 @@
       <figcaption>Fight, phase, attack and arena are all assets. The controller is the only runtime piece that knows about all of them.</figcaption>
     </figure>
 
-    <h2>Attacks as ScriptableObjects</h2>
-    <p>
-      <code>BossAttack</code> is an abstract <code>ScriptableObject</code> exposing one method,
-      <code>IEnumerator Execute(BossController boss)</code>. Each concrete attack —
-      <code>SwordRainAttack</code>, <code>BeamSweepAttack</code>,
-      <code>FeatherBarrageAttack</code>, <code>LandAblazeAttack</code> and a dozen more — is an
-      asset in the project, not an instance in a scene. The same attack asset can be dropped into
-      any phase of any fight, and editing its damage or telegraph in the inspector changes it
-      everywhere.
-    </p>
-
-    <h2>Tuning is applied, not baked</h2>
-    <p>
-      Attacks never read their raw serialized numbers. They go through the boss:
-      damage is multiplied by <code>boss.Tuning.damageScale</code>, telegraph duration by
-      <code>telegraphScale</code>, projectile speed by <code>projectileSpeedScale</code>. So
-      difficulty is one set of multipliers on the fight rather than thirty numbers spread across
-      thirty assets, and making a fight globally slower to telegraph is one field.
-    </p>
-
-    <h2>Editor tooling</h2>
-    <p>
-      This is the part I would want to talk through in an interview.
-      <code>NewFightWindow</code> scaffolds a new fight — configs, phases, scene, wiring.
-      <code>BossFightBuilder</code> and the two fight-specific builders construct a fight scene
-      from its config assets. <code>ArenaBuilder</code> generates arena geometry from an
-      <code>ArenaLayoutSet</code>. Custom inspectors sit on the config assets.
-    </p>
-    <p>
-      <code>FightValidator</code> is the one that earns its keep. Data-driven content fails
-      silently when a reference goes missing, so the validator turns "the boss just stands there"
-      into a specific error naming the phase and the field.
-    </p>
-
-    <h2>Status</h2>
-    <p>
-      A sandbox rather than a game. There is no menu, no progression and no connective tissue
-      between the fights. The player controller has movement, dash, double jump, attack and a
-      ranged projectile, which is enough to fight with.
-    </p>
   </div>
 </article>
 
