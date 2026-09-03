@@ -58,17 +58,13 @@
 <article>
   <div class="wrap">
 
-    <!-- GIF / VIDEO SLOT — the page badly wants battle footage at the top. Once cleared:
     <figure class="media">
-      <img src="../media/greenleaf-charge.gif" alt="Four thousand soldiers colliding in a Greenleaf battle">
-      <figcaption>4,000 soldiers, individually simulated.</figcaption>
+      <img src="../media/greenleaf-title.jpg" alt="The Severna key art: a fortified castle on a ridge under a storm, the valley below it in shadow">
+      <figcaption>
+        Severna: Blood &amp; Betrayal. The name the game ships under.
+      </figcaption>
     </figure>
-    or an unlisted YouTube embed:
-    <figure class="media">
-      <iframe src="https://www.youtube-nocookie.com/embed/VIDEO_ID" title="Greenleaf battle" allowfullscreen></iframe>
-      <figcaption>Battle footage.</figcaption>
-    </figure>
-    -->
+
 
     <p>
       Four systems, all mine end to end. The battle simulation is the one that defines the
@@ -81,12 +77,48 @@
       <a href="#ui">02 — Data-driven UI framework</a>
       <a href="#navigation">03 — Grid navigation &amp; formations</a>
       <a href="#settlement">04 — Settlement designer &amp; economy</a>
+      <a href="#overworld">The overworld</a>
     </div>
 
     <!-- ============================================================ 01 -->
     <section class="sys first" id="battle">
       <div class="kicker">01 — shipped as a standalone plugin</div>
       <h2>Battle simulation at scale</h2>
+
+      <figure class="media">
+        <img src="../media/greenleaf-melee.jpg" alt="Hundreds of soldiers in melee in a stone courtyard, unit cards along the bottom of the screen and a battle timer above">
+        <figcaption>
+          Every figure here is a Mass entity with its own state machine, drawn as an instanced
+          mesh with baked vertex animation. The card bar along the bottom is one unit per card.
+        </figcaption>
+      </figure>
+
+      <div class="media-row">
+        <figure class="media">
+          <img src="../media/greenleaf-status-icons.jpg" alt="Two units engaged on open grass with morale and status icons floating above them">
+          <figcaption>Per unit state, read at a glance.</figcaption>
+        </figure>
+        <figure class="media">
+          <img src="../media/greenleaf-charge.jpg" alt="A formation of cavalry at the charge across open ground">
+          <figcaption>A charge, mid-commit.</figcaption>
+        </figure>
+      </div>
+
+      <div class="media-row">
+        <figure class="media">
+          <img src="../media/greenleaf-siege-tower.jpg" alt="A siege tower rolling across a field at sunrise with an army following it">
+          <figcaption>A siege tower crossing the field.</figcaption>
+        </figure>
+        <figure class="media">
+          <img src="../media/greenleaf-gate-assault.jpg" alt="Soldiers massed against a fortified gate during a siege">
+          <figcaption>The same simulation, against a wall.</figcaption>
+        </figure>
+      </div>
+
+      <figure class="media">
+        <img src="../media/greenleaf-aftermath.jpg" alt="A battlefield after the fighting, bodies and broken equipment across open ground under a grey sky">
+        <figcaption>What the simulation is for.</figcaption>
+      </figure>
 
       <h3>The problem</h3>
       <p>
@@ -249,12 +281,32 @@
       <div class="kicker">02 — used across the whole project</div>
       <h2>Data-driven UI framework</h2>
 
-      <!-- GIF SLOT — panels updating live, or a designer wiring one up:
       <figure class="media">
-        <img src="../media/ui-binding.gif" alt="Strategy HUD panels updating from bound data fields">
-        <figcaption>Panels reacting to model changes with no gameplay code involved.</figcaption>
+        <img src="../media/greenleaf-ui-houses.jpg" alt="The Houses screen: three noble houses side by side, each with a grievance level, an ambition, a champion and a member list">
+        <figcaption>
+          The Houses screen. Nothing on it knows where its numbers came from, which is the
+          entire point of the framework.
+        </figcaption>
       </figure>
-      -->
+
+      <div class="media-row">
+        <figure class="media">
+          <img src="../media/greenleaf-ui-leader.jpg" alt="A leader character sheet with portrait, traits, skills and a stat column">
+          <figcaption>Leader sheet.</figcaption>
+        </figure>
+        <figure class="media">
+          <img src="../media/greenleaf-ui-event.jpg" alt="A diplomacy event card offering a trade agreement, with two house banners and the terms below">
+          <figcaption>A diplomacy event.</figcaption>
+        </figure>
+      </div>
+
+      <figure class="media">
+        <img src="../media/greenleaf-ui-betrayal.jpg" alt="A narrative event screen headed Betrayal on the Horizon, offering three responses each with its own consequence">
+        <figcaption>
+          Three responses, three different consequences, all of it authored as data rather than
+          wired up per screen.
+        </figcaption>
+      </figure>
 
       <h3>The problem</h3>
       <p>
@@ -382,12 +434,13 @@
       <div class="kicker">03 — part of the battle plugin</div>
       <h2>Grid navigation &amp; formations</h2>
 
-      <!-- GIF SLOT — a formation pathing around terrain, or the grid debug draw:
       <figure class="media">
-        <img src="../media/formation-pathing.gif" alt="A formation pathing around an obstacle and reforming">
-        <figcaption>One path, one formation, four hundred men holding their slots.</figcaption>
+        <img src="../media/greenleaf-deployment.jpg" alt="Two armies deployed in formation blocks on a hillside before a battle starts, with a Start Battle banner">
+        <figcaption>
+          Deployment. Every block is a formation holding slots on the grid, before anyone has
+          asked it to move.
+        </figcaption>
       </figure>
-      -->
 
       <h3>The problem</h3>
       <p>
@@ -500,12 +553,18 @@
       <div class="kicker">04 — built, then cut in a design pivot</div>
       <h2>Settlement designer &amp; economy</h2>
 
-      <!-- GIF SLOT:
       <figure class="media">
-        <img src="../media/settlement-placement.gif" alt="Placing buildings and dragging a wall segment inside a stronghold">
-        <figcaption>Building placement and modular wall construction.</figcaption>
+        <img src="../media/greenleaf-ui-plots.jpg" alt="A settlement management screen listing a province's plots, its production and tax output, and a stability bar">
+        <figcaption>
+          The settlement screen: plots, production, tax and stability for one province.
+        </figcaption>
       </figure>
-      -->
+
+      <!-- MILAN — this section still says the settlement layer was "cut in a design pivot",
+           but the August 2026 deck carries a live settlement economy screen and your CV lists
+           the settlement designer as shipped work. Reword this to match what is actually true
+           now, then delete this comment. -->
+
 
       <p>
         Before Greenleaf narrowed to battles, it had a settlement layer: place buildings inside a
@@ -595,6 +654,33 @@
         after.
       </p>
 
+    </section>
+
+    <section class="sys" id="overworld">
+      <div class="kicker">and the layer all four sit inside</div>
+      <h2>The overworld</h2>
+
+      <p>
+        Battles do not start on their own. The campaign map is where armies are raised, moved and
+        supplied, where a province is worth taking, and where the decision to fight is made before
+        any of the systems above are asked to run. It is the other half of what I lead.
+      </p>
+
+      <figure class="media">
+        <img src="../media/greenleaf-overworld.jpg" alt="The campaign map: a settlement on a lake seen from above, with the province management bar along the bottom">
+        <figcaption>A province on the campaign map, with its management bar along the bottom.</figcaption>
+      </figure>
+
+      <div class="media-row">
+        <figure class="media">
+          <img src="../media/greenleaf-army-panel.jpg" alt="An army selected on the campaign map with its troop roster open beside it">
+          <figcaption>An army and its roster.</figcaption>
+        </figure>
+        <figure class="media">
+          <img src="../media/greenleaf-fog-of-war.jpg" alt="The campaign map at night with unexplored territory hidden under fog of war">
+          <figcaption>What you have not scouted, you cannot see.</figcaption>
+        </figure>
+      </div>
     </section>
 
   </div>

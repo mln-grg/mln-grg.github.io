@@ -56,7 +56,7 @@
     </p>
     <div class="actions">
       <a class="btn primary" href="#projects">See the projects</a>
-      <a class="btn" href="Milan_George_Gameplay_Programmer.pdf">Download CV (PDF)</a>
+      <a class="btn" href="Milan_George_Gameplay_Programmer.pdf" download="Milan_George_Gameplay_and_Systems_Programmer.pdf">Download CV (PDF)</a>
       <a class="btn" href="https://github.com/mln-grg" rel="noopener">GitHub</a>
       <a class="btn" href="https://www.linkedin.com/in/milan-george-0a41a4181" rel="noopener">LinkedIn</a>
     </div>
@@ -71,12 +71,6 @@
       <div class="note">Open any project for the full write-up</div>
     </div>
 
-    <div class="tabs" id="tabs" role="group" aria-label="Filter projects">
-      <button type="button" data-filter="all" aria-pressed="true">All</button>
-      <button type="button" data-filter="graphics" aria-pressed="false">Graphics</button>
-      <button type="button" data-filter="systems" aria-pressed="false">Gameplay &amp; systems</button>
-    </div>
-
     <div class="group">
       <div class="group-head">
         <h3>Work projects</h3>
@@ -87,23 +81,7 @@
 
       <a class="pcard" data-cat="systems" href="work/greenleaf.html">
         <div class="thumb">
-          <svg viewBox="0 0 400 225" aria-hidden="true">
-            <rect class="tb-bg" width="400" height="225"/>
-            <g class="tb-a">
-              <circle cx="52" cy="72" r="4"/><circle cx="76" cy="72" r="4"/><circle cx="100" cy="72" r="4"/><circle cx="124" cy="72" r="4"/><circle cx="148" cy="72" r="4"/>
-              <circle cx="52" cy="98" r="4"/><circle cx="76" cy="98" r="4"/><circle cx="100" cy="98" r="4"/><circle cx="124" cy="98" r="4"/><circle cx="148" cy="98" r="4"/>
-              <circle cx="52" cy="124" r="4"/><circle cx="76" cy="124" r="4"/><circle cx="100" cy="124" r="4"/><circle cx="124" cy="124" r="4"/><circle cx="148" cy="124" r="4"/>
-              <circle cx="52" cy="150" r="4"/><circle cx="76" cy="150" r="4"/><circle cx="100" cy="150" r="4"/><circle cx="124" cy="150" r="4"/><circle cx="148" cy="150" r="4"/>
-            </g>
-            <g class="tb-d">
-              <circle cx="252" cy="72" r="4"/><circle cx="276" cy="72" r="4"/><circle cx="300" cy="72" r="4"/><circle cx="324" cy="72" r="4"/><circle cx="348" cy="72" r="4"/>
-              <circle cx="252" cy="98" r="4"/><circle cx="276" cy="98" r="4"/><circle cx="300" cy="98" r="4"/><circle cx="324" cy="98" r="4"/><circle cx="348" cy="98" r="4"/>
-              <circle cx="252" cy="124" r="4"/><circle cx="276" cy="124" r="4"/><circle cx="300" cy="124" r="4"/><circle cx="324" cy="124" r="4"/><circle cx="348" cy="124" r="4"/>
-              <circle cx="252" cy="150" r="4"/><circle cx="276" cy="150" r="4"/><circle cx="300" cy="150" r="4"/><circle cx="324" cy="150" r="4"/><circle cx="348" cy="150" r="4"/>
-            </g>
-            <path class="tb-s" d="M176 60 L200 111 L176 162"/>
-            <path class="tb-sm" d="M224 60 L200 111 L224 162"/>
-          </svg>
+          <img src="media/greenleaf-title.jpg" alt="Severna key art: a fortified castle on a ridge under a storm" loading="lazy">
         </div>
         <div class="body">
           <h3>Project Greenleaf</h3>
@@ -151,7 +129,7 @@
 
       <a class="pcard" data-cat="systems" href="work/resusvr.html">
         <div class="thumb">
-          <img src="media/resusvr-analytics.jpg" alt="The ResusVR end of session analytics screen, assessment steps colour coded green amber and red" loading="lazy">
+          <img src="media/resusvr-title.jpg" alt="A clinician placing a stethoscope on an elderly patient in a ResusVR examination room" loading="lazy">
         </div>
         <div class="body">
           <h3>ResusVR</h3>
@@ -173,6 +151,12 @@
         <h3>Personal projects</h3>
         <div class="ctx">Built alone, outside work</div>
       </div>
+
+    <div class="tabs" id="tabs" role="group" aria-label="Filter projects">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="graphics" aria-pressed="false">Graphics</button>
+      <button type="button" data-filter="systems" aria-pressed="false">Gameplay &amp; systems</button>
+    </div>
 
     <div class="grid">
 
@@ -460,7 +444,7 @@
     <div class="crow"><div class="k">Email</div><div><a href="mailto:milankgeorge@gmail.com">milankgeorge@gmail.com</a></div></div>
     <div class="crow"><div class="k">LinkedIn</div><div><a href="https://www.linkedin.com/in/milan-george-0a41a4181" rel="noopener">milan-george</a></div></div>
     <div class="crow"><div class="k">GitHub</div><div><a href="https://github.com/mln-grg" rel="noopener">mln-grg</a></div></div>
-    <div class="crow"><div class="k">CV</div><div><a href="Milan_George_Gameplay_Programmer.pdf">Milan_George_Gameplay_Programmer.pdf</a></div></div>
+    <div class="crow"><div class="k">CV</div><div><a href="Milan_George_Gameplay_Programmer.pdf" download="Milan_George_Gameplay_and_Systems_Programmer.pdf">Milan_George_Gameplay_and_Systems_Programmer.pdf</a></div></div>
   </div>
 </section>
 
@@ -604,16 +588,13 @@
   var tabs = document.getElementById("tabs");
   if (!tabs) return;
   var buttons = Array.prototype.slice.call(tabs.querySelectorAll("button"));
-  var cards = Array.prototype.slice.call(document.querySelectorAll(".pcard"));
-  var groups = Array.prototype.slice.call(document.querySelectorAll("#projects .group"));
+  //the filter belongs to the group it sits in, so the work grid above is left alone
+  var group = tabs.closest(".group");
+  var cards = Array.prototype.slice.call(group.querySelectorAll(".pcard"));
 
   function apply(filter) {
     cards.forEach(function (c) {
       c.hidden = filter !== "all" && c.getAttribute("data-cat") !== filter;
-    });
-    groups.forEach(function (g) {
-      var shown = g.querySelectorAll(".pcard:not([hidden])").length;
-      g.hidden = shown === 0;
     });
     buttons.forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.getAttribute("data-filter") === filter));
