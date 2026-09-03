@@ -56,12 +56,14 @@
   <div class="wrap">
 
     <figure class="media">
-      <a class="ytlite" href="https://www.youtube.com/watch?v=Z8LycaXvo9s" target="_blank" rel="noopener"
-         style="background-image:url('../media/horror-video-poster.jpg')"
-         aria-label="Watch the Horror Game Demo walkthrough on YouTube">
+      <button class="ytlite" type="button" data-yt="Z8LycaXvo9s"
+              style="background-image:url('../media/horror-video-poster.jpg')"
+              aria-label="Play the Horror Game Demo walkthrough">
         <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
-      </a>
-      <figcaption>Horror Game Demo walkthrough. Opens on YouTube.</figcaption>
+      </button>
+      <figcaption>
+        Walkthrough. Also on <a href="https://www.youtube.com/watch?v=Z8LycaXvo9s" rel="noopener">YouTube</a>.
+      </figcaption>
     </figure>
 
     <figure class="media">
@@ -122,6 +124,20 @@
   });
 </script>
 
+
+<script>
+//swap the poster for the player only when someone asks for it
+Array.prototype.forEach.call(document.querySelectorAll(".ytlite"), function (el) {
+  el.addEventListener("click", function () {
+    var f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/" + el.getAttribute("data-yt") + "?autoplay=1";
+    f.title = el.getAttribute("aria-label");
+    f.allow = "autoplay; encrypted-media; picture-in-picture";
+    f.allowFullscreen = true;
+    el.parentNode.replaceChild(f, el);
+  });
+});
+</script>
 
 </body>
 </html>
