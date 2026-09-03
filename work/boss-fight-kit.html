@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BossFightKit — Milan George</title>
-<meta name="description" content="A 2D combat prototype in Unity 6.5 URP: three Hollow Knight boss fights rebuilt with attacks, phases and arenas as ScriptableObjects, plus editor tooling to scaffold and validate a fight.">
+<title>Boss Rush Prototype — Milan George</title>
+<meta name="description" content="A 2D boss-rush prototype in Unity 6.5 URP: three boss fights built entirely as data, attacks, phases, arenas and tuning as ScriptableObjects, plus editor tooling to author and validate a fight.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BossFightKit — Milan George">
+<meta property="og:title" content="Boss Rush Prototype — Milan George">
 <meta property="og:description" content="Boss fights as data: attacks, phases and arenas as ScriptableObjects, plus the editor tools to build and validate them.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
@@ -37,9 +37,9 @@
 
 <div class="phead">
   <div class="wrap">
-    <h1>BossFightKit</h1>
+    <h1>Boss Rush Prototype</h1>
     <p class="deck">
-      Three Hollow Knight boss fights rebuilt in Unity as data rather than code, plus the editor tools that scaffold and validate a fight.
+      A 2D boss-rush prototype in Unity: three boss fights, each built entirely as data rather than code, plus the editor tools I built to author and validate a fight.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
@@ -54,11 +54,12 @@
   <div class="wrap">
 
     <ul>
-      <li><strong>Attacks, phases, arenas and tuning are ScriptableObjects.</strong> A balance change is an inspector edit, not a recompile, and a designer can make one.</li>
-      <li>Each attack is an asset exposing a single coroutine, so the same attack drops into any phase of any fight and editing it changes it everywhere.</li>
+      <li>A <strong>boss-rush prototype</strong>: pick a fight, survive its phases, move on to the next. Three fights implemented, each with several attacks and phase transitions.</li>
+      <li><strong>Attacks, phases, arenas and tuning are all ScriptableObjects.</strong> A balance change is an inspector edit, not a recompile, so a designer could make one without me.</li>
+      <li>Each attack is an asset exposing a single coroutine, so the same attack drops into any phase of any fight and editing it changes it everywhere it is used.</li>
       <li><strong>Tuning is applied, not baked.</strong> Attacks never read their raw serialised numbers; damage, telegraph and projectile speed all pass through the boss's tuning scale first.</li>
-      <li>What stayed in code is what had to: the motion of a sword rain, the geometry of a beam sweep clipped to the arena bounds.</li>
-      <li><strong>Editor tools</strong> that scaffold a fight and validate it, so a broken reference is caught at author time rather than failing silently at runtime.</li>
+      <li>What stayed in code is what had to: the motion of an attack, the geometry of a beam sweep clipped to the arena bounds.</li>
+      <li>Built the <strong>editor tools</strong> that scaffold a new fight and validate it, so a broken reference is caught at author time rather than failing silently at runtime.</li>
     </ul>
 
 <figure class="figure">

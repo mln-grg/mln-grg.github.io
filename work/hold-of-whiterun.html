@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hold of Whiterun — Milan George</title>
-<meta name="description" content="A text-driven fantasy sandbox with a living top-down map: 42 NPCs with schedules and opinions, and a gossip system where what you do becomes a fact that spreads through the hold on its own.">
+<meta name="description" content="A prototype NPC scheduler and gossip simulation, 42 people who trade what they know. Built with Claude Code to test the idea fast; the scheduling and gossip algorithm is mine.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hold of Whiterun — Milan George">
-<meta property="og:description" content="42 NPCs, schedules, opinions and a gossip system. What you do becomes a fact, and the fact spreads until it reaches the watch.">
+<meta property="og:description" content="A Claude Code prototype. 42 NPCs, schedules, and a gossip algorithm I designed: what you do becomes a fact, and it spreads until it reaches the watch.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -39,11 +39,11 @@
   <div class="wrap">
     <h1>Hold of Whiterun</h1>
     <p class="deck">
-      A text driven fantasy sandbox with a living top-down map, in TypeScript. Forty two people with schedules and opinions, who tell each other what you did.
+      A prototype NPC scheduler and gossip simulation, in TypeScript. Built with Claude Code so I could test the idea fast; the scheduling and gossip algorithm is mine.
     </p>
     <div class="facts">
-      <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
-      <div class="fact"><div class="k">Built with</div><div class="v">TypeScript, Vite, Canvas 2D</div></div>
+      <div class="fact"><div class="k">Type</div><div class="v">Personal prototype</div></div>
+      <div class="fact"><div class="k">Built with</div><div class="v">TypeScript, Vite, Canvas 2D, Claude Code</div></div>
       <div class="fact"><div class="k">Population</div><div class="v">42 NPCs</div></div>
       <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/ProceduralNarrative" rel="noopener">github.com/mln-grg/ProceduralNarrative</a></div></div>
     </div>
@@ -62,12 +62,12 @@
     </figure>
 
     <ul>
-      <li><strong>Everything the world knows is a fact.</strong> What you do becomes a fact seeded into whoever saw it, and it spreads from there without further input from you.</li>
-      <li><strong>Knowledge propagation.</strong> Facts move between co-located NPCs, weighted by heat, freshness and how much of a gossip the teller is. Secrets need trust to move at all. When a fact reaches the watch it becomes a bounty.</li>
-      <li><strong>42 NPCs on schedules.</strong> Ten minute clock, every action costs time, and the world runs while it passes.</li>
-      <li><strong>Opinion and standing.</strong> Per person disposition plus per faction standing, with bonds between NPCs, so harming one person turns their friends.</li>
-      <li><strong>Crime.</strong> Witnesses are rolled against Guile. What nobody saw did not happen, until someone repeats it.</li>
-      <li>Six quest threads with genuinely different endings, and a hand drawn map on Canvas 2D.</li>
+      <li><strong>A Claude Code prototype.</strong> I wanted to test an NPC scheduler and a gossip simulation idea quickly, so I built it with Claude Code doing the typing. The scheduling and gossip-propagation algorithm, and the system it runs on, are mine.</li>
+      <li><strong>Everything the world knows is a fact.</strong> What you do becomes a fact seeded into whoever saw it, and it spreads on its own from there.</li>
+      <li><strong>Gossip has weight.</strong> Facts move between co-located NPCs, weighted by heat, freshness and how much of a gossip the teller is. Reaching the watch turns a fact into a bounty.</li>
+      <li><strong>42 NPCs on a ten minute clock</strong>, each running their own schedule while the world keeps moving.</li>
+      <li><strong>Opinion and faction standing shift</strong> with bonds between NPCs, so harming one person turns their friends against you.</li>
+      <li>Six quest threads with genuinely different endings, on a hand drawn Canvas 2D map.</li>
     </ul>
 
 <figure class="media">
@@ -123,7 +123,7 @@
 
 <div class="wrap pagenav">
   <a href="mandelbrot.html">← Mandelbrot</a>
-  <a class="next" href="knight.html">Knight →</a>
+  <a class="next" href="knight.html">Combat GAS Project →</a>
 </div>
 
 <script>
