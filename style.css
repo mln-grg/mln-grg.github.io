@@ -15,6 +15,12 @@
   --wip:       #e59468;
   --wip-dim:   rgba(229, 148, 104, 0.45);
   --wip-bg:    rgba(229, 148, 104, 0.12);
+  --unity:     #8fc7e8;
+  --unity-dim: rgba(143, 199, 232, 0.40);
+  --unity-bg:  rgba(143, 199, 232, 0.10);
+  --unreal:    #b3a6f5;
+  --unreal-dim:rgba(179, 166, 245, 0.40);
+  --unreal-bg: rgba(179, 166, 245, 0.10);
   --radius: 10px;
   --maxw: 60rem;
   --font: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -37,6 +43,12 @@ html[data-theme="light"] {
   --wip:       #9c4a1c;
   --wip-dim:   rgba(156, 74, 28, 0.35);
   --wip-bg:    rgba(156, 74, 28, 0.08);
+  --unity:     #1a5f85;
+  --unity-dim: rgba(26, 95, 133, 0.35);
+  --unity-bg:  rgba(26, 95, 133, 0.07);
+  --unreal:    #4b3f9c;
+  --unreal-dim:rgba(75, 63, 156, 0.35);
+  --unreal-bg: rgba(75, 63, 156, 0.07);
   color-scheme: light;
 }
 
@@ -367,6 +379,16 @@ article code { font-family: var(--mono); font-size: 0.88em; background: var(--bg
 
 /* inline tags: the tool a prototype was built with, and work-in-progress state */
 .tag-ai { color: var(--accent); }
+
+/* engine chips, so the grid can be scanned for Unity or Unreal at a glance */
+.eng {
+  display: inline-block; vertical-align: baseline;
+  font-family: var(--mono); font-size: 0.66rem; font-weight: 600;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 0.08rem 0.4rem; border-radius: 4px; border: 1px solid;
+}
+.eng-unity  { color: var(--unity);  background: var(--unity-bg);  border-color: var(--unity-dim); }
+.eng-unreal { color: var(--unreal); background: var(--unreal-bg); border-color: var(--unreal-dim); }
 .tag-wip { color: var(--wip); }
 
 .badge {
