@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hold of Whiterun — Milan George</title>
-<meta name="description" content="A prototype NPC scheduler and gossip simulation, 42 people who trade what they know. Built with Claude Code to test the idea fast; the scheduling and gossip algorithm is mine.">
+<title>NPC Scheduler &amp; Gossip Simulation — Milan George</title>
+<meta name="description" content="A prototype NPC scheduler and gossip simulation in TypeScript. 42 people on daily schedules who trade what they know about you, and what they know spreads on its own.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hold of Whiterun — Milan George">
-<meta property="og:description" content="A Claude Code prototype. 42 NPCs, schedules, and a gossip algorithm I designed: what you do becomes a fact, and it spreads until it reaches the watch.">
+<meta property="og:title" content="NPC Scheduler &amp; Gossip Simulation — Milan George">
+<meta property="og:description" content="42 NPCs, daily schedules, and a gossip system: what you do becomes a fact, and it spreads until it reaches the watch.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -37,13 +37,13 @@
 
 <div class="phead">
   <div class="wrap">
-    <h1>Hold of Whiterun</h1>
+    <h1>NPC Scheduler &amp; Gossip Simulation</h1>
     <p class="deck">
-      A prototype NPC scheduler and gossip simulation, in TypeScript. Built with Claude Code so I could test the idea fast; the scheduling and gossip algorithm is mine.
+      Forty two people on their own daily schedules, who trade what they know about you. A prototype in TypeScript, on a hand drawn map.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal prototype</div></div>
-      <div class="fact"><div class="k">Built with</div><div class="v">TypeScript, Vite, Canvas 2D, Claude Code</div></div>
+      <div class="fact"><div class="k">Built with</div><div class="v">TypeScript, Vite, Canvas 2D, <span class="tag-ai">Claude Code</span></div></div>
       <div class="fact"><div class="k">Population</div><div class="v">42 NPCs</div></div>
       <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/ProceduralNarrative" rel="noopener">github.com/mln-grg/ProceduralNarrative</a></div></div>
     </div>
@@ -62,7 +62,6 @@
     </figure>
 
     <ul>
-      <li><strong>A Claude Code prototype.</strong> I wanted to test an NPC scheduler and a gossip simulation idea quickly, so I built it with Claude Code doing the typing. The scheduling and gossip-propagation algorithm, and the system it runs on, are mine.</li>
       <li><strong>Everything the world knows is a fact.</strong> What you do becomes a fact seeded into whoever saw it, and it spreads on its own from there.</li>
       <li><strong>Gossip has weight.</strong> Facts move between co-located NPCs, weighted by heat, freshness and how much of a gossip the teller is. Reaching the watch turns a fact into a bounty.</li>
       <li><strong>42 NPCs on a ten minute clock</strong>, each running their own schedule while the world keeps moving.</li>
@@ -133,6 +132,8 @@
     try { localStorage.setItem("theme", next); } catch (e) {}
   });
 </script>
+
+<script src="../nav.js"></script>
 
 </body>
 </html>

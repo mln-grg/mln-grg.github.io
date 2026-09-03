@@ -39,7 +39,7 @@
   <div class="wrap">
     <h1>Mandelbrot</h1>
     <p class="deck">
-      A Mandelbrot viewer in C++20 and SDL2. One file, one loop, and two problems worth solving properly.
+      A Mandelbrot viewer in C++20 and SDL2. A learning exercise, and honestly because I wanted to make something that looked good on screen.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Language</div><div class="v">C++20, SDL2</div></div>
@@ -62,6 +62,7 @@
     </figure>
 
     <ul>
+      <li>Written to keep practising C++ on something small, where the reward is that you can just look at it.</li>
       <li><strong>Smooth colour instead of banding.</strong> Colouring by iteration count gives hard rings. A large escape radius of 256 plus the fractional escape time <code>i + 1 - log2(log2(|z|))</code> is continuous across the band boundary, and interpolates through a fifteen stop palette.</li>
       <li><strong>Zoom anchored to the cursor.</strong> The wheel handler converts the cursor to a complex coordinate, applies the zoom, then moves the centre so that coordinate lands back under the cursor. Four lines, and the difference between exploring the set and chasing it.</li>
       <li>Computed at 500 by 500 with 500 iterations and stretched to a 1000 pixel window, so it stays interactive on one CPU thread.</li>
@@ -94,6 +95,8 @@
     try { localStorage.setItem("theme", next); } catch (e) {}
   });
 </script>
+
+<script src="../nav.js"></script>
 
 </body>
 </html>

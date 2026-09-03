@@ -39,7 +39,7 @@
   <div class="wrap">
     <h1>Horror Game Demo</h1>
     <p class="deck">
-      A first person story horror demo that never leaves one house, built in Unity over the winter of 2020.
+      A first person horror demo set inside a single house, built in Unity in 2020. The whole goal was atmosphere: making a space feel tense without anything actually chasing you.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Engine</div><div class="v">Unity</div></div>
@@ -73,10 +73,11 @@
     </figure>
 
     <ul>
-      <li>Structured after What Remains of Edith Finch: the house is the level, each room is a chapter, and walking into one turns the page.</li>
-      <li><strong>One building as a hard constraint.</strong> No streaming, no level transitions, no navigation problem, and nothing spent on places the player walks past once.</li>
-      <li><strong>Lighting instead of a monster.</strong> The frame above is one red source and a silhouette. Nothing in it is chasing anybody.</li>
-      <li>Early work, and on the site as early work: the first thing I built where the design question came before the code question.</li>
+      <li>The goal was tension, not threat. No monster and no chase, just light, sound and what you cannot quite make out.</li>
+      <li><strong>Lighting does the work.</strong> The frame above is one red source and a silhouette, and nothing in it is hostile.</li>
+      <li><strong>One building as a hard constraint.</strong> No streaming, no level transitions, and nothing spent on places the player walks past once, so every room could be authored properly.</li>
+      <li>The house is the level and each room is a chapter, so moving through it is what advances the story.</li>
+      <li>Early days work, from when I was still finding my feet in game development.</li>
     </ul>
 
   </div>
@@ -109,6 +110,8 @@ Array.prototype.forEach.call(document.querySelectorAll(".ytlite"), function (el)
   });
 });
 </script>
+
+<script src="../nav.js"></script>
 
 </body>
 </html>

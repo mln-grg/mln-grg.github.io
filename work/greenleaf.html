@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Project Greenleaf — Milan George</title>
-<meta name="description" content="A Total War style strategy game in Unreal Engine 5. Leading the battle and overworld layers: 4,000 soldiers on Mass Entity, an MVVM UI framework, A* formation navigation and a settlement economy.">
+<meta name="description" content="A large scale RTS and grand strategy game in Unreal Engine 5, heading toward release. Leading the battle and overworld layers: 4,000 soldiers on Mass Entity, an MVVM UI framework, A* navigation with boids formations, and a settlement economy.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Project Greenleaf — Milan George">
-<meta property="og:description" content="Total War style RTS in UE5. 4,000 individually simulated soldiers on Mass Entity, plus the UI framework, navigation and settlement systems around them.">
+<meta property="og:description" content="A large scale RTS and grand strategy game in UE5, heading toward release. 4,000 individually simulated soldiers on Mass Entity, plus the UI framework, navigation and settlement systems around them.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -39,8 +39,8 @@
   <div class="wrap">
     <h1>Project Greenleaf</h1>
     <p class="deck">
-      A Total War style strategy game in Unreal Engine 5. I lead the battle and overworld
-      layers: four systems, all mine end to end, built with a team of five.
+      A large scale real time strategy and grand strategy game in Unreal Engine 5, in the vein
+      of Total War, now heading toward release. I lead the battle and overworld layers.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Studio</div><div class="v">Nytwolf Games</div></div>
@@ -49,6 +49,7 @@
       <div class="fact"><div class="k">Scale</div><div class="v">4,000 simulated soldiers</div></div>
       <div class="fact"><div class="k">Team</div><div class="v">5 engineers</div></div>
       <div class="fact"><div class="k">Period</div><div class="v">2024 — 2026</div></div>
+      <div class="fact"><div class="k">Status</div><div class="v">Gearing up for release</div></div>
     </div>
   </div>
 </div>
@@ -58,7 +59,12 @@
 
     <figure class="media">
       <img src="../media/greenleaf-title.jpg" alt="Severna key art: a fortified castle on a ridge under a storm, the valley below in shadow">
-      <figcaption>Severna: Blood &amp; Betrayal, the name the game ships under.</figcaption>
+    </figure>
+
+    <figure class="media">
+      <video src="../media/greenleaf-reel.mp4" autoplay muted loop playsinline preload="metadata"
+             poster="../media/greenleaf-titlecard.jpg"
+             aria-label="Gameplay reel: battles, sieges, formations and the campaign map"></video>
     </figure>
 
     <div class="toc">
@@ -148,28 +154,23 @@
 
       <figure class="media">
         <img src="../media/greenleaf-melee.jpg" alt="Hundreds of soldiers in melee in a stone courtyard, unit cards along the bottom of the screen">
-        <figcaption>One unit per card along the bottom.</figcaption>
       </figure>
 
       <div class="media-row">
         <figure class="media">
           <img src="../media/greenleaf-status-icons.jpg" alt="Two units engaged on grass with morale and status icons above them">
-          <figcaption>Per unit state.</figcaption>
         </figure>
         <figure class="media">
           <img src="../media/greenleaf-charge.jpg" alt="A formation of cavalry at the charge across open ground">
-          <figcaption>A charge, mid-commit.</figcaption>
         </figure>
       </div>
 
       <div class="media-row">
         <figure class="media">
           <img src="../media/greenleaf-siege-tower.jpg" alt="A siege tower rolling across a field at sunrise with an army following it">
-          <figcaption>Siege tower.</figcaption>
         </figure>
         <figure class="media">
           <img src="../media/greenleaf-gate-assault.jpg" alt="Soldiers massed against a fortified gate during a siege">
-          <figcaption>The same simulation, against a wall.</figcaption>
         </figure>
       </div>
     </section>
@@ -191,16 +192,13 @@
       <div class="media-row">
         <figure class="media">
           <img src="../media/greenleaf-ui-leader.jpg" alt="A leader character sheet with portrait, traits, skills and a stat column">
-          <figcaption>Leader sheet.</figcaption>
         </figure>
         <figure class="media">
           <img src="../media/greenleaf-ui-event.jpg" alt="A diplomacy event card offering a trade agreement, with two house banners and the terms below">
-          <figcaption>A diplomacy event.</figcaption>
         </figure>
       </div>
       <figure class="media">
         <img src="../media/greenleaf-ui-betrayal.jpg" alt="A narrative event screen headed Betrayal on the Horizon, offering three responses each with its own consequence">
-        <figcaption>Three responses, three consequences, all of it authored as data.</figcaption>
       </figure>
     </section>
 
@@ -211,8 +209,11 @@
       <ul>
         <li>Designed and implemented <strong>A* grid navigation</strong> and the pathing layer in
           C++ for unit movement.</li>
-        <li>The formation resolves one path. Each soldier's problem shrinks to reaching its own slot,
-          with boids style flocking holding the shape on the move.</li>
+        <li>The formation resolves one path, so each soldier's problem shrinks to reaching its own
+          slot rather than pathing for itself.</li>
+        <li>Squad movement runs on a <strong>boids system</strong>: separation, alignment and
+          cohesion keep the formation together and stop soldiers walking through each other while
+          the squad is on the move.</li>
         <li>A move order expands into a <strong>chain of steps read off the path</strong>: walk,
           climb a wall, cross a gate, reporting success only once the last step lands.</li>
       </ul>
@@ -273,7 +274,6 @@
 
       <figure class="media">
         <img src="../media/greenleaf-deployment.jpg" alt="Two armies deployed in formation blocks on a hillside before a battle starts">
-        <figcaption>Deployment, before anyone has asked a formation to move.</figcaption>
       </figure>
     </section>
 
@@ -321,7 +321,6 @@
 
       <figure class="media">
         <img src="../media/greenleaf-ui-plots.jpg" alt="A settlement management screen listing a province plots, its production and tax output, and a stability bar">
-        <figcaption>Plots, production, tax and stability for one province.</figcaption>
       </figure>
 
       <!-- MILAN — this section used to say the settlement layer was cut in a design pivot. The
@@ -342,17 +341,14 @@
 
       <figure class="media">
         <img src="../media/greenleaf-overworld.jpg" alt="The campaign map: a settlement on a lake seen from above, with the province management bar along the bottom">
-        <figcaption>A province on the campaign map.</figcaption>
       </figure>
 
       <div class="media-row">
         <figure class="media">
           <img src="../media/greenleaf-army-panel.jpg" alt="An army selected on the campaign map with its troop roster open beside it">
-          <figcaption>An army and its roster.</figcaption>
         </figure>
         <figure class="media">
           <img src="../media/greenleaf-fog-of-war.jpg" alt="The campaign map at night with unexplored territory hidden under fog of war">
-          <figcaption>What you have not scouted, you cannot see.</figcaption>
         </figure>
       </div>
     </section>
@@ -372,6 +368,8 @@
     try { localStorage.setItem("theme", next); } catch (e) {}
   });
 </script>
+
+<script src="../nav.js"></script>
 
 </body>
 </html>

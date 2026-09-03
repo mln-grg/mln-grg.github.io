@@ -12,6 +12,9 @@
   --accent:    #64d6a0;
   --accent-dim:#2c6a51;
   --accent-bg: rgba(100, 214, 160, 0.09);
+  --wip:       #e59468;
+  --wip-dim:   rgba(229, 148, 104, 0.45);
+  --wip-bg:    rgba(229, 148, 104, 0.12);
   --radius: 10px;
   --maxw: 60rem;
   --font: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -31,6 +34,9 @@ html[data-theme="light"] {
   --accent:    #10774f;
   --accent-dim:#a8d9c2;
   --accent-bg: rgba(16, 119, 79, 0.07);
+  --wip:       #9c4a1c;
+  --wip-dim:   rgba(156, 74, 28, 0.35);
+  --wip-bg:    rgba(156, 74, 28, 0.08);
   color-scheme: light;
 }
 
@@ -357,3 +363,37 @@ article code { font-family: var(--mono); font-size: 0.88em; background: var(--bg
 
 .d-arrow { fill: var(--text-mute); }
 .d-arrow-a { fill: var(--accent); }
+
+/* inline tags: the tool a prototype was built with, and work-in-progress state */
+.tag-ai { color: var(--accent); }
+.tag-wip { color: var(--wip); }
+
+.badge {
+  display: inline-block; vertical-align: middle; margin-left: 0.6rem;
+  font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em;
+  text-transform: uppercase; font-weight: 500;
+  padding: 0.25rem 0.6rem; border-radius: 999px;
+  background: var(--accent-bg); color: var(--accent);
+  border: 1px solid var(--accent-dim);
+}
+.badge.wip { background: var(--wip-bg); color: var(--wip); border-color: var(--wip-dim); }
+
+/* fixed prev/next arrows, so you can walk the projects without scrolling back */
+.sidenav {
+  position: fixed; top: 50%; transform: translateY(-50%); z-index: 30;
+  width: 2.6rem; height: 2.6rem; border-radius: 999px;
+  display: grid; place-items: center;
+  font-size: 1.4rem; line-height: 1; text-decoration: none;
+  color: var(--text-mute); background: var(--bg-raised);
+  border: 1px solid var(--line);
+  transition: color .15s ease, border-color .15s ease, transform .15s ease;
+}
+.sidenav:hover {
+  color: var(--accent); border-color: var(--accent-dim); text-decoration: none;
+}
+.sidenav.prev { left: 1.25rem; }
+.sidenav.next { right: 1.25rem; }
+.sidenav.prev:hover { transform: translateY(-50%) translateX(-2px); }
+.sidenav.next:hover { transform: translateY(-50%) translateX(2px); }
+@media (max-width: 74rem) { .sidenav { display: none; } }
+@media (prefers-reduced-motion: reduce) { .sidenav { transition: none; } }

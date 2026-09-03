@@ -63,10 +63,10 @@
 
     <ul>
       <li>Built a <strong>session recorder on ffmpeg</strong>, driven from the running Unity application, with multi session management so a machine used all day by successive trainees keeps their recordings separate and retrievable.</li>
-      <li>Kept capture off the critical path. A frame hitch in VR is a comfort problem, not a cosmetic one, so the encoder's cost had to be predictable.</li>
+      <li>Kept the capture off the main thread so recording never cost the simulation a frame.</li>
       <li>Built the <strong>analytics and instructor grading layer</strong>: what the trainee did during a procedure, presented to an instructor as something reviewable and scoreable.</li>
       <li>The unit that turned out to be worth recording was the decision, not the frame.</li>
-      <li>Cut load times significantly, which matters on a machine that is restarted between every trainee.</li>
+      <li>Cut load times significantly.</li>
     </ul>
 
   </div>
@@ -84,6 +84,8 @@
     try { localStorage.setItem("theme", next); } catch (e) {}
   });
 </script>
+
+<script src="../nav.js"></script>
 
 </body>
 </html>

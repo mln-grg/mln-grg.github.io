@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Blacksmith — Milan George</title>
-<meta name="description" content="A browser prototype for a forge-and-battle game loop, built with Claude Code to test the idea fast. Every sprite drawn with path commands, every sound synthesised at runtime, no asset files.">
+<meta name="description" content="A browser prototype for a forge-and-battle game loop. Every sprite drawn with path commands, every sound synthesised at runtime, and no asset files anywhere.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Blacksmith — Milan George">
-<meta property="og:description" content="A Claude Code prototype. One silhouette function drives the pour, the anvil, the grindstone and the battlefield, no asset files anywhere.">
+<meta property="og:description" content="One silhouette function drives the pour, the anvil, the grindstone and the battlefield. No asset files anywhere.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -39,11 +39,11 @@
   <div class="wrap">
     <h1>Blacksmith</h1>
     <p class="deck">
-      A browser prototype for a forge-and-battle game loop. Built with Claude Code so I could test the idea fast; the loop and the art system are mine.
+      A browser prototype for a forge-and-battle game loop: cast and shape a weapon, then send it out with a squad and find out whether your work held up.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal prototype</div></div>
-      <div class="fact"><div class="k">Built with</div><div class="v">Plain JS, canvas, WebAudio, Claude Code</div></div>
+      <div class="fact"><div class="k">Built with</div><div class="v">Plain JS, canvas, WebAudio, <span class="tag-ai">Claude Code</span></div></div>
       <div class="fact"><div class="k">Assets</div><div class="v">None — all drawn in code</div></div>
       <div class="fact"><div class="k">Source</div><div class="v"><a href="https://github.com/mln-grg/Blacksmith" rel="noopener">github.com/mln-grg/Blacksmith</a></div></div>
     </div>
@@ -62,7 +62,6 @@
     </figure>
 
     <ul>
-      <li><strong>A Claude Code prototype.</strong> I wanted to work out a forge-and-battle game loop idea quickly, so I built it with Claude Code doing the typing. The loop and the mould-driven art system are mine.</li>
       <li><strong>Every sprite is drawn in code</strong> with 2D path commands and every sound is synthesised with WebAudio at runtime. No asset files anywhere in the repository.</li>
       <li><strong>One mould silhouette drives everything.</strong> The same pair of edge functions defines the pour, the anvil, the grindstone and the blade on the battlefield, so a bad cast is visibly a thinner blade later.</li>
       <li><strong>Four craft stages</strong>, each its own skill: cast, forge, grind, fit. Pour too hard and you fold air into the metal; dawdle and the melt sets porous anyway.</li>
@@ -96,6 +95,8 @@
     try { localStorage.setItem("theme", next); } catch (e) {}
   });
 </script>
+
+<script src="../nav.js"></script>
 
 </body>
 </html>

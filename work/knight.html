@@ -37,9 +37,9 @@
 
 <div class="phead">
   <div class="wrap">
-    <h1>Combat GAS Project</h1>
+    <h1>Combat GAS Project <span class="badge wip">In progress</span></h1>
     <p class="deck">
-      A combat framework built on Unreal's Gameplay Ability System, structured after Lyra. In progress, and this page says what is and is not built.
+      A combat framework on Unreal's Gameplay Ability System. I am building it to get properly comfortable with GAS, so the list below is honest about how far it has actually got.
     </p>
     <div class="facts">
       <div class="fact"><div class="k">Type</div><div class="v">Personal project</div></div>
@@ -54,11 +54,13 @@
   <div class="wrap">
 
     <ul>
-      <li><strong>Layered pawn structure</strong> after Lyra: a base character for what any pawn needs, a hero character for the player, with ability, combat and input components hanging off the pawn rather than accumulating on one class.</li>
-      <li><strong>Abilities granted from a data asset</strong> on possession, so adding one to the hero is a data change rather than a code change.</li>
-      <li><strong>Input bound by gameplay tag.</strong> A data asset maps tags to input actions and the input component binds by tag, so routing lives in data instead of a switch statement.</li>
-      <li><strong>Component composition.</strong> A shared base for every pawn component carrying typed accessors with compile time checks, so subclasses reach their owner without repeating casts.</li>
-      <li>Weapon specific animation swapped in as a linked layer rather than branching inside one large graph.</li>
+      <li>GAS is the part of Unreal I most wanted to know cold, so I am building a combat framework on it instead of reading about it.</li>
+      <li>Structure follows <strong>Lyra</strong>, scaled down: a base character with what any pawn needs, a hero character on top, and ability, combat and input as components on the pawn rather than one swollen class.</li>
+      <li><strong>Abilities come from a data asset</strong> and are granted when the pawn is possessed, so giving the hero a new ability is an asset change, not a code change.</li>
+      <li><strong>Input binds by gameplay tag</strong> rather than a switch statement, so routing lives in data.</li>
+      <li>Weapon animation is a <strong>linked anim layer</strong>, so a new weapon does not mean another branch in one enormous graph.</li>
+      <li><strong>In so far:</strong> ability system component and attribute scaffolding, data driven granting, tag input, the character and combat component split, linked anim layers, axe equip and unequip.</li>
+      <li><strong>Not in yet:</strong> attributes are declared but not populated, so no health, damage or ability cost. No enemies, no damage resolution, one weapon and no UI.</li>
     </ul>
 
 <figure class="figure">
@@ -116,6 +118,8 @@
     try { localStorage.setItem("theme", next); } catch (e) {}
   });
 </script>
+
+<script src="../nav.js"></script>
 
 </body>
 </html>
