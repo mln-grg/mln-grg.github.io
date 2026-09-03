@@ -98,6 +98,7 @@ header.bar {
   color: var(--text-mute); margin-bottom: 1.5rem; }
 
 .hero p.lede { color: var(--text-dim); font-size: 1.05rem; max-width: 46rem; margin: 0 0 2rem; }
+.hero p.lede + p.lede { margin-top: -1.1rem; }
 
 .actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
 .btn {
