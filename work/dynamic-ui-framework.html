@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dynamic UI Framework — MVVM in Unreal — Milan George</title>
+<meta name="description" content="An MVVM UI framework shipped as a standalone Unreal Engine 5 C++ plugin: ViewModels, a selection resolver that turns gameplay selection into a ViewDescriptor, gameplay tag property binding over TVariant, and commands.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dynamic UI Framework — MVVM in Unreal — Milan George">
+<meta property="og:description" content="Gameplay writes state onto ViewModels, widgets subscribe by gameplay tag, and neither side holds a reference to the other. Shipped as a standalone UE5 plugin.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1113'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' fill='%2364d6a0' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../style.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var sysLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+    document.documentElement.setAttribute("data-theme", saved || (sysLight ? "light" : "dark"));
+  })();
+</script>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="../index.html">Milan George</a>
+    <nav>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#experience" class="hide-sm">Experience</a>
+      <a href="../index.html#contact">Contact</a>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap crumb"><a href="../index.html#projects">← All projects</a></div>
+
+<div class="phead">
+  <div class="wrap">
+    <h1>Dynamic UI Framework</h1>
+    <p class="deck">
+      The UI framework for <a href="greenleaf.html">Project Greenleaf</a>, built as its own C++
+      plugin. Gameplay writes state onto ViewModels, widgets subscribe to it by gameplay tag, and
+      neither side ever holds a reference to the other.
+    </p>
+    <div class="facts">
+      <div class="fact"><div class="k">Studio</div><div class="v">Nytwolf Games</div></div>
+      <div class="fact"><div class="k">Role</div><div class="v">Architecture &amp; implementation</div></div>
+      <div class="fact"><div class="k">Engine</div><div class="v">Unreal Engine 5, C++</div></div>
+      <div class="fact"><div class="k">Pattern</div><div class="v">MVVM</div></div>
+      <div class="fact"><div class="k">Shipped as</div><div class="v">Standalone plugin</div></div>
+      <div class="fact"><div class="k">Drives</div><div class="v">Every screen in the game</div></div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="wrap">
+
+    <figure class="figure">
+      <div class="frame">
+        <svg viewBox="0 0 720 250" role="img" aria-label="Diagram: the model pushes state into the ViewModel, the ViewModel notifies the view through bindings, and the view sends commands back the other way.">
+          <text x="16" y="24" class="d-s">the ViewModel holds no widget pointers; the widget calls no gameplay code</text>
+
+          <rect x="16" y="60" width="180" height="110" rx="8" class="d-box-a"/>
+          <text x="32" y="96" class="d-t">Model</text>
+          <text x="32" y="118" class="d-s">gameplay state</text>
+          <text x="32" y="136" class="d-s">systems, actors, saves</text>
+
+          <path class="d-l-a" d="M196 96 H240"/><polygon class="d-arrow-a" points="248,96 236,91 236,101"/>
+          <text x="202" y="72" class="d-lbl">state,</text>
+          <text x="202" y="86" class="d-lbl">events</text>
+
+          <rect x="248" y="40" width="200" height="150" rx="8" class="d-box-a"/>
+          <text x="264" y="66" class="d-t">ViewModel</text>
+          <rect x="264" y="82" width="168" height="36" rx="6" class="d-box"/>
+          <text x="276" y="105" class="d-t">Properties</text>
+          <rect x="264" y="128" width="168" height="36" rx="6" class="d-box"/>
+          <text x="276" y="151" class="d-t">Commands</text>
+
+          <path class="d-l-a" d="M448 96 H492"/><polygon class="d-arrow-a" points="500,96 488,91 488,101"/>
+          <text x="454" y="72" class="d-lbl">tag +</text>
+          <text x="454" y="86" class="d-lbl">value</text>
+
+          <rect x="500" y="60" width="204" height="110" rx="8" class="d-box-a"/>
+          <text x="516" y="96" class="d-t">View</text>
+          <text x="516" y="118" class="d-s">UMG widget</text>
+          <text x="516" y="136" class="d-s">presentation and input</text>
+
+          <path class="d-l" d="M500 150 H460"/><polygon class="d-arrow" points="452,150 464,145 464,155"/>
+          <text x="466" y="172" class="d-lbl">command</text>
+
+          <path class="d-l" d="M248 150 H208"/><polygon class="d-arrow" points="200,150 212,145 212,155"/>
+          <text x="204" y="172" class="d-lbl">action</text>
+
+          <text x="16" y="226" class="d-lbl">state flows right · user intent flows back left, always through the ViewModel</text>
+        </svg>
+      </div>
+      <figcaption>
+        State goes one way, intent comes back the other, and the ViewModel is the only thing that
+        can see both ends.
+      </figcaption>
+    </figure>
+
+    <div class="toc">
+      <a href="#mvvm">01 — MVVM boundary</a>
+      <a href="#context">02 — Context &amp; selection</a>
+      <a href="#lifecycle">03 — View lifecycle</a>
+      <a href="#binding">04 — Property binding</a>
+      <a href="#interaction">05 — Two-way &amp; commands</a>
+    </div>
+
+    <section class="sys first" id="mvvm">
+      <div class="kicker">01 — the boundary</div>
+      <h2>MVVM, and what it buys</h2>
+
+      <ul>
+        <li>The ViewModel is the <strong>only type that knows both sides</strong>. Gameplay writes
+          state onto it, widgets read state off it, and neither can reach the other directly.</li>
+        <li>A ViewModel holds properties and commands. It holds no widget pointers and calls no
+          UMG functions, so it can be driven and inspected without a UI on screen.</li>
+        <li>A widget declares what it wants to display and the framework connects it. Adding a
+          screen is editor work, not a change to the system the screen reports on.</li>
+        <li>That was the point of the rebuild. A new panel used to mean touching gameplay code,
+          and that is where most of the UI bugs were coming from.</li>
+      </ul>
+
+      <figure class="figure">
+        <div class="frame">
+          <svg viewBox="0 0 720 250" role="img" aria-label="UML class diagram: UViewModel, FViewDescriptor, the HUD composition layer and the view widget, and the references between them.">
+            <rect x="16" y="40" width="236" height="180" rx="6" class="d-box-a"/>
+            <text x="30" y="66" class="d-t">UViewModel</text>
+            <path class="d-l" style="opacity:.5" d="M16 78 H252"/>
+            <text x="30" y="100" class="d-s">+ Bindings : TMap&lt;Tag, Value&gt;</text>
+            <text x="30" y="120" class="d-s">+ OnBindingChanged : delegate</text>
+            <path class="d-l" style="opacity:.5" d="M16 134 H252"/>
+            <text x="30" y="158" class="d-s">+ SetValue(Tag, Value)</text>
+            <text x="30" y="178" class="d-s">+ GetValue(Tag) : Value</text>
+            <text x="30" y="198" class="d-s">+ Execute(CommandTag)</text>
+
+            <path class="d-l" d="M276 96 H266"/><polygon class="d-arrow" points="256,96 268,91 268,101"/>
+
+            <rect x="276" y="40" width="180" height="104" rx="6" class="d-box"/>
+            <text x="290" y="66" class="d-t">FViewDescriptor</text>
+            <path class="d-l" style="opacity:.5" d="M276 78 H456"/>
+            <text x="290" y="100" class="d-s">ViewType : EViewType</text>
+            <text x="290" y="120" class="d-s">ViewModel : UViewModel*</text>
+
+            <path class="d-l" d="M366 182 V160"/><polygon class="d-arrow" points="366,150 361,162 371,162"/>
+            <text x="376" y="172" class="d-lbl">observes</text>
+
+            <rect x="276" y="182" width="180" height="66" rx="6" class="d-box"/>
+            <text x="290" y="208" class="d-t">HUD</text>
+            <text x="290" y="232" class="d-s">ViewType → WidgetClass</text>
+
+            <path class="d-l" d="M480 96 H470"/><polygon class="d-arrow" points="460,96 472,91 472,101"/>
+
+            <rect x="480" y="40" width="224" height="180" rx="6" class="d-box-a"/>
+            <text x="494" y="66" class="d-t">UViewBase : UUserWidget</text>
+            <path class="d-l" style="opacity:.5" d="M480 78 H704"/>
+            <text x="494" y="100" class="d-s">+ ViewModel : UViewModel*</text>
+            <text x="494" y="120" class="d-s">+ Bindings : Tag → Widget</text>
+            <path class="d-l" style="opacity:.5" d="M480 134 H704"/>
+            <text x="494" y="158" class="d-s">+ Initialize(ViewModel)</text>
+            <text x="494" y="178" class="d-s">+ OnBindingChanged(Tag, Val)</text>
+            <text x="494" y="198" class="d-s">+ Resolve(Tag, Val)</text>
+          </svg>
+        </div>
+        <figcaption>
+          The four types the plugin is built from. Both arrows point at the ViewModel, and the
+          ViewModel points at nothing.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="sys" id="context">
+      <div class="kicker">02 — contextual UI</div>
+      <h2>ViewModel context &amp; selection resolver</h2>
+
+      <ul>
+        <li>Some UI is permanent: level, health, XP, gold. Some of it depends entirely on what the
+          player just clicked. The <strong>context owns both</strong>, the persistent player
+          ViewModel and whichever contextual ViewModel the current selection produced.</li>
+        <li>A settlement, a hero and an agent each need a completely different screen. The
+          <strong>Selection Resolver</strong> turns the selected actor into an
+          <code>FViewDescriptor</code>: which view to show, and which ViewModel it runs on.</li>
+        <li>So the HUD carries no type checks. It reads a ViewType and looks up a widget class,
+          and never learns which gameplay class produced it.</li>
+        <li>A new selectable thing costs a ViewModel and one resolver entry. Nothing in the HUD or
+          in the existing widgets moves.</li>
+      </ul>
+
+      <figure class="figure">
+        <div class="frame">
+          <svg viewBox="0 0 720 300" role="img" aria-label="Diagram: a selected settlement, hero or agent goes through the selection resolver, which produces a ViewDescriptor holding a view type and a ViewModel, which the HUD reads.">
+            <text x="16" y="24" class="d-s">gameplay selection in, UI facing description out</text>
+
+            <rect x="16" y="44" width="130" height="38" rx="6" class="d-box"/>
+            <text x="30" y="68" class="d-t">Settlement</text>
+            <rect x="16" y="96" width="130" height="38" rx="6" class="d-box"/>
+            <text x="30" y="120" class="d-t">Hero</text>
+            <rect x="16" y="148" width="130" height="38" rx="6" class="d-box"/>
+            <text x="30" y="172" class="d-t">Agent</text>
+
+            <path class="d-l-a" d="M146 63 L186 108"/>
+            <path class="d-l-a" d="M146 115 H186"/>
+            <path class="d-l-a" d="M146 167 L186 122"/>
+            <polygon class="d-arrow-a" points="196,115 184,110 184,120"/>
+
+            <rect x="196" y="79" width="156" height="72" rx="8" class="d-box-a"/>
+            <text x="212" y="108" class="d-t">Selection Resolver</text>
+            <text x="212" y="130" class="d-s">actor → view type</text>
+
+            <path class="d-l-a" d="M352 115 H384"/><polygon class="d-arrow-a" points="394,115 382,110 382,120"/>
+
+            <rect x="394" y="52" width="164" height="126" rx="8" class="d-box-a"/>
+            <text x="410" y="78" class="d-t">FViewDescriptor</text>
+            <rect x="410" y="90" width="132" height="32" rx="6" class="d-box"/>
+            <text x="422" y="111" class="d-t">ViewType</text>
+            <rect x="410" y="130" width="132" height="32" rx="6" class="d-box"/>
+            <text x="422" y="151" class="d-t">ViewModel*</text>
+
+            <path class="d-l-a" d="M558 115 H590"/><polygon class="d-arrow-a" points="600,115 588,110 588,120"/>
+
+            <rect x="600" y="79" width="104" height="72" rx="8" class="d-box-a"/>
+            <text x="616" y="108" class="d-t">HUD</text>
+            <text x="616" y="130" class="d-s">picks widget</text>
+
+            <rect x="196" y="212" width="362" height="60" rx="8" class="d-box" style="stroke-dasharray:5 5"/>
+            <text x="212" y="238" class="d-t">ViewModel Context</text>
+            <text x="212" y="260" class="d-s">persistent player VM + current contextual VM</text>
+            <path class="d-l" d="M558 242 H640 V166"/><polygon class="d-arrow" points="640,156 635,168 645,168"/>
+
+            <text x="16" y="292" class="d-lbl">no if/else over gameplay classes anywhere above this line</text>
+          </svg>
+        </div>
+        <figcaption>
+          The HUD knows how to display a ViewType. It does not need to know what produced one.
+        </figcaption>
+      </figure>
+
+      <div class="media-row">
+        <figure class="media">
+          <img src="../media/greenleaf-ui-leader.jpg" alt="A leader character sheet with portrait, traits, skills and a stat column">
+          <figcaption>Hero selected: hero view, hero ViewModel.</figcaption>
+        </figure>
+        <figure class="media">
+          <img src="../media/greenleaf-ui-plots.jpg" alt="A settlement management screen listing a province plots, its production and tax output, and a stability bar">
+          <figcaption>Settlement selected: same path, different descriptor.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="sys" id="lifecycle">
+      <div class="kicker">03 — composition</div>
+      <h2>HUD composition &amp; view lifecycle</h2>
+
+      <ul>
+        <li>The HUD is the one place that maps <strong>ViewType to widget class</strong>, and the
+          one place that creates a view or tears it down.</li>
+        <li>If the descriptor arrives with a different ViewType, the old view goes and the new one
+          is created.</li>
+        <li>If only the ViewModel changed, the view stays and is <strong>reinitialised</strong>
+          with the new one. Clicking down a row of settlements costs a rebind, not a rebuild.</li>
+        <li>View lifetime and ViewModel lifetime are separate concerns, which is the thing that
+          makes the second case possible at all.</li>
+      </ul>
+
+      <figure class="figure">
+        <div class="frame">
+          <svg viewBox="0 0 720 250" role="img" aria-label="Diagram: when the view type changes the widget is replaced; when only the selected object changes the same widget is reinitialised with a new ViewModel.">
+            <text x="16" y="24" class="d-s">view type changed → rebuild</text>
+            <rect x="16" y="36" width="322" height="184" rx="8" class="d-box" style="fill:none;stroke-dasharray:4 4"/>
+
+            <rect x="34" y="58" width="120" height="34" rx="6" class="d-box"/>
+            <text x="48" y="80" class="d-t">Settlement</text>
+            <path class="d-l" d="M154 75 H182"/><polygon class="d-arrow" points="192,75 180,70 180,80"/>
+            <rect x="192" y="58" width="130" height="34" rx="6" class="d-box"/>
+            <text x="204" y="80" class="d-s">SettlementWidget</text>
+            <text x="204" y="108" class="d-lbl">removed</text>
+
+            <path class="d-l" d="M94 92 V132"/><polygon class="d-arrow" points="94,142 89,130 99,130"/>
+            <text x="104" y="120" class="d-lbl">select a hero</text>
+
+            <rect x="34" y="148" width="120" height="34" rx="6" class="d-box-a"/>
+            <text x="48" y="170" class="d-t">Hero</text>
+            <path class="d-l-a" d="M154 165 H182"/><polygon class="d-arrow-a" points="192,165 180,160 180,170"/>
+            <rect x="192" y="148" width="130" height="34" rx="6" class="d-box-a"/>
+            <text x="204" y="170" class="d-s">HeroWidget</text>
+            <text x="204" y="198" class="d-lbl">created</text>
+
+            <text x="382" y="24" class="d-s">same view type → rebind</text>
+            <rect x="382" y="36" width="322" height="184" rx="8" class="d-box" style="fill:none;stroke-dasharray:4 4"/>
+
+            <rect x="400" y="58" width="130" height="34" rx="6" class="d-box"/>
+            <text x="414" y="80" class="d-t">Settlement A</text>
+            <path class="d-l-a" d="M530 75 H560"/><polygon class="d-arrow-a" points="570,75 558,70 558,80"/>
+            <path class="d-l" d="M460 92 V132"/><polygon class="d-arrow" points="460,142 455,130 465,130"/>
+            <text x="470" y="120" class="d-lbl">select B</text>
+
+            <rect x="400" y="148" width="130" height="34" rx="6" class="d-box-a"/>
+            <text x="414" y="170" class="d-t">Settlement B</text>
+            <path class="d-l-a" d="M530 165 H560"/><polygon class="d-arrow-a" points="570,165 558,160 558,170"/>
+
+            <rect x="570" y="58" width="118" height="124" rx="6" class="d-box-a"/>
+            <text x="584" y="104" class="d-s">SettlementWidget</text>
+            <text x="584" y="126" class="d-lbl">kept alive</text>
+            <text x="584" y="144" class="d-lbl">Initialize(VM B)</text>
+
+            <text x="16" y="242" class="d-lbl">the widget is chosen by view type · its contents are chosen by ViewModel</text>
+          </svg>
+        </div>
+        <figcaption>
+          Two settlements are the same screen with different data, and the framework treats them
+          that way.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="sys" id="binding">
+      <div class="kicker">04 — the binding layer</div>
+      <h2>Gameplay tags &amp; a <code>TVariant</code> value</h2>
+
+      <ul>
+        <li>Bindable properties are identified by <strong>gameplay tag</strong> rather than by
+          string. They autocomplete, they are structured, and they cannot be typo'd into
+          silence.</li>
+        <li>Values travel as a <code>TVariant</code> over an explicit supported set. Unreal already
+          solves type erasure, copying and lifetime here, so I did not write my own.</li>
+        <li>The ViewModel stores a <code>TMap&lt;FGameplayTag, FBindingValue&gt;</code> and
+          broadcasts the tag and the value on change. It never learns who is listening, and one
+          property can drive several widgets at once.</li>
+        <li>The <strong>Binding Resolver</strong> is the single place that knows UMG. It pulls the
+          expected type out of the variant and makes the call. A mismatch fails loudly instead of
+          leaving a panel quietly showing nothing.</li>
+      </ul>
+
+      <figure class="figure">
+        <div class="frame">
+          <svg viewBox="0 0 720 232" role="img" aria-label="Diagram: three tagged ViewModel properties carry variant values into a single binding resolver, which makes the concrete UMG call for each.">
+            <text x="14" y="22" class="d-s">one notification path, whatever the type</text>
+            <text x="14" y="48" class="d-lbl">ViewModel property</text>
+            <text x="206" y="48" class="d-lbl">FBindingValue</text>
+            <text x="504" y="48" class="d-lbl">UMG call</text>
+
+            <rect x="14" y="58" width="172" height="36" rx="6" class="d-box-a"/>
+            <text x="26" y="81" class="d-s">UI.Hero.HealthPercent</text>
+            <path class="d-l-a" d="M186 76 H198"/><polygon class="d-arrow-a" points="206,76 194,71 194,81"/>
+            <rect x="206" y="58" width="104" height="36" rx="6" class="d-box"/>
+            <text x="218" y="81" class="d-s">float</text>
+            <path class="d-l-a" d="M310 76 H334"/><polygon class="d-arrow-a" points="342,76 330,71 330,81"/>
+
+            <rect x="14" y="106" width="172" height="36" rx="6" class="d-box-a"/>
+            <text x="26" y="129" class="d-s">UI.Hero.Name</text>
+            <path class="d-l-a" d="M186 124 H198"/><polygon class="d-arrow-a" points="206,124 194,119 194,129"/>
+            <rect x="206" y="106" width="104" height="36" rx="6" class="d-box"/>
+            <text x="218" y="129" class="d-s">FText</text>
+            <path class="d-l-a" d="M310 124 H334"/><polygon class="d-arrow-a" points="342,124 330,119 330,129"/>
+
+            <rect x="14" y="154" width="172" height="36" rx="6" class="d-box-a"/>
+            <text x="26" y="177" class="d-s">UI.Hero.Portrait</text>
+            <path class="d-l-a" d="M186 172 H198"/><polygon class="d-arrow-a" points="206,172 194,167 194,177"/>
+            <rect x="206" y="154" width="104" height="36" rx="6" class="d-box"/>
+            <text x="218" y="177" class="d-s">UTexture2D*</text>
+            <path class="d-l-a" d="M310 172 H334"/><polygon class="d-arrow-a" points="342,172 330,167 330,177"/>
+
+            <rect x="342" y="58" width="140" height="132" rx="8" class="d-box-a"/>
+            <text x="358" y="112" class="d-t">Binding</text>
+            <text x="358" y="132" class="d-t">Resolver</text>
+            <text x="358" y="156" class="d-s">Value.Get&lt;T&gt;()</text>
+
+            <path class="d-l-a" d="M482 76 H496"/><polygon class="d-arrow-a" points="504,76 492,71 492,81"/>
+            <path class="d-l-a" d="M482 124 H496"/><polygon class="d-arrow-a" points="504,124 492,119 492,129"/>
+            <path class="d-l-a" d="M482 172 H496"/><polygon class="d-arrow-a" points="504,172 492,167 492,177"/>
+
+            <rect x="504" y="58" width="202" height="36" rx="6" class="d-box"/>
+            <text x="516" y="81" class="d-s">ProgressBar::SetPercent</text>
+            <rect x="504" y="106" width="202" height="36" rx="6" class="d-box"/>
+            <text x="516" y="129" class="d-s">TextBlock::SetText</text>
+            <rect x="504" y="154" width="202" height="36" rx="6" class="d-box"/>
+            <text x="516" y="177" class="d-s">Image::SetBrushFromTexture</text>
+
+            <text x="14" y="220" class="d-lbl">the ViewModel never names a widget · the resolver is the only code that touches UMG</text>
+          </svg>
+        </div>
+        <figcaption>
+          The resolver is the seam. Everything left of it is UI agnostic, everything right of it is
+          UMG.
+        </figcaption>
+      </figure>
+
+      <pre><code>using FBindingValue = TVariant&lt;float, int32, bool, FText, UTexture2D*&gt;;
+
+// gameplay side, no widget in sight
+ViewModel-&gt;SetValue(TAG_UI_Hero_HealthPercent, 0.75f);
+
+// view side, inside OnBindingChanged(Tag, Value)
+HealthBar-&gt;SetPercent(Value.Get&lt;float&gt;());</code></pre>
+    </section>
+
+    <section class="sys" id="interaction">
+      <div class="kicker">05 — the way back</div>
+      <h2>Two-way bindings &amp; commands</h2>
+
+      <ul>
+        <li><strong>Two-way binding is for a value the player edits</strong>, a volume slider being
+          the plain case. The view can write, but only to the ViewModel, and the ViewModel decides
+          what reaches the model.</li>
+        <li><strong>A command is an operation.</strong> A heal button carries a command tag and
+          knows nothing about how healing is implemented.</li>
+        <li>A command also reports whether it can run right now, so a greyed out button is derived
+          from ViewModel state instead of being set by hand in three places.</li>
+        <li>Two-way binding needs a defined source of truth or the view and the model sit there
+          updating each other. The ViewModel is it.</li>
+      </ul>
+
+      <figure class="figure">
+        <div class="frame">
+          <svg viewBox="0 0 720 262" role="img" aria-label="Diagram: a volume slider two-way bound through the ViewModel to the model, beside a heal button that sends a command and receives the result back as a binding.">
+            <text x="16" y="24" class="d-s">editable value</text>
+            <rect x="16" y="36" width="322" height="188" rx="8" class="d-box" style="fill:none;stroke-dasharray:4 4"/>
+
+            <rect x="40" y="56" width="150" height="36" rx="6" class="d-box-a"/>
+            <text x="54" y="79" class="d-t">Volume Slider</text>
+            <path class="d-l-a" d="M115 98 V112"/>
+            <polygon class="d-arrow-a" points="115,92 110,102 120,102"/>
+            <polygon class="d-arrow-a" points="115,118 110,108 120,108"/>
+            <rect x="40" y="118" width="150" height="36" rx="6" class="d-box-a"/>
+            <text x="54" y="141" class="d-t">ViewModel.Volume</text>
+            <path class="d-l-a" d="M115 160 V174"/>
+            <polygon class="d-arrow-a" points="115,154 110,164 120,164"/>
+            <polygon class="d-arrow-a" points="115,180 110,170 120,170"/>
+            <rect x="40" y="180" width="150" height="36" rx="6" class="d-box"/>
+            <text x="54" y="203" class="d-t">Model.Volume</text>
+
+            <text x="206" y="124" class="d-lbl">one value, two</text>
+            <text x="206" y="140" class="d-lbl">directions, so the</text>
+            <text x="206" y="156" class="d-lbl">view may write it</text>
+
+            <text x="382" y="24" class="d-s">operation</text>
+            <rect x="382" y="36" width="322" height="188" rx="8" class="d-box" style="fill:none;stroke-dasharray:4 4"/>
+
+            <rect x="400" y="56" width="150" height="36" rx="6" class="d-box-a"/>
+            <text x="414" y="79" class="d-t">Heal Button</text>
+            <path class="d-l-a" d="M475 92 V112"/><polygon class="d-arrow-a" points="475,118 470,108 480,108"/>
+            <rect x="400" y="118" width="150" height="36" rx="6" class="d-box-a"/>
+            <text x="414" y="141" class="d-t">HealCommand</text>
+            <path class="d-l-a" d="M475 154 V174"/><polygon class="d-arrow-a" points="475,180 470,170 480,170"/>
+            <rect x="400" y="180" width="150" height="36" rx="6" class="d-box"/>
+            <text x="414" y="203" class="d-t">Gameplay system</text>
+
+            <path class="d-l" style="stroke-dasharray:5 5" d="M550 198 H614 V74 H566"/>
+            <polygon class="d-arrow" points="556,74 568,69 568,79"/>
+            <text x="622" y="124" class="d-lbl">arrives</text>
+            <text x="622" y="140" class="d-lbl">back as a</text>
+            <text x="622" y="156" class="d-lbl">binding</text>
+
+            <text x="16" y="248" class="d-lbl">a slider is a value</text>
+            <text x="382" y="248" class="d-lbl">a button is a verb · no return value, the state comes back on its own</text>
+          </svg>
+        </div>
+        <figcaption>
+          Two-way binding and commands solve different problems, and keeping them apart is what
+          stops widgets calling gameplay directly.
+        </figcaption>
+      </figure>
+
+      <figure class="media">
+        <img src="../media/greenleaf-ui-betrayal.jpg" alt="A narrative event screen headed Betrayal on the Horizon, offering three responses each with its own consequence">
+        <figcaption>
+          Three responses, three commands. The screen carries the tags and nothing else.
+        </figcaption>
+      </figure>
+    </section>
+
+  </div>
+</article>
+
+<div class="wrap pagenav">
+  <a href="greenleaf.html">← Project Greenleaf</a>
+  <a class="next" href="simgym.html">SimGym →</a>
+</div>
+
+<script>
+  document.getElementById("themebtn").addEventListener("click", function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+</script>
+
+<script src="../nav.js"></script>
+
+</body>
+</html>
